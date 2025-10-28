@@ -2,16 +2,16 @@ import mongoose from "mongoose"
 
 export interface Budget extends mongoose.Document {
     budgetID: string,
-    institutionName: string,
-    primaryInvestigator: string,
-    coPIs: string[],
+    name: string,
+    pi: string,
+    coPI: string[],
     type: "primary" | "secondary" | "parallel"
 }
 const BudgetSchema = new mongoose.Schema<Budget>({
-    budgetID: {type: String},
-    institutionName: {type: String},
-    primaryInvestigator: {type: String},
-    coPIs: {type: [String]},
+    budgetID: mongoose.Types.ObjectId,
+    name: {type: String},
+    pi: {type: String},
+    coPI: {type: [String]},
     type: {type: String}
 })
 

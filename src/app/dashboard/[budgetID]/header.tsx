@@ -2,11 +2,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function Header({budgets}) {
+export default function Header({budgets, current_budget}) {
     const path = usePathname()
     return <header>
         <select className="institution-dropdown">
                 <option>Select a Institution</option>
+                {budgets.map((x, idx) => {
+                    console.log(x.pi)
+                    return <option key={idx}>{x.name}</option>
+                })}
                 <option>Add new Institution</option>
         </select>
         <nav className="tabNav">

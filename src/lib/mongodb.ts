@@ -16,7 +16,6 @@ if (!cached) {
 }
 
 export default async function dbConnect() {
-    console.log(cached.conn)
     if (cached.conn) {
         return cached.conn
     }
@@ -33,7 +32,6 @@ export default async function dbConnect() {
         throw e;
     }
 
-    console.log("here")
 
     return cached.conn
 }

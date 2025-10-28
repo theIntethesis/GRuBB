@@ -51,8 +51,8 @@ const salary2 = db.salary.insertOne({
     rate: 18.5,
     rateTimeUnit: "hour",
     percentFTE: .5,
-    payment: 370,
-    fringe_rate: 20,
+    // payment: 370,
+    // fringe_rate: 20,
     semester: "Spring 2025",
     id: fac.insertedId
 })
@@ -77,12 +77,13 @@ const travel_profiles = db.travel_profiles.insertOne({
 const budget = db.budgets.insertOne({
     pi: "Joe Vandal",
     type: "Primary",
-    Co_PI: ["Jane Vandal"]
+    coPI: ["Jane Vandal"],
+    name: "University of Idaho"
 })
 
 const acct = db.institutional_account.insertOne({
     semester: "Fall 2025",
-    name: "University of Idaho",
+
     budgetID: budget.insertedId,
     incoming: 0,
     outgoing: 0,

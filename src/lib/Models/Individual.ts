@@ -1,12 +1,12 @@
 import mongoose from "mongoose"
 
 export interface Individual extends mongoose.Document {
-    ID: string // uniqueness handled by mongodb
+    id: string // uniqueness handled by mongodb
     name: string
 }
 
 const IndividualSchema = new mongoose.Schema<Individual>({
-    ID: {type: String},
+    id: mongoose.Types.ObjectId,
     name: {type: String}
 })
 

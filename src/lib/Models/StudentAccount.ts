@@ -5,13 +5,13 @@ import mongoose from "mongoose"
 export interface StudentAccount extends mongoose.Document {
     // tuition - to be calculated
     semester: string, // i'll type this later
-    ID: string,
+    id: string,
     aidRecieved: number,
 }
 
 const StudentAccountSchema = new mongoose.Schema<StudentAccount>({
     semester: {type: String},
-    ID: {type: String},
+    id: mongoose.Types.ObjectId,
     aidRecieved: {type: Number}
 })
 

@@ -5,7 +5,7 @@ export interface SalaryAccount extends mongoose.Document {
     rateTimeUnit: "hour" | "year",
     percentFTE: number, // Percentage
     semester: string, // i'll type this later
-    ID: string
+    id: string
     // payment - calculated (payment)
     // fringe benefits rate - calculated, (fringeRate)
 }
@@ -14,6 +14,6 @@ const SalaryAccountSchema = new mongoose.Schema<SalaryAccount>({
     rateTimeUnit: {type: String},
     percentFTE: {type: Number},
     semester: {type: String},
-    ID: {type: String}
+    id: mongoose.Types.ObjectId
 })
 export default mongoose.models.SalaryAccount || mongoose.model<SalaryAccount>("SalaryAccount", SalaryAccountSchema)
