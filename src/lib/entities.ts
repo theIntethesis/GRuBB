@@ -1,4 +1,6 @@
-export interface Individual {
+import mongoose from "mongoose"
+
+export interface Individual extends mongoose.Document {
     ID: string // uniqueness handled by mongodb
     name: string
 }
@@ -8,7 +10,7 @@ export interface Student extends Individual {
 export interface Faculty extends Individual {
     role: "faculty" | "staff" | "postdoc"
 }
-export interface Account {
+export interface Account extends mongoose.Document {
     semester: string // i'll type this later
     ID: string
 }
@@ -25,20 +27,20 @@ export interface SalaryAccount extends Account {
     // fringe benefits rate - calculated, (fringeRate)
 }
 
-export interface OverheadCharges {
+export interface OverheadCharges extends mongoose.Document {
     charge: number
     description: string
 }
 
-export interface TravelProfile {
+export interface TravelProfile extends mongoose.Document {
     perDiem: number
     airfare: number
     lodging: number
 }
 
-export interface InstitutionalAccount {
+export interface InstitutionalAccount extends mongoose.Document {
     semester: string,
-    budgetID: any,
+    budgetID: string,
     // incoming,
     // outgoing,
     inStateTuitionRate: number,
@@ -51,8 +53,8 @@ export interface InstitutionalAccount {
     // aidAllocated - calculated
 }
 
-export interface Budget {
-    budgetID: any,
+export interface Budget extends mongoose.Document {
+    budgetID: string,
     institutionName: string,
     primaryInvestigator: string,
     coPIs: string[],

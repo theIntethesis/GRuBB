@@ -40,6 +40,7 @@
             shellHook = ''
                 alias StartMongo='systemctl --user start mongodb'
                 alias StopMongo='systemctl --user stop mongodb'
+                alias StatusMongo='systemctl --user status mongodb'
                 echo "${mongodbService}" > ~/.config/systemd/user/mongodb.service
                 systemctl --user daemon-reload
 

@@ -2,10 +2,10 @@
 import { createContext, useState, useRef } from "react"
 import { Budget } from "./entities";
 
-
 export const UserContext = createContext({})
 
 export default function SetupContext({ children }: Readonly<{ children: React.ReactNode; }>) {
+
     const [institutions, setInstitutions]  = useState<Budget[]>([])
     const [selectedInstitution, setSelectedInstitution] = useState<Budget | null>(null)
 
@@ -19,7 +19,7 @@ export default function SetupContext({ children }: Readonly<{ children: React.Re
         institutions,
         selectedInstitution,
         setSelectedInstitution,
-        addInstitution
+        addInstitution,
     }
 
     return <UserContext value={userContext}>
