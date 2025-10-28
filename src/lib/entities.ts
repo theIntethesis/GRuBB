@@ -53,6 +53,7 @@ export interface InstitutionalAccount {
 
 export interface Budget {
     budgetID: any,
+    institutionName: string,
     primaryInvestigator: string,
     coPIs: string[],
     type: "primary" | "secondary" | "parallel"

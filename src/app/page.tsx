@@ -1,5 +1,7 @@
-import Link from "next/link";
 
-export default function Page() {
-    return <Link href="start">here</Link>
+export default function Index() {
+    // in theory this is just a start page
+    return <div>
+
+    </div>
 }
