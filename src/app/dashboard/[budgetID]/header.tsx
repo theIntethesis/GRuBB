@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function Header() {
+export default function Header({budgets}) {
     const path = usePathname()
     return <header>
         <select className="institution-dropdown">
@@ -10,10 +10,10 @@ export default function Header() {
                 <option>Add new Institution</option>
         </select>
         <nav className="tabNav">
-                <Link href="/Student" className={"tab " + (path == "/Student" ? "active" : "")}>Student</Link>
-                <Link href="/Faculty" className={"tab " + (path == "/Faculty" ? "active" : "")}>Faculty</Link>
-                <Link href="/Rates" className={"tab " + (path == "/Rates" ? "active" : "")}>Rates</Link>
-                <Link href="/Institution" className={"tab " + (path == "/Institution" ? "active" : "")}>Institution</Link>
+                <Link href="Student" className={"tab " + (path.endsWith("Student") ? "active" : "")}>Student</Link>
+                <Link href="Faculty" className={"tab " + (path.endsWith("Faculty") ? "active" : "")}>Faculty</Link>
+                <Link href="Rates" className={"tab " + (path.endsWith("Rates") ? "active" : "")}>Rates</Link>
+                <Link href="Account" className={"tab " + (path.endsWith("Account") ? "active" : "")}>Account</Link>
         </nav>
     </header>
 }

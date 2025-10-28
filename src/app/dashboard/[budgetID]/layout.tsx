@@ -17,12 +17,15 @@ export default async function Layout({
 
     // const budget = await Budget.findById(budgetID)
     const budget = await Budget.findById(budgetID)
+    const allBudgets = await Budget.find({})
 
-    return <body>
-        <Header/>
+    console.log(allBudgets)
+
+    return <>
+        <Header budgets={allBudgets}/>
 
 
         {children}
-    </body>
+    </>
 
 }

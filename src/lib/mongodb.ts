@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-
-
 declare global {
   var mongoose: any; // This must be a `var` and not a `let / const`
 }
@@ -34,5 +32,6 @@ export default async function dbConnect() {
         throw e;
     }
 
+    console.log(cached.conn)
     return cached.conn
 }
