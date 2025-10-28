@@ -40,6 +40,7 @@ export interface TravelProfile extends mongoose.Document {
 
 export interface InstitutionalAccount extends mongoose.Document {
     semester: string,
+    name: string,
     budgetID: string,
     // incoming,
     // outgoing,

@@ -38,6 +38,7 @@ export const TravelProfileSchema = new mongoose.Schema<entities.TravelProfile>({
 
 export const InstitutionalAccountSchema = new mongoose.Schema<entities.InstitutionalAccount>({
     semester: {type: String},
+    name: {type: String},
     budgetID: {type: String},
     inStateTuitionRate: {type: Number},
     outOfStateTuitionRate: {type: Number},

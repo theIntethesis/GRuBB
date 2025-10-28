@@ -82,6 +82,7 @@ const budget = db.budgets.insertOne({
 
 const acct = db.institutional_account.insertOne({
     semester: "Fall 2025",
+    name: "University of Idaho",
     budgetID: budget.insertedId,
     incoming: 0,
     outgoing: 0,
