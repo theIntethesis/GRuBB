@@ -1,16 +1,16 @@
 export interface Individual {
-    ID: any // unique
+    ID: string // uniqueness handled by mongodb
     name: string
 }
 export interface Student extends Individual {
     outOfState: boolean
 }
 export interface Faculty extends Individual {
-    type: "faculty" | "staff" | "postdoc"
+    role: "faculty" | "staff" | "postdoc"
 }
 export interface Account {
     semester: string // i'll type this later
-    ID: any
+    ID: string
 }
 export interface StudentAccount extends Account {
     // tuition - to be calculated
@@ -18,11 +18,22 @@ export interface StudentAccount extends Account {
 }
 export interface SalaryAccount extends Account {
     rate: number,
-    rateTimeUnit: "hour" | "yearly",
-    fullTimeEquiv: number,
+    rateTimeUnit: "hour" | "year",
+    percentFTE: number, // Percentage
 
-    // payment - calculated
-    // fringe benefits rate - calculated,
+    // payment - calculated (payment)
+    // fringe benefits rate - calculated, (fringeRate)
+}
+
+export interface OverheadCharges {
+    charge: number
+    description: string
+}
+
+export interface TravelProfile {
+    perDiem: number
+    airfare: number
+    lodging: number
 }
 
 export interface InstitutionalAccount {

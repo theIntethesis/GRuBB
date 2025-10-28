@@ -41,5 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 # Mongo
-*/bin/
-mongo/database/*
+mongo/*
+!mongo/database/.gitkeep
