@@ -2,27 +2,29 @@ import mongoose from "mongoose"
 import * as entities from "./entities"
 
 export const IndividualSchema = new mongoose.Schema<entities.Individual>({
-    ID: {type: String},
     name: {type: String}
 })
 
 export const StudentSchema = new mongoose.Schema<entities.Student>({
-    outOfState: {type: Boolean}
+    outOfState: {type: Boolean},
+    indID: {type: mongoose.Types.ObjectId}
 })
 
 export const FacultySchema = new mongoose.Schema<entities.Faculty>({
-    role: {type: String}
+    role: {type: String},
+    indID: {type: mongoose.Types.ObjectId}
 })
 
 export const StudentAccountSchema = new mongoose.Schema<entities.StudentAccount>({
     semester: {type: String},
-    ID: {type: String}
+    student_id: {type: mongoose.Types.ObjectId}
 })
 
 export const SalaryAccountSchema = new mongoose.Schema<entities.SalaryAccount>({
     rate: {type: Number},
     rateTimeUnit: {type: String},
-    percentFTE: {type: Number}
+    percentFTE: {type: Number},
+    faculty_id: {type: mongoose.Types.ObjectId}
 })
 
 export const OverheadChargesSchema = new mongoose.Schema<entities.OverheadCharges>({
@@ -39,7 +41,7 @@ export const TravelProfileSchema = new mongoose.Schema<entities.TravelProfile>({
 export const InstitutionalAccountSchema = new mongoose.Schema<entities.InstitutionalAccount>({
     semester: {type: String},
     name: {type: String},
-    budgetID: {type: String},
+    budgetID: {type: mongoose.Types.ObjectId},
     inStateTuitionRate: {type: Number},
     outOfStateTuitionRate: {type: Number},
     tuitionIncrease: {type: Number},
@@ -49,7 +51,6 @@ export const InstitutionalAccountSchema = new mongoose.Schema<entities.Instituti
 })
 
 export const BudgetSchema = new mongoose.Schema<entities.Budget>({
-    budgetID: {type: String},
     institutionName: {type: String},
     primaryInvestigator: {type: String},
     coPIs: {type: [String]},

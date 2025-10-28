@@ -20,20 +20,21 @@ const fac = db.faculty.insertOne({
     indID: fInd.insertedId
 })
 
-// Student Account for student.
-const studAcct = db.student_accounts.insertOne({
-    semester: "Fall 2025",
-    tuition: 2500,
-    aid_received: 1500,
-    student_id: stu.insertedId
-})
-// Student Account for student.
-const studAcct2 = db.student_accounts.insertOne({
-    semester: "Spring 2025",
-    tuition: 3000,
-    aid_received: 1000,
-    student_id: stu.insertedId
-})
+// Student Accounts for student.
+const studAccts = db.student_accounts.insertMany([
+    {
+        semester: "Fall 2025",
+        tuition: 2500,
+        aid_received: 1500,
+        student_id: stu.insertedId
+    },
+    {
+        semester: "Fall 2025",
+        tuition: 3000,
+        aid_received: 1000,
+        student_id: stu.insertedId
+    }
+])
 
 // Salary for faculty.
 const salary = db.salary.insertOne({

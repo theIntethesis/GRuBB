@@ -1,7 +1,6 @@
-
+"use client"
+import { redirect } from "next/navigation";
 export default function Index() {
-    // in theory this is just a start page
-    return <div>
-
-    </div>
+    // Turn this into a start page, but for now redirect to Student tab
+    redirect(`/Student`)
 }
