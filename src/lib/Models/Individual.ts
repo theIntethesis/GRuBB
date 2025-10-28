@@ -7,7 +7,7 @@ export interface Individual extends mongoose.Document {
 
 const IndividualSchema = new mongoose.Schema<Individual>({
     id: mongoose.Types.ObjectId,
-    name: {type: String}
+    name: String
 })
 
 export default mongoose.models.Individual || mongoose.model<Individual>("Individual", IndividualSchema)

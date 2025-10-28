@@ -10,10 +10,10 @@ export interface SalaryAccount extends mongoose.Document {
     // fringe benefits rate - calculated, (fringeRate)
 }
 const SalaryAccountSchema = new mongoose.Schema<SalaryAccount>({
-    rate: {type: Number},
-    rateTimeUnit: {type: String},
-    percentFTE: {type: Number},
-    semester: {type: String},
+    rate: Number,
+    rateTimeUnit: String,
+    percentFTE: Number,
+    semester: String,
     id: mongoose.Types.ObjectId
 })
 export default mongoose.models.SalaryAccount || mongoose.model<SalaryAccount>("SalaryAccount", SalaryAccountSchema)

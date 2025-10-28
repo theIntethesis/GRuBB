@@ -9,10 +9,10 @@ export interface Budget extends mongoose.Document {
 }
 const BudgetSchema = new mongoose.Schema<Budget>({
     budgetID: mongoose.Types.ObjectId,
-    name: {type: String},
-    pi: {type: String},
-    coPI: {type: [String]},
-    type: {type: String}
+    name: String,
+    pi: String,
+    coPI: [String],
+    type: String
 })
 
 export default mongoose.models.Budget || mongoose.model<Budget>("Budget", BudgetSchema)

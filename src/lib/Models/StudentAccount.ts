@@ -10,9 +10,9 @@ export interface StudentAccount extends mongoose.Document {
 }
 
 const StudentAccountSchema = new mongoose.Schema<StudentAccount>({
-    semester: {type: String},
+    semester: String,
     id: mongoose.Types.ObjectId,
-    aidRecieved: {type: Number}
+    aidRecieved: Number
 })
 
 export default mongoose.models.StudentAccount || mongoose.model<StudentAccount>("StudentAccount", StudentAccountSchema)

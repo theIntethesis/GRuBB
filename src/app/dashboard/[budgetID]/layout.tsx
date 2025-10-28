@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 import "@/styles/globals.css";
-import Header from "./header";
-import dbConnect from "@/lib/mongodb";
-import Budget from "@/lib/Models/Budget";
+import Header from "@/app/dashboard/header";
+
+import { getAllBudgets, getBudget } from "../utils";
 
 export default async function Layout({
     children,
@@ -13,19 +13,13 @@ export default async function Layout({
     params: Promise<{ budgetID: string }>
 }) {
     const { budgetID } = await params
-    await dbConnect()
+
 
     // const budget = await Budget.findById(budgetID)
-    const budget = await Budget.findById(budgetID).lean()
 
 
-    const allBudgets = await Budget.find({}).lean()
-    allBudgets.forEach(x => {
-        x._id = x._id.toJSON()
-    })
-    budget._id = budget._id.toJSON()
-
-
+    const budget = await getBudget(budgetID)
+    const allBudgets = await getAllBudgets()
 
     console.log(allBudgets)
     console.log(budget)

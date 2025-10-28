@@ -14,17 +14,21 @@ export interface InstitutionalAccount extends mongoose.Document {
     postDocFBR: number,
     // incomingTuition - calculated,
     // aidAllocated - calculated
+    studentAccounts: string[],
+    salaryAccounts: string[]
 }
 
 const InstitutionalAccountSchema = new mongoose.Schema<InstitutionalAccount>({
-    semester: {type: String},
-    name: {type: String},
+    semester: String,
+    name: String,
     id: mongoose.Types.ObjectId,
-    inStateTuitionRate: {type: Number},
-    outOfStateTuitionRate: {type: Number},
-    tuitionIncrease: {type: Number},
-    facultyFBR: {type: Number},
-    studentFBR: {type: Number},
-    postDocFBR: {type: Number}
+    inStateTuitionRate: Number,
+    outOfStateTuitionRate: Number,
+    tuitionIncrease: Number,
+    facultyFBR: Number,
+    studentFBR: Number,
+    postDocFBR: Number,
+    studentAccounts: [mongoose.Types.ObjectId],
+    salaryAccounts: [mongoose.Types.ObjectId]
 })
 export default mongoose.models.InstitutionalAccount || mongoose.model<InstitutionalAccount>("InstitutionalAccount", InstitutionalAccountSchema)

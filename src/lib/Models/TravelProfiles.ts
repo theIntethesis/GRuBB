@@ -6,8 +6,8 @@ export interface TravelProfile extends mongoose.Document {
     lodging: number
 }
 const TravelProfileSchema = new mongoose.Schema<TravelProfile>({
-    perDiem: {type: Number},
-    airfare: {type: Number},
-    lodging: {type: Number}
+    perDiem: Number,
+    airfare: Number,
+    lodging: Number
 })
 export default mongoose.models.TravelProfile || mongoose.model<TravelProfile>("TravelProfile", TravelProfileSchema)
