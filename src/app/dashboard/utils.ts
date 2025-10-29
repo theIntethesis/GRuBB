@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/mongodb";
-import Budget from "@/lib/Models/Budget";
+import { Budget } from "@/lib/models";
 
 export async function getBudget(budgetID) {
     await dbConnect()
