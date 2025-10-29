@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 export interface InstitutionalAccount extends mongoose.Document {
     semester: string,
     name: string,
-    id: string,
+    budgetID: string,
     // incoming,
     // outgoing,
     inStateTuitionRate: number,
@@ -15,13 +15,14 @@ export interface InstitutionalAccount extends mongoose.Document {
     // incomingTuition - calculated,
     // aidAllocated - calculated
     studentAccounts: string[],
-    salaryAccounts: string[]
+    salaryAccounts: string[],
+    travelProfile: string
 }
 
 const InstitutionalAccountSchema = new mongoose.Schema<InstitutionalAccount>({
     semester: String,
     name: String,
-    id: mongoose.Types.ObjectId,
+    budgetID: mongoose.Types.ObjectId,
     inStateTuitionRate: Number,
     outOfStateTuitionRate: Number,
     tuitionIncrease: Number,
@@ -29,6 +30,7 @@ const InstitutionalAccountSchema = new mongoose.Schema<InstitutionalAccount>({
     studentFBR: Number,
     postDocFBR: Number,
     studentAccounts: [mongoose.Types.ObjectId],
-    salaryAccounts: [mongoose.Types.ObjectId]
+    salaryAccounts: [mongoose.Types.ObjectId],
+    travelProfile: mongoose.Types.ObjectId
 })
 export default mongoose.models.InstitutionalAccount || mongoose.model<InstitutionalAccount>("InstitutionalAccount", InstitutionalAccountSchema)

@@ -1,10 +1,23 @@
 import dbConnect from "@/lib/mongodb"
+import InstitutionalAccount from "@/lib/Models/InstitutionalAccount"
 
 export default async function Page({ params }) {
+    let conn = await dbConnect()
     const { budgetID } = await params
-    await dbConnect()
+
+    try {
+        const shit = await InstitutionalAccount
+        .find({})
+        .lean()
+
+        console.log(conn.modelNames())
+        console.log(shit)
 
 
+    }
+    catch (e) {
+        console.log(e)
+    }
 
 
     return <main className="two">

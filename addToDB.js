@@ -2,33 +2,33 @@ db = db.getSiblingDB("grubb")
 
 
 // Student that is an individual
-const sInd = db.individual.insertOne({
+const sInd = db.individuals.insertOne({
     name: "Joe Smith"
 })
-const stu = db.student.insertOne({
+const stu = db.students.insertOne({
     outOfState: false,
     indID: sInd.insertedId
 })
 
 
 // Faculty that is a student
-const fInd = db.individual.insertOne({
+const fInd = db.individuals.insertOne({
     name: "Joe Vandal"
 })
-const fac = db.faculty.insertOne({
+const fac = db.facultys.insertOne({
     role: "faculty",
     indID: fInd.insertedId
 })
 
 // Student Account for student.
-const studAcct = db.student_accounts.insertOne({
+const studAcct = db.studentaccounts.insertOne({
     semester: "Fall 2025",
     tuition: 2500,
     aid_received: 1500,
     student_id: stu.insertedId
 })
 // Student Account for student.
-const studAcct2 = db.student_accounts.insertOne({
+const studAcct2 = db.studentaccounts.insertOne({
     semester: "Spring 2025",
     tuition: 3000,
     aid_received: 1000,
@@ -36,7 +36,7 @@ const studAcct2 = db.student_accounts.insertOne({
 })
 
 // Salary for faculty.
-const salary = db.salary.insertOne({
+const salary = db.salarys.insertOne({
     rate: 17,
     rateTimeUnit: "hour",
     percentFTE: .5,
@@ -47,7 +47,7 @@ const salary = db.salary.insertOne({
 })
 
 // Salary for faculty.
-const salary2 = db.salary.insertOne({
+const salary2 = db.salarys.insertOne({
     rate: 18.5,
     rateTimeUnit: "hour",
     percentFTE: .5,
@@ -57,7 +57,7 @@ const salary2 = db.salary.insertOne({
     id: fac.insertedId
 })
 
-const overs = db.overhead_charges.insertMany([
+const overs = db.overheadcharges.insertMany([
     {
         charge: 100.27,
         description: "Vandal Swag"
@@ -68,7 +68,7 @@ const overs = db.overhead_charges.insertMany([
     }
 ])
 
-const travel_profiles = db.travel_profiles.insertOne({
+const travel_profiles = db.travelprofiles.insertOne({
     perDiem: 52,
     airfare: 120,
     lodging: 55
@@ -81,20 +81,19 @@ const budget = db.budgets.insertOne({
     name: "University of Idaho"
 })
 
-const acct = db.institutional_account.insertOne({
+const acct = db.institutionalaccounts.insertOne({
     semester: "Fall 2025",
-
     budgetID: budget.insertedId,
-    incoming: 0,
-    outgoing: 0,
+    // incoming: 0,
+    // outgoing: 0,
     outOfStateTuitionRate: 4000,
     inStateTuitionRate: 2500,
     tuitionIncrease: 1,
     facultyFBR: 20,
     studentFBR: 15,
     postDocFBR: 22,
-    incoming_tuition: 15000,
-    aid_allocated: 4700,
+    // incoming_tuition: 15000,
+    // aid_allocated: 4700,
     overheadCharges: overs.insertedId,
     travelProfile: travel_profiles.insertedId,
     studentAccounts: [studAcct.insertedId, studAcct2.insertedId],
