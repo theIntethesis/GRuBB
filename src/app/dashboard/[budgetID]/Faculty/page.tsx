@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/mongodb"
-import InstitutionalAccount from "@/lib/Models/InstitutionalAccount"
+import { InstitutionalAccount } from "@/lib/models"
 
 export default async function Page({ params }) {
     let conn = await dbConnect()
