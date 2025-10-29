@@ -1,9 +1,11 @@
 'use client'
+import dbConnect from "@/lib/mongodb";
 import Link from "next/link";
 import { redirect, usePathname } from "next/navigation";
 
 export default function Header({budgets, current_budget}: {budgets: [any], current_budget: any}) {
     const path = usePathname()
+
 
     const handleOnChange = (e) => {
         const ret = budgets.filter((x) => x.name == e.target.value)
@@ -24,7 +26,6 @@ export default function Header({budgets, current_budget}: {budgets: [any], curre
     return <header>
         <select className="institution-dropdown" onChange={handleOnChange} value={selected}>
                 {budgets.map((x, idx) => {
-                    console.log(x.pi)
                     return <option key={idx}>{x.name}</option>
                 })}
                 <option>Add new Institution</option>

@@ -14,15 +14,11 @@ export default async function Layout({
 }) {
     const { budgetID } = await params
 
-
-    // const budget = await Budget.findById(budgetID)
-
-
     const budget = await getBudget(budgetID)
     const allBudgets = await getAllBudgets()
 
-    console.log(allBudgets)
-    console.log(budget)
+    // console.log(allBudgets)
+    // console.log(budget)
 
     return <>
         <Header budgets={allBudgets} current_budget={budget}/>
