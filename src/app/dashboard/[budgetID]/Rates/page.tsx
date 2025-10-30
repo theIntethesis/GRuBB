@@ -8,22 +8,10 @@ export default function Page() {
     }
     return <main className="two">
         <div className='two-column'>
-            <label>[Student / Faculty Selector]</label>
-            <select>
-                <option></option>
-            </select>
             <Form action={onSubmit}>
                 <table>
                     <tbody>
-                        <tr>
-                            <td>[NAME CENTERED]</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Travel
-                            </td>
 
-                        </tr>
                         <tr>
                             <td>
                                 <label htmlFor="semester">Semester:</label>
