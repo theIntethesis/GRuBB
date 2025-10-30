@@ -1,0 +1,51 @@
+import dbConnect from "@/lib/mongodb"
+import { Faculty, Individual, InstitutionalAccount, SalaryAccount } from "@/lib/models"
+
+export default async function Page({ params, children }) {
+    await dbConnect()
+    const { budgetID } = await params
+
+    // if this returns more than one institutional account then budgetID is not unique1
+    const salaryAccIds = await InstitutionalAccount
+        .find({budgetID: budgetID})
+        .select("salaryAccounts")
+        .lean()
+
+    console.log(salaryAccIds)
+    console.log(salaryAccIds[0].salaryAccounts)
+
+    const facultyIDs = await SalaryAccount
+        .find({})
+        .where('_id').in(salaryAccIds[0].salaryAccounts)
+        .lean()
+
+    console.log(facultyIDs.map(x => x.id))
+
+    const faculty = await Faculty
+        .find({})
+        .where('_id').in(facultyIDs.map(x => x.id))
+        .lean()
+
+    console.log(faculty)
+
+
+    const individuals = await Individual
+        .find({})
+        .where('_id').in(faculty.map(x => x.indID))
+        .lean()
+
+    console.log(individuals)
+
+    return <main className="two-col">
+        <div className="items">
+
+            {individuals.map((x, idx) => {
+                return <a key={idx} href={"/dashboard/" + budgetID + "/Faculty/" + x._id.toString()}>{x.name}</a>
+            })}
+            <button>Add New Faculty Member</button>
+        </div>
+        <div>
+            {children}
+        </div>
+    </main>
+}
