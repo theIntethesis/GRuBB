@@ -27,7 +27,7 @@ export default async function Page({ params, children }) {
             .where('_id').in(studentIDs.map(x => x.student_id))
             .lean()
 
-        // console.log(students)
+        console.log(students)
 
 
         const individuals = await Individual
@@ -40,7 +40,7 @@ export default async function Page({ params, children }) {
     return <main className="two-col">
         <div className="items">
             {individuals.map((x, idx) => {
-                return <a key={idx} href={"/dashboard/" + budgetID + "/Student/" + x._id}>{x.name}</a>
+                return <a key={idx} href={"/dashboard/" + budgetID + "/Student/" + x._id.toString()}>{x.name}</a>
             })}
             <button>Add New Student</button>
         </div>

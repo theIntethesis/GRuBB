@@ -1,29 +1,28 @@
-import { Individual, Student } from "@/lib/models"
+import { Individual, Faculty } from "@/lib/models"
 
 export default async function page({params}) {
-    const { studentID } = await params
-    console.log(studentID)
+    const { facultyID } = await params
+    console.log(facultyID)
 
 
 
     const individual = await Individual
-        .findById(studentID)
+        .findById(facultyID)
         .lean()
 
 
     console.log(individual)
 
-    const student = await Student
+    const faculty = await Faculty
         .find({
             indID: individual._id
         })
         .lean()
 
-    console.log(student)
+    console.log(faculty)
 
     return <div>
         name: {individual.name}
         <br/>
-        outOfState: {student[0].outOfState ? "true" : "false"}
     </div>
 }

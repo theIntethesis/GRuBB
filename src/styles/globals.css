@@ -163,6 +163,7 @@ main.rates {
   row-gap: 0.5em;
   column-gap: 0.5em;
 }
+
 .co-pi-row {
   grid-column: 1 / span 2;
   display: contents; /* this puts its children into the parent grid*/
