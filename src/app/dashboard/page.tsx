@@ -1,6 +1,7 @@
 import Header from "@/app/dashboard/header";
 import dbConnect from "@/lib/mongodb";
 import { Budget } from "@/lib/models";
+
 export default async function Page() {
     await dbConnect()
 
