@@ -35,8 +35,6 @@ header {
   row-gap: 0.5em;
 }
 
-
-
 main {
   background-color: white;
   height: 100%;
@@ -57,12 +55,31 @@ main.two {
     button {
       background-color: white;
       margin: 0.25em;
-      border-radius: 10px;
+      border-radius: 5px;
       color: black;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+    button:hover {
+      background-color: lightgray;
+    }
+    input {
+      border-color: black;
+      background-color: white;
+      color: black;
+      border-radius: 10px;
+      margin: .25em;
+    }
+    table {
+      margin:5px;
+      td {
+        width: 50%;
+        margin-left: 5px;
+        margin-right: 5px;
+      }
     }
   }
 }
-
 
 main.rates {
   form {
@@ -73,8 +90,6 @@ main.rates {
       border: 1px solid black;
     }
   }
-
-
 }
 
 .institution-dropdown {
