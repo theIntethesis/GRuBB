@@ -8,39 +8,14 @@ export default function Page() {
     }
     return <main className="two">
         <div className='two-column'>
-            <label>[Student / Faculty Selector]</label>
             <Form action={onSubmit}>
                 <table>
                     <tbody>
                         <tr>
-                            [STUDENT NAME CENTERED]
-                        </tr>
-                        <tr>
                             <td>
-                                <label htmlFor="rate">Rate per Hour:</label>
+                                Travel
                             </td>
-                            <td>
-                                <input name="rate" type="number" min="0"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label htmlFor="time">Hours per Week:</label>
-                            </td>
-                            <td>
-                                <input name="time" type="number" min="0"/>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button className='px-2 py-1 rounded'>Submit</button>
-            </Form>
-            <hr/>
-            <Form action={onSubmit}>
-                <table>
-                    <tbody>
-                        <tr>
-                            Travel [CENTER THIS]
+
                         </tr>
                         <tr>
                             <td>
@@ -97,11 +72,14 @@ export default function Page() {
                 <button className='px-2 py-1 rounded'>Submit</button>
             </Form>
             <hr/>
-            <Form action={onSubmit}> 
+            <Form action={onSubmit}>
                 <table>
                     <tbody>
                         <tr>
-                            Overhead Charges [CENTER THIS]
+                            <td>
+                                Overhead Charges
+                            </td>
+
                         </tr>
                         <tr>
                             <td>
