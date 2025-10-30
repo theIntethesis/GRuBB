@@ -14,6 +14,12 @@ export default function Page() {
 
                         <tr>
                             <td>
+                                Travel
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
                                 <label htmlFor="semester">Semester:</label>
                             </td>
                             <td>
