@@ -1,7 +1,7 @@
 // db.getSiblingDB("admin").dropUser("admin")
 
 // Create admin user
-db.getSiblingDB("admin").createUser({user:"admin", pwd:"hyphenated-last-name", roles:["root"]})
+//db.getSiblingDB("admin").createUser({user:"admin", pwd:"hyphenated-last-name", roles:["root"]})
 
 db = db.getSiblingDB("grubb")
 

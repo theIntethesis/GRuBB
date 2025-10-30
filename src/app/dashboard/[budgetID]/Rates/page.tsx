@@ -11,25 +11,27 @@ export default function Page() {
             <label>[Student / Faculty Selector]</label>
             <Form action={onSubmit}>
                 <table>
-                    <tr>
-                        <label>[STUDENT NAME CENTERED]</label>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label htmlFor="rate">Rate per Hour:</label>
-                        </td>
-                        <td>
-                            <input name="rate" type="number" min="0"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label htmlFor="time">Hours per Week:</label>
-                        </td>
-                        <td>
-                            <input name="time" type="number" min="0"/>
-                        </td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            [STUDENT NAME CENTERED]
+                        </tr>
+                        <tr>
+                            <td>
+                                <label htmlFor="rate">Rate per Hour:</label>
+                            </td>
+                            <td>
+                                <input name="rate" type="number" min="0"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label htmlFor="time">Hours per Week:</label>
+                            </td>
+                            <td>
+                                <input name="time" type="number" min="0"/>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
                 <button className='px-2 py-1 rounded'>Submit</button>
             </Form>
@@ -38,7 +40,7 @@ export default function Page() {
                 <table>
                     <tbody>
                         <tr>
-                            <label>Travel [CENTER THIS]</label>
+                            Travel [CENTER THIS]
                         </tr>
                         <tr>
                             <td>
@@ -99,7 +101,7 @@ export default function Page() {
                 <table>
                     <tbody>
                         <tr>
-                            <label>Overhead Charges [CENTER THIS]</label>
+                            Overhead Charges [CENTER THIS]
                         </tr>
                         <tr>
                             <td>
