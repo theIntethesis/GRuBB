@@ -1,4 +1,4 @@
-import { Individual, Faculty } from "@/lib/models"
+import { Individual, Faculty, SalaryAccount } from "@/lib/models"
 
 export default async function page({params}) {
     const { facultyID } = await params
@@ -21,8 +21,29 @@ export default async function page({params}) {
 
     console.log(faculty)
 
+    const accounts = await SalaryAccount
+        .find({
+            id: faculty[0]._id
+        })
+        .lean()
+
+    console.log(accounts)
+
     return <div>
-        name: {individual.name}
-        <br/>
+        <div>
+            name: {individual.name}
+            <br/>
+            role: {faculty[0].role}
+        </div>
+        {accounts.map((x, idx) => {
+
+            return <div key={idx}>
+                {x.semester}
+                <br/>
+                rate: {x.rate}/{x.rateTimeUnit}
+                <br/>
+                {x.percentFTE * 40} hours/week
+            </div>
+        })}
     </div>
 }

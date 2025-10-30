@@ -11,22 +11,22 @@ export default async function Page({ params, children }) {
         .select("salaryAccounts")
         .lean()
 
-    console.log(salaryAccIds)
-    console.log(salaryAccIds[0].salaryAccounts)
+    // console.log(salaryAccIds)
+    // console.log(salaryAccIds[0].salaryAccounts)
 
     const facultyIDs = await SalaryAccount
         .find({})
         .where('_id').in(salaryAccIds[0].salaryAccounts)
         .lean()
 
-    console.log(facultyIDs.map(x => x.id))
+    // console.log(facultyIDs.map(x => x.id))
 
     const faculty = await Faculty
         .find({})
         .where('_id').in(facultyIDs.map(x => x.id))
         .lean()
 
-    console.log(faculty)
+    // console.log(faculty)
 
 
     const individuals = await Individual
@@ -34,7 +34,7 @@ export default async function Page({ params, children }) {
         .where('_id').in(faculty.map(x => x.indID))
         .lean()
 
-    console.log(individuals)
+    // console.log(individuals)
 
     return <main className="two-col">
         <div className="items">

@@ -1,4 +1,4 @@
-import { Individual, Student } from "@/lib/models"
+import { Individual, Student, StudentAccount } from "@/lib/models"
 
 export default async function page({params}) {
     const { studentID } = await params
@@ -19,11 +19,31 @@ export default async function page({params}) {
         })
         .lean()
 
+    const accounts = await StudentAccount
+        .find({
+            id: individual.id
+        })
+        .lean()
+
     console.log(student)
+    console.log(accounts)
 
     return <div>
-        name: {individual.name}
-        <br/>
-        outOfState: {student[0].outOfState ? "true" : "false"}
+        <div>
+            name: {individual.name}
+            <br/>
+            outOfState: {student[0].outOfState ? "true" : "false"}
+
+        </div>
+
+        {accounts.map((x, idx) => {
+            return <div key={idx}>
+                semester: {x.semester}
+                <br/>
+                tuition: {x.tuition}
+                <br/>
+                aid recieved: {x.aid_received}
+            </div>
+        })}
     </div>
 }
