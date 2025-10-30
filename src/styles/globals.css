@@ -58,7 +58,6 @@ main.two {
       border-radius: 5px;
       color: black;
       transition: background-color 0.3s;
-      width: 100%;
     }
     button:hover {
       background-color: lightgray;
@@ -69,6 +68,13 @@ main.two {
       color: black;
       border-radius: 10px;
       margin: .25em;
+    }
+    select {
+      background-color: white;
+      color: black;
+      width: min-content;
+      border-radius: 10px;
+      padding: 0.25em;
     }
     table {
       margin:5px;

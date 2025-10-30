@@ -13,7 +13,7 @@ export default function Page() {
         console.log("Trying to add PI")
     }
     const removePI = () => {
-        console.log("Trying to add PI")
+        console.log("Trying to remove PI")
     }
     return <main className='two'>
         <div className='two-column'>
@@ -21,10 +21,10 @@ export default function Page() {
                 <table>
                     <tbody>
                         <tr>
-                            <td className="left-align">
+                            <td>
                                 <label htmlFor="name">Budget Name:</label>
                             </td>
-                            <td className="right-align">
+                            <td>
                                 <input name="name" type="text" className="px-2 py-1 rounded"></input>
                             </td>
                         </tr>
@@ -33,11 +33,17 @@ export default function Page() {
                             <td><input name="PI" type="text" className="px-2 py-1 rounded"></input></td>                        
                         </tr>
                         <tr id="coPIs">
-                            <td>
-                                <button className="px-2 py-1 rounded" onClick={addPI}>Add Co-PI</button>
+                            <td style={{
+                                borderRight: "5px",
+                                borderLeft: "5px"
+                            }}>
+                                <button className="px-2 py-1 rounded" formAction={addPI}>Add Co-PI</button>
                             </td>
-                            <td>
-                                <button className="px-2 py-1 rounded" onClick={removePI}>Remove Co-PI</button>
+                            <td style={{
+                                borderRight: "5px",
+                                borderLeft: "5px"
+                            }}>
+                                <button className="px-2 py-1 rounded" formAction={removePI}>Remove Co-PI</button>
                             </td>
                         </tr>
                         <tr>
