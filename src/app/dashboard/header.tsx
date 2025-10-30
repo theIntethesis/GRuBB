@@ -23,12 +23,16 @@ export default function Header({budgets, current_budget}: {budgets: [any], curre
     let selected = current_budget != null ? current_budget.name : "Add new Institution"
 
     return <header>
-        <select className="institution-dropdown" onChange={handleOnChange} value={selected}>
+        <div style={{display: "flex", flexDirection: "row", columnGap: "10px"}}>
+            <select className="institution-dropdown" onChange={handleOnChange} value={selected}>
                 {budgets.map((x, idx) => {
                     return <option key={idx}>{x.name}</option>
                 })}
                 <option>Add new Institution</option>
-        </select>
+            </select>
+            <button style={{backgroundColor: "white", color: "black", borderRadius: "10px", padding: "0em 0.5em"}}>Export Full Budget</button>
+        </div>
+
         {current_budget != null ?
             <nav className="tabNav">
                 <Link href={"/dashboard/"  + current_budget._id + "/Student"} className={"tab " + (path.includes("Student") ? "active" : "")}>Student</Link>
