@@ -14,7 +14,7 @@ export default function AccountForm({budget}) {
         console.log("Trying to add PI")
     }
     const removePI = () => {
-        console.log("Trying to add PI")
+        console.log("Trying to remove PI")
     }
 
     console.log(budget)
@@ -45,14 +45,14 @@ export default function AccountForm({budget}) {
                         <input name="PI" type="text" defaultValue={budget.pi}></input>
 
                         <input name="add-co-pi" type="text"></input>
-                        <button>Add</button>
+                        <button formAction={addPI}>Add</button>
 
                         {budget != null ?
                             budget.coPI.map((x, idx) => {
 
                                 return <div className="co-pi-row" key={idx}>
                                     <input name="modify-co-pi" type="text" defaultValue={x}/>
-                                    <button>Remove</button>
+                                    <button formAction={removePI}>Remove</button>
                                 </div>
                             })
                         : null}
