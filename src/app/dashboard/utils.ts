@@ -1,3 +1,4 @@
+"use server"
 import dbConnect from "@/lib/mongodb";
 import { Budget } from "@/lib/models";
 

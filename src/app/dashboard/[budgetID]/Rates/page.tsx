@@ -12,8 +12,6 @@ export default function Page() {
         </div>
         <div>
             <Form action={onSubmit}>
-                <label htmlFor="username">Username:</label>
-                <input name="username" type="number"/>
             </Form>
         </div>
 
