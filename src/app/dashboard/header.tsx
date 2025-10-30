@@ -6,7 +6,6 @@ import { redirect, usePathname } from "next/navigation";
 export default function Header({budgets, current_budget}: {budgets: [any], current_budget: any}) {
     const path = usePathname()
 
-
     const handleOnChange = (e) => {
         const ret = budgets.filter((x) => x.name == e.target.value)
         if (ret.length == 1) {
@@ -32,10 +31,10 @@ export default function Header({budgets, current_budget}: {budgets: [any], curre
         </select>
         {current_budget != null ?
             <nav className="tabNav">
-                <Link href="Student" className={"tab " + (path.endsWith("Student") ? "active" : "")}>Student</Link>
-                <Link href="Faculty" className={"tab " + (path.endsWith("Faculty") ? "active" : "")}>Faculty</Link>
-                <Link href="Rates" className={"tab " + (path.endsWith("Rates") ? "active" : "")}>Rates</Link>
-                <Link href="Account" className={"tab " + (path.endsWith("Account") ? "active" : "")}>Account</Link>
+                <Link href={"/dashboard/"  + current_budget._id + "/Student"} className={"tab " + (path.includes("Student") ? "active" : "")}>Student</Link>
+                <Link href={"/dashboard/"  + current_budget._id + "/Faculty"} className={"tab " + (path.includes("Faculty") ? "active" : "")}>Faculty</Link>
+                <Link href={"/dashboard/"  + current_budget._id + "/Rates"} className={"tab " + (path.includes("Rates") ? "active" : "")}>Rates</Link>
+                <Link href={"/dashboard/"  + current_budget._id + "/Account"} className={"tab " + (path.includes("Account") ? "active" : "")}>Account</Link>
             </nav>
         : <></>}
 

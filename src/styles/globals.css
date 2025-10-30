@@ -99,6 +99,15 @@ main.two-col {
     flex-direction: column;
     row-gap: 0.25em;
     padding: 0.5em;
+
+    a {
+      background-color: white;
+
+      border-radius: 10px;
+      color: black;
+      padding: 0px 10px;
+      text-align: center;
+    }
   }
 }
 
@@ -153,4 +162,8 @@ main.rates {
   justify-content: left;
   row-gap: 0.5em;
   column-gap: 0.5em;
+}
+.co-pi-row {
+  grid-column: 1 / span 2;
+  display: contents; /* this puts its children into the parent grid*/
 }

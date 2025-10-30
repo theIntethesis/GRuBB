@@ -50,14 +50,14 @@ export default function AccountForm({budget}) {
                         {budget != null ?
                             budget.coPI.map((x, idx) => {
 
-                                return <>
+                                return <div className="co-pi-row" key={idx}>
                                     <input name="modify-co-pi" type="text" defaultValue={x}/>
                                     <button>Remove</button>
-                                </>
+                                </div>
                             })
                         : null}
                         <span/><span/>
-                        <button className="px-2 py-1 rounded">Submit</button>
+                        <button>Save</button>
                 </section>
 
 
