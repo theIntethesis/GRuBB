@@ -11,10 +11,23 @@ export default function AccountForm({budget}) {
         console.log(formData.get('type'))
     };
     const addPI = () => {
-        console.log("Trying to add PI")
+        const name = (document.getElementById("add-co-pi") as HTMLInputElement).value
+        let i = 0;
+        let validIndex;
+        do {
+            validIndex = document.getElementById(i.toString())
+            console.log(`Trying to add PI ${name} at index ${i}`)
+            i++;
+        } while (validIndex);
+        let addhere = document.getElementById("addhere")
+        addhere.innerHTML = `<div className="co-pi-row" key={${i}} id={${i}}>
+        ${name}
+        <button formAction={() => removePI(idx)}>Remove</button></div>
+        <div id="addhere"/>`
     }
-    const removePI = () => {
-        console.log("Trying to remove PI")
+    const removePI = (index: string) => {
+        console.log(`Trying to remove PI ${index}`)
+        document.getElementById(index)?.remove();    
     }
 
     console.log(budget)
@@ -44,19 +57,19 @@ export default function AccountForm({budget}) {
                         <label htmlFor="PI">Principal Investigator:</label>
                         <input name="PI" type="text" defaultValue={budget.pi}></input>
 
-                        <input name="add-co-pi" type="text"></input>
+                        <input id="add-co-pi" type="text"></input>
                         <button formAction={addPI}>Add</button>
-
                         {budget != null ?
                             budget.coPI.map((x, idx) => {
 
-                                return <div className="co-pi-row" key={idx}>
-                                    <input name="modify-co-pi" type="text" defaultValue={x}/>
-                                    <button formAction={removePI}>Remove</button>
+                                return <div className="co-pi-row" key={idx} id={idx}>
+                                    {x}
+                                    <button formAction={() => removePI(idx)}>Remove</button>
                                 </div>
                             })
                         : null}
-
+                        <div id="addhere"/><div/>
+                            
                         <button>Save</button>
 
                 </section>

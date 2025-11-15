@@ -11,9 +11,11 @@ export default function Page() {
             <Form action={onSubmit}>
                 <table>
                     <tbody>
-
                         <tr>
-                            <td>
+                            <td style={{
+                                fontSize: "15pt",
+                                textAlign: "center"
+                            }}>
                                 Travel
                             </td>
 
@@ -23,7 +25,9 @@ export default function Page() {
                                 <label htmlFor="semester">Semester:</label>
                             </td>
                             <td>
-                                <select name="semester">
+                                <select name="semester" className="rightside" style={{
+                                    width:"100%"
+                                }}>
                                     <option>Fall</option>
                                     <option>Spring</option>
                                 </select>
@@ -34,7 +38,9 @@ export default function Page() {
                                 <label htmlFor="year">Year:</label>
                             </td>
                             <td>
-                                <select name="year">
+                                <select name="year" className="rightside" style={{
+                                    width:"100%"
+                                }}>
                                     <option>2025</option>
                                     <option>2026</option>
                                     <option>2027</option>
@@ -49,7 +55,7 @@ export default function Page() {
                                 <label htmlFor="perdiem">Per Diem:</label>
                             </td>
                             <td>
-                                <input name="perdiem" type="number"/>
+                                $<input name="perdiem" type="number" min="0" className="rightside"/>
                             </td>
                         </tr>
                         <tr>
@@ -57,7 +63,7 @@ export default function Page() {
                                 <label htmlFor="airfare">Airfare:</label>
                             </td>
                             <td>
-                                <input name="airfare" type="number"/>
+                                $<input name="airfare" type="number" min="0" className="rightside"/>
                             </td>
                         </tr>
                         <tr>
@@ -65,19 +71,26 @@ export default function Page() {
                                 <label htmlFor="lodging">Lodging:</label>
                             </td>
                             <td>
-                                <input name="lodging" type="number" min="0"/>
+                                $<input name="lodging" type="number" min="0" className="rightside"/>
                             </td>
+                        </tr>
+                        <tr>
+                            <td><button className='px-2 py-1 rounded' style={{
+                                width: '100%'
+                            }}>Submit</button></td>
                         </tr>
                     </tbody>
                 </table>
-                <button className='px-2 py-1 rounded'>Submit</button>
             </Form>
             <hr/>
             <Form action={onSubmit}>
                 <table>
                     <tbody>
                         <tr>
-                            <td>
+                            <td style={{
+                                fontSize: "15pt",
+                                textAlign: "center"
+                            }}>
                                 Overhead Charges
                             </td>
 
@@ -87,7 +100,7 @@ export default function Page() {
                                 <label htmlFor="description">Description:</label>
                             </td>
                             <td>
-                                <input name="description" type="text"/>
+                                <input name="description" type="text" className="rightside"/>
                             </td>
                         </tr>
                         <tr>
@@ -95,12 +108,18 @@ export default function Page() {
                                 <label htmlFor="charge">Charge Amount:</label>
                             </td>
                             <td>
-                                <input name="charge" type="number" min="0"/>
+                                $<input name="charge" type="number" min="0" className="rightside"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button className='px-2 py-1 rounded' style={{
+                                    width: '100%'
+                                }}>Submit</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <button className='px-2 py-1 rounded'>Submit</button>
             </Form>
             <hr/>
         </div>
