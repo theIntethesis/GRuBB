@@ -2,6 +2,7 @@
 "use client"
 
 import Form from "next/form"
+import { createRoot } from "react-dom/client";
 
 export default function AccountForm({budget}) {
     // these will be server side
@@ -13,21 +14,22 @@ export default function AccountForm({budget}) {
     const addPI = () => {
         const name = (document.getElementById("add-co-pi") as HTMLInputElement).value
         let i = 0;
-        let validIndex;
-        do {
-            validIndex = document.getElementById(i.toString())
-            console.log(`Trying to add PI ${name} at index ${i}`)
-            i++;
-        } while (validIndex);
-        let addhere = document.getElementById("addhere")
-        addhere.innerHTML = `<div className="co-pi-row" key={${i}} id={${i}}>
-        ${name}
-        <button formAction={() => removePI(idx)}>Remove</button></div>
-        <div id="addhere"/>`
+        while (document.getElementById(i.toString()) != null) i++;
+        console.log(`Adding PI ${name} at index ${i}`);
+        
+        const Element = (
+            <div className="co-pi-row" id={i.toString()}>
+                {name}
+                <button formAction={() => removePI(i.toString())}>Remove</button>
+            </div>
+        );
+        const ElementString = <div className='co-pi-row' id={i.toString()}>{name}<button formAction={() => removePI(i)}>Remove</button></div>;
+
+        document.getElementById("addhere")!.insertAdjacentHTML('beforebegin', ElementString);
     }
-    const removePI = (index: string) => {
+    const removePI = (index: string | number) => {
         console.log(`Trying to remove PI ${index}`)
-        document.getElementById(index)?.remove();    
+        document.getElementById(index.toString())?.remove();
     }
 
     console.log(budget)
@@ -68,7 +70,7 @@ export default function AccountForm({budget}) {
                                 </div>
                             })
                         : null}
-                        <div id="addhere"/><div/>
+                        <div id="addhere"></div><div/>
                             
                         <button>Save</button>
 
