@@ -5,8 +5,7 @@ export default async function Page({ params }: {params: {budgetID: string, semes
     const { budgetID, semesterID } = await params
 
     const budget = await getBudget(budgetID)
-    const semester = await getInstitutionalAccount(budgetID, semesterID)
+    const semesterAcc = await getInstitutionalAccount(budgetID, semesterID)
 
-
-    return <SemesterForm budget={budget} semester={semester}/>
+    return <SemesterForm budget={budget} semester={semesterAcc}/>
 }

@@ -96,6 +96,49 @@ export async function createInstitutionalAccount(
     redirect(`/dashboard/${budgetID}/Rates/${newacc._id.toJSON()}`)
 }
 
+export async function modifyInstitutionalAccount(
+    budgetID: string,
+    semesterID: string,
+    inStateTuitionRate: number,
+    outOfStateTuitionRate: number,
+    tuitionIncrease: number,
+    facultyFBR: number,
+    studentFBR: number,
+    postDocFBR: number,
+    perDiem: number,
+    airfare: number,
+    lodging: number,
+    overheadCharge: number
+) {
+    await dbConnect()
+    await InstitutionalAccount.findByIdAndUpdate(semesterID, {
+        inStateTuitionRate,
+        outOfStateTuitionRate,
+        tuitionIncrease,
+        facultyFBR,
+        studentFBR,
+        postDocFBR,
+    })
+
+    const acc = await InstitutionalAccount.findById(semesterID).select("travelProfile overheadCharge").lean()
+
+    console.log(acc)
+
+
+    await TravelProfile.findByIdAndUpdate(acc.travelProfile, {
+        perDiem,
+        airfare,
+        lodging
+    })
+
+    await OverheadCharge.findByIdAndUpdate(acc.overheadCharge, {
+        charge: overheadCharge
+    })
+
+
+    revalidatePath("/dashboard", "layout")
+}
+
 export async function deleteInstitutionalAccount(
     budgetID: string,
     semesterID: string
@@ -116,18 +159,20 @@ export async function deleteInstitutionalAccount(
     redirect(`/dashboard/${budgetID}/Rates`)
 }
 
+
+
 export async function getAllAccounts(budgetID: string) {
     const accs = await InstitutionalAccount
         .find({budgetID: budgetID})
         .lean()
-    console.log(accs)
+
     accs.forEach(x => {
         x._id = x._id.toJSON()
         x.budgetID = x.budgetID.toJSON()
         x.travelProfile = ""
         x.overheadCharge = x.overheadCharge?.toJSON() || null
     })
-    console.log(accs)
+
     return accs
 
 }
@@ -138,6 +183,9 @@ export async function getInstitutionalAccount(
 ) {
     const acc = await InstitutionalAccount.findById(semesterID).lean()
 
+    const travelProfiles = await TravelProfile.findById(acc.travelProfile).lean()
+    const overheadCharges = await OverheadCharge.findById(acc.overheadCharge).lean()
+
     let ret = {
         semester: acc.semester,
         _id: acc._id.toJSON(),
@@ -146,7 +194,11 @@ export async function getInstitutionalAccount(
         tuitionIncrease: acc.tuitionIncrease,
         facultyFBR: acc.facultyFBR,
         studentFBR: acc.studentFBR,
-        postDocFBR: acc.postDocFBR
+        postDocFBR: acc.postDocFBR,
+        perDiem: travelProfiles.perDiem,
+        airfare: travelProfiles.airfare,
+        lodging: travelProfiles.lodging,
+        overheadCharge: overheadCharges.charge
     }
 
     return ret

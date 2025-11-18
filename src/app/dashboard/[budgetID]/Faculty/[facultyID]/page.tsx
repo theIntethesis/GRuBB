@@ -1,12 +1,16 @@
 import { Individual, Faculty, SalaryAccount } from "@/lib/models"
 import {FacultyForm} from "../form"
 
-export default async function page({params}: {params: {budgetID: string, facultyID: string}}) {
+export default async function page({params}: {params: {budgetID: string}}) {
     const { facultyID } = await params
+
+
 
     const individual = await Individual
         .findById(facultyID)
         .lean()
+
+
 
     const faculty = await Faculty
         .find({

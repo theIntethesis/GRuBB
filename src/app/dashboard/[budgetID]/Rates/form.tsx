@@ -1,9 +1,7 @@
 "use client"
-import { createInstitutionalAccount, deleteInstitutionalAccount, getInstitutionalAccount } from '@/lib/server-api'
+import { createInstitutionalAccount, deleteInstitutionalAccount, getInstitutionalAccount, modifyInstitutionalAccount } from '@/lib/server-api'
 
 import Form from 'next/form'
-import { redirect, RedirectType } from 'next/navigation'
-import { useState } from 'react'
 
 export default function SemesterSetupForm({ semester, budget }: { semester?: any, budget: any }) {
     const initialValues = semester != null ? semester : {
@@ -13,8 +11,13 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
         tuitionIncrease: 0,
         facultyFBR: 0,
         studentFBR: 0,
-        postDocFBR: 0
+        postDocFBR: 0,
+        perDiem: 0,
+        airfare: 0,
+        lodging: 0,
+        overheadCharge: 0
     }
+
 
     const onDelete = async () => {
         if (semester == undefined) {
@@ -23,7 +26,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
         await deleteInstitutionalAccount(budget._id, semester._id)
     }
 
-    const onSubmit = async (formData: FormData) => {
+    const onCreate = async (formData: FormData) => {
         await createInstitutionalAccount(
             budget._id,
             formData.get("semester") == "Fall" ? "Fall" : "Spring",
@@ -40,9 +43,25 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
             parseFloat(formData.get("overheadCharge")?.toString() || "0")
         )
     }
+    const onModify = async (formData: FormData) => {
+        modifyInstitutionalAccount(
+            budget._id,
+            semester._id,
+            parseFloat(formData.get("inStateTuitionRate")?.toString() || "0"),
+            parseFloat(formData.get("outOfStateTuitionRate")?.toString() || "0"),
+            parseFloat(formData.get("tuitionIncrease")?.toString() || "0"),
+            parseFloat(formData.get("facultyFBR")?.toString() || "0"),
+            parseFloat(formData.get("studentFBR")?.toString() || "0"),
+            parseFloat(formData.get("postDocFBR")?.toString() || "0"),
+            parseFloat(formData.get("perdiem")?.toString() || "0"),
+            parseFloat(formData.get("airfare")?.toString() || "0"),
+            parseFloat(formData.get("lodging")?.toString() || "0"),
+            parseFloat(formData.get("overheadCharge")?.toString() || "0")
+        )
+    }
 
     return <div>
-            <Form action={onSubmit}>
+            <Form action={semester == null ? onCreate : onModify}>
                 <table style={{
                     padding: "10px",
                     margin: "auto"
@@ -142,7 +161,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                                 <label htmlFor="perdiem">Per Diem:</label>
                             </td>
                             <td className='rightside'>
-                                $<input name="perdiem" type="number" min="0" className="rightside"/>
+                                $<input name="perdiem" type="number" min="0" className="rightside" defaultValue={initialValues.perDiem}/>
                             </td>
                         </tr>
                         <tr>
@@ -150,7 +169,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                                 <label htmlFor="airfare">Airfare:</label>
                             </td>
                             <td className='rightside'>
-                                $<input name="airfare" type="number" min="0" className="rightside"/>
+                                $<input name="airfare" type="number" min="0" className="rightside" defaultValue={initialValues.airfare}/>
                             </td>
                         </tr>
                         <tr>
@@ -158,7 +177,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                                 <label htmlFor="lodging">Lodging:</label>
                             </td>
                             <td className='rightside'>
-                                $<input name="lodging" type="number" min="0" className="rightside"/>
+                                $<input name="lodging" type="number" min="0" className="rightside" defaultValue={initialValues.lodging}/>
                             </td>
                         </tr>
                         <tr>
@@ -175,14 +194,14 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                                 <label htmlFor="overheadCharge">Charge Amount:</label>
                             </td>
                             <td className='rightside'>
-                                $<input name="overheadCharge" type="number" min="0" className="rightside"/>
+                                $<input name="overheadCharge" type="number" min="0" className="rightside" defaultValue={initialValues.overheadCharge}/>
                             </td>
                         </tr>
                         <tr>
                             <td colSpan={2} style={{ textAlign: "center" }}>
                                 <button className='px-2 py-1 rounded' style={{
                                     width: '50%'
-                                }}>Submit</button>
+                                }}>{semester == null ? "Submit" : "Update"}</button>
                                 {semester != null ? <button formAction={onDelete} className='px-2 py-1 rounded' style={{
                                     width: '50%'
                                 }}>
