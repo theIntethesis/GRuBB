@@ -2,16 +2,12 @@ import { Individual, Student, StudentAccount } from "@/lib/models"
 
 export default async function page({params}) {
     const { studentID } = await params
-    console.log(studentID)
-
 
 
     const individual = await Individual
         .findById(studentID)
         .lean()
 
-
-    console.log(individual)
 
     const student = await Student
         .find({
@@ -24,9 +20,6 @@ export default async function page({params}) {
             id: individual.id
         })
         .lean()
-
-    console.log(student)
-    console.log(accounts)
 
     return <div>
         <div>

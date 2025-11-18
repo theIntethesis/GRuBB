@@ -11,22 +11,16 @@ export default async function Page({ params, children }) {
         .select("salaryAccounts")
         .lean()
 
-    // console.log(salaryAccIds)
-    // console.log(salaryAccIds[0].salaryAccounts)
     if (salaryAccIds.length > 0) {
         const facultyIDs = await SalaryAccount
             .find({})
             .where('_id').in(salaryAccIds[0].salaryAccounts)
             .lean()
 
-        // console.log(facultyIDs.map(x => x.id))
-
         const faculty = await Faculty
             .find({})
             .where('_id').in(facultyIDs.map(x => x.id))
             .lean()
-
-        // console.log(faculty)
 
 
         const individuals = await Individual
@@ -46,8 +40,6 @@ export default async function Page({ params, children }) {
             </div>
         </main>
     }
-
-    // console.log(individuals)
 
     return <main className="two-col">
         <div className="items">

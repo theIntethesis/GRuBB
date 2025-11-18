@@ -3,36 +3,33 @@
 
 import Form from "next/form"
 import { createRoot } from "react-dom/client";
+import { useState } from "react";
+import { modifyBudget } from "@/lib/api";
 
-export default function AccountForm({budget}) {
+export default function AccountForm({ budget }) {
+
+    const [coPIs, setCoPIs] = useState<string[]>(budget.coPI)
+
     // these will be server side
-    const onSubmit = (formData: FormData) => {
-        console.log(formData.get('name'))
-        console.log(formData.get('PI'))
-        console.log(formData.get('type'))
+    const onSubmit = async (formData: FormData) => {
+
+        await modifyBudget(budget._id, {
+            name: formData.get("name") != "" ? formData.get("name") : budget.name,
+            pi: formData.get("PI") != "" ? formData.get("PI") : budget.pi,
+            coPI: coPIs
+        })
     };
     const addPI = () => {
+        // reload budget
         const name = (document.getElementById("add-co-pi") as HTMLInputElement).value
-        let i = 0;
-        while (document.getElementById(i.toString()) != null) i++;
-        console.log(`Adding PI ${name} at index ${i}`);
-        
-        const Element = (
-            <div className="co-pi-row" id={i.toString()}>
-                {name}
-                <button formAction={() => removePI(i.toString())}>Remove</button>
-            </div>
-        );
-        const ElementString = <div className='co-pi-row' id={i.toString()}>{name}<button formAction={() => removePI(i)}>Remove</button></div>;
 
-        document.getElementById("addhere")!.insertAdjacentHTML('beforebegin', ElementString);
+        setCoPIs([...coPIs, name])
     }
-    const removePI = (index: string | number) => {
-        console.log(`Trying to remove PI ${index}`)
-        document.getElementById(index)?.remove();
-    }
+    const removePI = (coPIName) => {
+        // reload budget
 
-    console.log(budget)
+        setCoPIs(coPIs.filter(x => x != coPIName))
+    }
 
 
     return <main>
@@ -53,11 +50,10 @@ export default function AccountForm({budget}) {
                         <input id="add-co-pi" type="text"></input>
                         <button formAction={addPI}>Add</button>
                         {budget != null ?
-                            budget.coPI.map((x, idx) => {
-
+                            coPIs.map((x, idx) => {
                                 return <div className="co-pi-row" key={idx} id={idx}>
                                     {x}
-                                    <button formAction={() => removePI(idx)}>Remove</button>
+                                    <button formAction={() => removePI(x)}>Remove</button>
                                 </div>
                             })
                         : null}

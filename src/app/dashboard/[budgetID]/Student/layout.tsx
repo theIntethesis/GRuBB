@@ -12,8 +12,6 @@ export default async function Page({ params, children }) {
             .select("studentAccounts")
             .lean()
 
-        // console.log(studentAccIds)
-        // console.log(studentAccIds[0].studentAccounts)
 
         if (studentAccIds.length > 0) {
             const studentIDs = await StudentAccount
@@ -21,14 +19,12 @@ export default async function Page({ params, children }) {
                 .where('_id').in(studentAccIds[0].studentAccounts)
                 .lean()
 
-            // console.log(studentIDs.map(x => x.student_id))
 
             const students = await Student
                 .find({})
                 .where('_id').in(studentIDs.map(x => x.student_id))
                 .lean()
 
-            console.log(students)
 
 
             const individuals = await Individual
@@ -49,7 +45,6 @@ export default async function Page({ params, children }) {
             </main>
         }
 
-        // console.log(individuals)
 
     return <main className="two-col">
         <div className="items">

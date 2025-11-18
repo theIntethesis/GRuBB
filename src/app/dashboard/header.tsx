@@ -9,7 +9,6 @@ export default function Header({budgets, current_budget}: {budgets: [any], curre
     const handleOnChange = (e) => {
         const ret = budgets.filter((x) => x.name == e.target.value)
         if (ret.length == 1) {
-            console.log(ret[0])
             redirect("/dashboard/" + ret[0]._id + "/Student")
         }
         else {

@@ -2,7 +2,6 @@ import { Individual, Faculty, SalaryAccount } from "@/lib/models"
 
 export default async function page({params}) {
     const { facultyID } = await params
-    console.log(facultyID)
 
 
 
@@ -11,7 +10,6 @@ export default async function page({params}) {
         .lean()
 
 
-    console.log(individual)
 
     const faculty = await Faculty
         .find({
@@ -19,7 +17,6 @@ export default async function page({params}) {
         })
         .lean()
 
-    console.log(faculty)
 
     const accounts = await SalaryAccount
         .find({
@@ -27,7 +24,6 @@ export default async function page({params}) {
         })
         .lean()
 
-    console.log(accounts)
 
     return <div>
         <div>
