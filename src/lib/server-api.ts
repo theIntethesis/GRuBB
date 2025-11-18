@@ -1,7 +1,32 @@
 "use server"
+import dbConnect from "@/lib/mongodb";
+import { Budget, InstitutionalAccount, OverheadCharge, SalaryAccount, TravelProfile} from "@/lib/models";
 
-import { Budget, InstitutionalAccount, OverheadCharge, SalaryAccount, TravelProfile } from "./models"
-import dbConnect from "./mongodb"
+export async function getBudget(budgetID: string) {
+    await dbConnect()
+    try {
+        const budget = await Budget.findById(budgetID).lean()
+        if (budget != null) {
+            budget._id = budget._id.toJSON()
+        }
+        return budget
+    }
+    catch (e) {
+        console.log(e)
+        return null
+    }
+}
+
+export async function getAllBudgets() {
+    await dbConnect()
+    const allBudgets = await Budget.find({}).lean()
+    allBudgets.forEach(x => {
+        x._id = x._id.toJSON()
+    })
+
+    return allBudgets
+}
+
 
 export async function createBudget(
     name: string,
@@ -69,8 +94,8 @@ export async function createInstitutionalAccount(
 }
 
 export async function deleteInstitutionalAccount(
-    budgetID,
-    semesterID
+    budgetID: string,
+    semesterID: string
 ) {
     const acc = await InstitutionalAccount.findById(semesterID).lean()
 
@@ -83,7 +108,26 @@ export async function deleteInstitutionalAccount(
     await OverheadCharge.findByIdAndDelete(acc.overheadCharge)
 
     await InstitutionalAccount.findByIdAndDelete(semesterID)
+}
 
+export async function getInstitutionalAccount(
+    budgetID: string,
+    semesterID: string
+) {
+    const acc = await InstitutionalAccount.findById(semesterID).lean()
+
+    let ret = {
+        semester: acc.semester,
+        _id: acc._id.toJSON(),
+        inStateTuitionRate: acc.inStateTuitionRate,
+        outOfStateTuitionRate: acc.outOfStateTuitionRate,
+        tuitionIncrease: acc.tuitionIncrease,
+        facultyFBR: acc.facultyFBR,
+        studentFBR: acc.studentFBR,
+        postDocFBR: acc.postDocFBR
+    }
+
+    return ret
 }
 
 export async function modifyBudget(

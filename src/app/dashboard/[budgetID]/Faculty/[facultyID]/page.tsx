@@ -1,7 +1,7 @@
 import { Individual, Faculty, SalaryAccount } from "@/lib/models"
 import {FacultyForm} from "../form"
 
-export default async function page({params}) {
+export default async function page({params}: {params: {budgetID: string, facultyID: string}}) {
     const { facultyID } = await params
 
 

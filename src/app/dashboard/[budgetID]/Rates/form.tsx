@@ -1,16 +1,34 @@
 "use client"
-import { createInstitutionalAccount, deleteInstitutionalAccount } from '@/lib/api'
+import { createInstitutionalAccount, deleteInstitutionalAccount, getInstitutionalAccount } from '@/lib/server-api'
 import { refresh } from 'next/cache'
 import Form from 'next/form'
 import { redirect, RedirectType } from 'next/navigation'
+import { useState } from 'react'
 
-
-export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID?: string, budgetID: string }) {
+export default function SemesterSetupForm({ semester, budget }: { semester?: any, budget: any }) {
     // if semesterID not null set default values
 
+
+    const initialValues = semester != null ? semester : {
+        semester: "Fall 2025",
+        inStateTuitionRate: 0,
+        outOfStateTuitionRate: 0,
+        tuitionIncrease: 0,
+        facultyFBR: 0,
+        studentFBR: 0,
+        postDocFBR: 0
+    }
+
+    console.log(initialValues)
+
+
+
     const onDelete = async () => {
-        await deleteInstitutionalAccount(budgetID, semesterID)
-        redirect(`/dashboard/${budgetID}/Rates`)
+        if (semester == undefined) {
+            return
+        }
+        await deleteInstitutionalAccount(budget._id, semester._id)
+        redirect(`/dashboard/${budget._id}/Rates`)
     }
 
     const onSubmit = async (formData: FormData) => {
@@ -45,10 +63,7 @@ export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID
             parseFloat(formData.get("overheadCharge")?.toString() || "0")
         )
 
-        redirect(`/dashboard/${budgetID}/Rates/${acc_id}`)
-    }
-    const onSemesterChange = (e: string) => {
-        console.log("changing semester to " + e)
+        // redirect(`/dashboard/${budgetID}/Rates/${acc_id}`)
     }
 
     return <div>
@@ -60,15 +75,15 @@ export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID
                     <tbody>
                         <tr>
                             {
-                                semesterID ? <>
+                                semester ? <>
                                     <td colSpan={2} style = {{
                                         textAlign: "center",
                                         fontSize: "15pt",
                                         fontWeight: "bold"
                                     }}>
-                                        Semester {/* Get Semester Here*/}
+                                        {initialValues.semester}
                                     </td>
-                                </> : 
+                                </> :
                                 <>
                                     <td style={{ textAlign: "center" }}>
                                         <label htmlFor="semester" style={{
@@ -77,11 +92,11 @@ export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID
                                         }}>Semester:</label>
                                     </td>
                                     <td style={{ textAlign: "left" }}>
-                                        <select name="semester">
+                                        <select name="semester" defaultValue={initialValues.semester.split(' ')[0]}>
                                             <option>Fall</option>
                                             <option>Spring</option>
                                         </select>
-                                        <input name="year" type="number" min="2024" max="2040"/>
+                                        <input name="year" type="number" min="2024" max="2040" defaultValue={initialValues.semester.split(' ')[1]}/>
                                     </td>
                                 </>
                             }
@@ -94,7 +109,7 @@ export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID
                                 <label htmlFor="inStateTuitionRate">In-State Tuition Rate:</label>
                             </td>
                             <td className="rightside">
-                                $<input name="inStateTuitionRate" type="number" min="0" className="rightside"/>
+                                $<input name="inStateTuitionRate" type="number" min="0" className="rightside" defaultValue={initialValues.inStateTuitionRate}/>
                             </td>
                         </tr>
                         <tr>
@@ -102,7 +117,7 @@ export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID
                                 <label htmlFor="outOfStateTuitionRate">Out-of-State Tuition Rate:</label>
                             </td>
                             <td className="rightside">
-                                $<input name="outOfStateTuitionRate" type="number" min="0" className="rightside"/>
+                                $<input name="outOfStateTuitionRate" type="number" min="0" className="rightside" defaultValue={initialValues.outOfStateTuitionRate}/>
                             </td>
                         </tr>
                         <tr>
@@ -110,7 +125,7 @@ export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID
                                 <label htmlFor="tuitionIncrease">Tuition Increase (%):</label>
                             </td>
                             <td className="rightside">
-                                <input name="tuitionIncrease" type="number" min="0" max="100" className="rightside"/>%
+                                <input name="tuitionIncrease" type="number" min="0" max="100" className="rightside" defaultValue={initialValues.tuitionIncrease}/>%
                             </td>
                         </tr>
                         <tr>
@@ -118,7 +133,7 @@ export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID
                                 <label htmlFor="facultyFBR">Faculty Fringe Benefits Rate (%):</label>
                             </td>
                             <td className="rightside">
-                                <input name="facultyFBR" type="number" min="0" max="100" className="rightside"/>%
+                                <input name="facultyFBR" type="number" min="0" max="100" className="rightside" defaultValue={initialValues.facultyFBR}/>%
                             </td>
                         </tr>
                         <tr>
@@ -126,7 +141,7 @@ export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID
                                 <label htmlFor="studentFBR">Student Fringe Benefits Rate (%):</label>
                             </td>
                             <td className="rightside">
-                                <input name="studentFBR" type="number" min="0" max="100" className="rightside"/>%
+                                <input name="studentFBR" type="number" min="0" max="100" className="rightside" defaultValue={initialValues.studentFBR}/>%
                             </td>
                         </tr>
                         <tr>
@@ -134,7 +149,7 @@ export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID
                                 <label htmlFor="postDocFBR">Post-Doc Fringe Benefits Rate (%):</label>
                             </td>
                             <td className="rightside">
-                                <input name="postDocFBR" type="number" min="0" max="100" className="rightside"/>%
+                                <input name="postDgocFBR" type="number" min="0" max="100" className="rightside" defaultValue={initialValues.postDocFBR}/>%
                             </td>
                         </tr>
 
@@ -193,7 +208,7 @@ export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID
                                 <button className='px-2 py-1 rounded' style={{
                                     width: '50%'
                                 }}>Submit</button>
-                                {semesterID != null ? <button formAction={onDelete} className='px-2 py-1 rounded' style={{
+                                {semester != null ? <button formAction={onDelete} className='px-2 py-1 rounded' style={{
                                     width: '50%'
                                 }}>
                                     Delete

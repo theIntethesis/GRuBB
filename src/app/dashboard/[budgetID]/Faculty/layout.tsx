@@ -3,7 +3,7 @@ import { Faculty, Individual, InstitutionalAccount, SalaryAccount } from "@/lib/
 import { redirect } from "next/navigation"
 import Link from "next/link"
 
-export default async function Page({ params, children }) {
+export default async function Page({ params, children }: {params: {budgetID: string, facultyID: string}, children: any}) {
     await dbConnect()
     const { budgetID } = await params
 

@@ -9,7 +9,7 @@ const addNewSemester = () => {
     console.log("add new semester")
 };
 
-export default async function Page({ params, children }) {
+export default async function Page({ params, children }: {params: {budgetID: string}, children: any}) {
     await dbConnect()
     const { budgetID } = await params
 

@@ -2,11 +2,10 @@
 "use client"
 
 import Form from "next/form"
-import { createRoot } from "react-dom/client";
 import { useState } from "react";
-import { modifyBudget } from "@/lib/api";
+import { modifyBudget } from "@/lib/server-api";
 
-export default function AccountForm({ budget }) {
+export default function AccountForm({ budget } : {budget: any}) {
 
     const [coPIs, setCoPIs] = useState<string[]>(budget.coPI)
 
@@ -25,7 +24,7 @@ export default function AccountForm({ budget }) {
 
         setCoPIs([...coPIs, name])
     }
-    const removePI = (coPIName) => {
+    const removePI = (coPIName: string) => {
         // reload budget
 
         setCoPIs(coPIs.filter(x => x != coPIName))
@@ -51,7 +50,7 @@ export default function AccountForm({ budget }) {
                         <button formAction={addPI}>Add</button>
                         {budget != null ?
                             coPIs.map((x, idx) => {
-                                return <div className="co-pi-row" key={idx} id={idx}>
+                                return <div className="co-pi-row" key={idx} id={idx.toString()}>
                                     {x}
                                     <button formAction={() => removePI(x)}>Remove</button>
                                 </div>
