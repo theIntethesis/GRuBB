@@ -125,7 +125,7 @@ export async function getAllAccounts(budgetID: string) {
         x._id = x._id.toJSON()
         x.budgetID = x.budgetID.toJSON()
         x.travelProfile = ""
-        x.overheadCharge = x.overheadCharge.toJSON()
+        x.overheadCharge = x.overheadCharge?.toJSON() || null
     })
     console.log(accs)
     return accs

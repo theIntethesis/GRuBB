@@ -6,9 +6,6 @@ import { redirect, RedirectType } from 'next/navigation'
 import { useState } from 'react'
 
 export default function SemesterSetupForm({ semester, budget }: { semester?: any, budget: any }) {
-    // if semesterID not null set default values
-
-
     const initialValues = semester != null ? semester : {
         semester: "Fall 2025",
         inStateTuitionRate: 0,
@@ -18,10 +15,6 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
         studentFBR: 0,
         postDocFBR: 0
     }
-
-    console.log(initialValues)
-
-
 
     const onDelete = async () => {
         if (semester == undefined) {
@@ -46,8 +39,6 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
             parseFloat(formData.get("lodging")?.toString() || "0"),
             parseFloat(formData.get("overheadCharge")?.toString() || "0")
         )
-
-
     }
 
     return <div>

@@ -15,7 +15,7 @@ export default async function Page({ params, children }: {params: {budgetID: str
     return <main className="two-col">
         <div className="items">
             {semesters != null ? semesters.map(x => {
-                    return <Link href={`/dashboard/${budgetID}/Rates/${x._id}`} key={x._id}>{x.semester}</Link>
+                return <Link href={`/dashboard/${budgetID}/Rates/${x._id}`} key={x._id}>{x.semester}</Link>
             }) : null}
             <Link href={`/dashboard/${budgetID}/Rates/`}>Add New Semester</Link>
         </div>
