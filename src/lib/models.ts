@@ -49,7 +49,7 @@ export interface I_Student extends mongoose.Document {
     outOfState: boolean
 }
 export interface I_StudentAccount extends mongoose.Document {
-    // tuition - to be calculated
+    // tuition - to be looked up
     semester: string, // i'll type this later
     id: string,
     aidRecieved: number,
