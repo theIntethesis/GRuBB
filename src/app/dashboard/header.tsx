@@ -40,7 +40,7 @@ export default function Header({budgets, current_budget}: {budgets: [any], curre
                 <Link href={"/dashboard/"  + current_budget._id + "/Rates"} className={"tab " + (path.includes("Rates") ? "active" : "")}>Rates</Link>
                 <Link href={"/dashboard/"  + current_budget._id + "/Account"} className={"tab " + (path.includes("Account") ? "active" : "")}>Account</Link>
             </nav>
-        : <></>}
+        : <nav className="tabNav"></nav>}
 
     </header>
 }

@@ -43,3 +43,6 @@ next-env.d.ts
 # Mongo
 mongo/*
 !mongo/database/.gitkeep
+
+
+flake.lock

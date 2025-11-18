@@ -16,7 +16,6 @@ export interface I_Individual extends mongoose.Document {
 }
 export interface I_InstitutionalAccount extends mongoose.Document {
     semester: string,
-    name: string,
     budgetID: string,
     // incoming,
     // outgoing,
@@ -76,7 +75,6 @@ const IndividualSchema = new mongoose.Schema<I_Individual>({
 })
 const InstitutionalAccountSchema = new mongoose.Schema<I_InstitutionalAccount>({
     semester: String,
-    name: String,
     budgetID: mongoose.Types.ObjectId,
     inStateTuitionRate: Number,
     outOfStateTuitionRate: Number,
