@@ -16,8 +16,6 @@ export default function NewInstituionForm() {
 
 
     return <div>
-
-
         <Form action={onSubmit}>
             <table>
                 <tbody>
@@ -25,16 +23,6 @@ export default function NewInstituionForm() {
                         <td className="leftside">Institution Name</td>
                         <td className="rightside">
                             <input type="text" name="name"></input>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="leftside">Initial Semester</td>
-                        <td className="rightside">
-                            <select name="startSemester">
-                                <option>Fall</option>
-                                <option>Spring</option>
-                            </select>
-                            <input type="number" name="startYear"></input>
                         </td>
                     </tr>
                     <tr>

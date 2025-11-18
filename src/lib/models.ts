@@ -29,7 +29,8 @@ export interface I_InstitutionalAccount extends mongoose.Document {
     // aidAllocated - calculated
     studentAccounts: string[],
     salaryAccounts: string[],
-    travelProfile: string
+    travelProfile: string,
+    overheadCharge: string
 }
 export interface I_OverheadCharge extends mongoose.Document {
     charge: number
@@ -84,7 +85,8 @@ const InstitutionalAccountSchema = new mongoose.Schema<I_InstitutionalAccount>({
     postDocFBR: Number,
     studentAccounts: [mongoose.Types.ObjectId],
     salaryAccounts: [mongoose.Types.ObjectId],
-    travelProfile: mongoose.Types.ObjectId
+    travelProfile: mongoose.Types.ObjectId,
+    overheadCharge: mongoose.Types.ObjectId
 })
 const OverheadChargesSchema = new mongoose.Schema<I_OverheadCharge>({
     charge: Number,
