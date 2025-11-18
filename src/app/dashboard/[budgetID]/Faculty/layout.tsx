@@ -1,5 +1,7 @@
 import dbConnect from "@/lib/mongodb"
 import { Faculty, Individual, InstitutionalAccount, SalaryAccount } from "@/lib/models"
+import { redirect } from "next/navigation"
+import Link from "next/link"
 
 export default async function Page({ params, children }) {
     await dbConnect()
@@ -33,7 +35,7 @@ export default async function Page({ params, children }) {
                 {individuals.map((x, idx) => {
                     return <a key={idx} href={"/dashboard/" + budgetID + "/Faculty/" + x._id.toString()}>{x.name}</a>
                 })}
-                <button>Add New Faculty Member</button>
+                <Link href={`/dashboard/${budgetID}/Faculty/`}>Add New Faculty Member</Link>
             </div>
             <div>
                 {children}
@@ -43,7 +45,7 @@ export default async function Page({ params, children }) {
 
     return <main className="two-col">
         <div className="items">
-            <button>Add New Faculty Member</button>
+            <Link href={`/dashboard/${budgetID}/Faculty/`}>Add New Faculty Member</Link>
         </div>
         <div>
             {children}

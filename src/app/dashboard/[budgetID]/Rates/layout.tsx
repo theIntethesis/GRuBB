@@ -1,6 +1,7 @@
 "use server"
 import dbConnect from "@/lib/mongodb"
 import { Faculty, Individual, InstitutionalAccount, SalaryAccount, StudentAccount, Student } from "@/lib/models"
+import Link from "next/link";
 
 // Rates
 
@@ -47,7 +48,7 @@ export default async function Page({ params, children }) {
                     {individuals.map((x, idx) => {
                         return <a key={idx} href={"/dashboard/" + budgetID + "/Rates/" + x._id.toString()}>{x.name}</a>
                     })}
-                    <button>Add New Semester</button>
+                    <Link href={`/dashboard/${budgetID}/Rates/`}>Add New Semester</Link>
                 </div>
                 <div>
                     {children}
@@ -59,7 +60,7 @@ export default async function Page({ params, children }) {
 
     return <main className="two-col">
         <div className="items">
-            <button>Add New Semester</button>
+            <Link href={`/dashboard/${budgetID}/Rates/`}>Add New Semester</Link>
         </div>
         <div>
             {children}

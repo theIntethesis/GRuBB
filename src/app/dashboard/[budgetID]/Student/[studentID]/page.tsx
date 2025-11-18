@@ -17,7 +17,8 @@ export default async function page({params}) {
 
     const accounts = await StudentAccount
         .find({
-            id: individual.id
+            id: individual.id,
+
         })
         .lean()
 
@@ -26,7 +27,6 @@ export default async function page({params}) {
             name: {individual.name}
             <br/>
             outOfState: {student[0].outOfState ? "true" : "false"}
-
         </div>
 
         {accounts.map((x, idx) => {

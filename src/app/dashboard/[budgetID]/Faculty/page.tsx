@@ -1,5 +1,4 @@
+import { FacultyForm, FacultySetupForm } from "./form";
 export default function page() {
-    return <div>
-
-    </div>
+    return <FacultySetupForm />
 }

@@ -6,7 +6,7 @@ export default function Page() {
     const onSubmit = () => {
 
     }
-    return<div>
+    return <div>
             <Form action={onSubmit}>
                 <table style={{
                     padding: "10px",
