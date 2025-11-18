@@ -89,13 +89,25 @@ export function FacultySetupForm() {
     </div>  
 }
 
-export function FacultyForm({name, role, semesters, rate, rateUnit, percentFTE}) {
+export function FacultyForm({name, role, semesters, rate, rateUnit, percentFTE} : {name: string, role: string, semesters: string[], rate: number, rateUnit: string, percentFTE: number}) {
     const onSubmit = () => {
 
     };
     const deleteMe = () => {
         console.log("Deleting " + name);
     };
+    // call the various api functions to do shit in here
+    /*
+        name
+        role
+        semesters (list of all semesters for this student)
+        rate (current semester)
+        rateUnit (current semester)
+        percentFTE (current semester)
+
+        Change parameters to BudgetID and IndividualID(?)
+    */
+    
     return <div>
         <Form action={onSubmit}>
             <table style={{

@@ -5,7 +5,7 @@ import Form from 'next/form'
 import { redirect, RedirectType } from 'next/navigation'
 
 
-export default function SemesterForm({ semesterID, budgetID }: { semesterID?: string, budgetID: string }) {
+export default function SemesterSetupForm({ semesterID, budgetID }: { semesterID?: string, budgetID: string }) {
     // if semesterID not null set default values
 
     const onDelete = async () => {
@@ -46,7 +46,9 @@ export default function SemesterForm({ semesterID, budgetID }: { semesterID?: st
         )
 
         redirect(`/dashboard/${budgetID}/Rates/${acc_id}`)
-
+    }
+    const onSemesterChange = (e: string) => {
+        console.log("changing semester to " + e)
     }
 
     return <div>
@@ -57,18 +59,32 @@ export default function SemesterForm({ semesterID, budgetID }: { semesterID?: st
                 }}>
                     <tbody>
                         <tr>
-                            <td className="rightside">
-                                <label htmlFor="semester" style={{
-                                    fontSize: "15pt"
-                                }}>Semester:</label>
-                            </td>
-                            <td className="leftside">
-                                <select name="semester">
-                                    <option>Fall</option>
-                                    <option>Spring</option>
-                                </select>
-                                <input name="year" type="number" min="2024" max="2040"/>
-                            </td>
+                            {
+                                semesterID ? <>
+                                    <td colSpan={2} style = {{
+                                        textAlign: "center",
+                                        fontSize: "15pt",
+                                        fontWeight: "bold"
+                                    }}>
+                                        Semester {/* Get Semester Here*/}
+                                    </td>
+                                </> : 
+                                <>
+                                    <td style={{ textAlign: "center" }}>
+                                        <label htmlFor="semester" style={{
+                                            fontSize: "15pt",
+                                            textAlign: "center"
+                                        }}>Semester:</label>
+                                    </td>
+                                    <td style={{ textAlign: "left" }}>
+                                        <select name="semester">
+                                            <option>Fall</option>
+                                            <option>Spring</option>
+                                        </select>
+                                        <input name="year" type="number" min="2024" max="2040"/>
+                                    </td>
+                                </>
+                            }
                         </tr>
                         <tr>
                             <td colSpan={2}><hr/></td>
@@ -127,8 +143,7 @@ export default function SemesterForm({ semesterID, budgetID }: { semesterID?: st
                                 fontSize: "15pt",
                                 textAlign: "center"
                             }}>
-                                <hr/>
-                                Travel
+                                <hr/>Travel
                             </td>
 
                         </tr>

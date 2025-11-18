@@ -7,7 +7,8 @@ export function StudentSetupForm() {
     return <div>
         <Form action={onSubmit}>
             <table style={{
-                margin: "auto",
+                padding: "10px",
+                margin: "auto"
             }}>
                 <tbody>
                     <tr>
@@ -56,7 +57,16 @@ export function StudentSetupForm() {
     </div>
 }
 
-export function StudentForm({name, outOfState, semesters, tuition, aid}) {
+export function StudentForm({name, outOfState, semesters, tuition, aid} : {name: string, outOfState: boolean, semesters: string[], tuition: number, aid: number}) {
+    // call the various api functions to do shit in here
+    /*
+        name
+        outOfState
+        semesters (list of all semesters for this student)
+        tuition (current semester)
+        aid (current semester)
+        Change parameters to BudgetID and IndividualID(?)
+    */
     const onSubmit = () => {
 
     }
@@ -90,7 +100,7 @@ export function StudentForm({name, outOfState, semesters, tuition, aid}) {
                     </tr>
                     <tr>
                         <td colSpan={2} style={{textAlign: "center"}}>
-                            <input type="checkbox" disabled={outOfState}/> Out of State
+                            <input type="checkbox" checked={outOfState} disabled={true}/>Out of State
                         </td>
                     </tr>
                     <tr>
@@ -98,7 +108,7 @@ export function StudentForm({name, outOfState, semesters, tuition, aid}) {
                             <label htmlFor="tuition">Tuition:</label>
                         </td>
                         <td className="rightside">
-                            $<input type="number" id="tuition" name="tuition" value={tuition}/>
+                            $<input type="number" id="tuition" name="tuition" defaultValue={tuition}/>
                         </td>
                     </tr>
                     <tr>
@@ -106,7 +116,7 @@ export function StudentForm({name, outOfState, semesters, tuition, aid}) {
                             <label htmlFor="aid">Aid Received:</label>
                         </td>
                         <td className="rightside">
-                            $<input type="number" id="aid" name="aid" value={aid}/>
+                            $<input type="number" id="aid" name="aid" defaultValue={aid}/>
                         </td>
                     </tr>
                     <tr><td colSpan={2} style={{textAlign: "center"}}>
