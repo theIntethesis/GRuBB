@@ -56,9 +56,15 @@ export function StudentSetupForm() {
     </div>
 }
 
-export function StudentForm({studentID} : {studentID?: string}) {
+export function StudentForm({name, outOfState, semesters, tuition, aid}) {
     const onSubmit = () => {
 
+    }
+    const deleteMe = () => {
+
+    }
+    const onNewSemester = (newsemester: string) => {
+        console.log("Changing semester to " + newsemester)
     }
     return <div>
         <Form action={onSubmit}>
@@ -73,16 +79,18 @@ export function StudentForm({studentID} : {studentID?: string}) {
                             <p style={{
                                 fontSize: "20pt",
                                 fontWeight: "bold"
-                            }}>{/* Student Name */}</p>
+                            }}>{name}</p>
                             <hr/>
-                            <select>
-                                {/* Semesters Here */}
+                            <select onChange={(e) => onNewSemester(e.target.value)}>
+                                {semesters.map((x, idx) => {
+                                    return <option key={idx}>{x}</option>
+                                })}
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <td colSpan={2} style={{textAlign: "center"}}>
-                            <input type="checkbox" disabled={true}/> Out of State
+                            <input type="checkbox" disabled={outOfState}/> Out of State
                         </td>
                     </tr>
                     <tr>
@@ -90,7 +98,7 @@ export function StudentForm({studentID} : {studentID?: string}) {
                             <label htmlFor="tuition">Tuition:</label>
                         </td>
                         <td className="rightside">
-                            $<input type="number" id="tuition" name="tuition"/>
+                            $<input type="number" id="tuition" name="tuition" value={tuition}/>
                         </td>
                     </tr>
                     <tr>
@@ -98,11 +106,14 @@ export function StudentForm({studentID} : {studentID?: string}) {
                             <label htmlFor="aid">Aid Received:</label>
                         </td>
                         <td className="rightside">
-                            $<input type="number" id="aid" name="aid"/>
+                            $<input type="number" id="aid" name="aid" value={aid}/>
                         </td>
                     </tr>
                     <tr><td colSpan={2} style={{textAlign: "center"}}>
-                        <button style={{width: "100%"}}>Save</button>
+                        <button style={{width: "100%"}} formAction={onSubmit}>Save</button>
+                    </td></tr>
+                    <tr><td colSpan={2} style={{textAlign: "center"}}>
+                        <button style={{width: "100%"}} formAction={deleteMe}>Delete</button>
                     </td></tr>
                 </tbody>
             </table>

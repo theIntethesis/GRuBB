@@ -36,7 +36,7 @@ export default async function Page({ params, children }) {
             return <main className="two-col">
                 <div className="items">
                     {individuals.map((x, idx) => {
-                        return <a key={idx} href={"/dashboard/" + budgetID + "/Student/" + x._id.toString()}>{x.name}</a>
+                        return <Link key={idx} href={"/dashboard/" + budgetID + "/Student/" + x._id.toString()}>{x.name}</Link>
                     })}
                     <Link href={`/dashboard/${budgetID}/Student/`}>Add New Student</Link>
                 </div>
