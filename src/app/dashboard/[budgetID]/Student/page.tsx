@@ -1,4 +1,5 @@
-import {StudentSetupForm, StudentForm} from "./form"
-export default function page() {
-    return <StudentSetupForm/>
+
+// add new student
+export default function Page() {
+    return <></>
 }
