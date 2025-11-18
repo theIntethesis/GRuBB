@@ -1,6 +1,8 @@
 "use server"
 import dbConnect from "@/lib/mongodb";
 import { Budget, InstitutionalAccount, OverheadCharge, SalaryAccount, TravelProfile} from "@/lib/models";
+import { revalidatePath} from 'next/cache'
+import { redirect } from "next/navigation";
 
 export async function getBudget(budgetID: string) {
     await dbConnect()
@@ -90,7 +92,8 @@ export async function createInstitutionalAccount(
     });
     await newacc.save()
 
-    return newacc._id.toJSON()
+    revalidatePath("/dashboard", "layout")
+    redirect(`/dashboard/${budgetID}/Rates/${newacc._id.toJSON()}`)
 }
 
 export async function deleteInstitutionalAccount(
@@ -108,6 +111,25 @@ export async function deleteInstitutionalAccount(
     await OverheadCharge.findByIdAndDelete(acc.overheadCharge)
 
     await InstitutionalAccount.findByIdAndDelete(semesterID)
+
+    revalidatePath("/dashboard", "layout")
+    redirect(`/dashboard/${budgetID}/Rates`)
+}
+
+export async function getAllAccounts(budgetID: string) {
+    const accs = await InstitutionalAccount
+        .find({budgetID: budgetID})
+        .lean()
+    console.log(accs)
+    accs.forEach(x => {
+        x._id = x._id.toJSON()
+        x.budgetID = x.budgetID.toJSON()
+        x.travelProfile = ""
+        x.overheadCharge = x.overheadCharge.toJSON()
+    })
+    console.log(accs)
+    return accs
+
 }
 
 export async function getInstitutionalAccount(

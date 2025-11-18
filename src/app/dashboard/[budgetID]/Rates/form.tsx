@@ -1,6 +1,6 @@
 "use client"
 import { createInstitutionalAccount, deleteInstitutionalAccount, getInstitutionalAccount } from '@/lib/server-api'
-import { refresh } from 'next/cache'
+
 import Form from 'next/form'
 import { redirect, RedirectType } from 'next/navigation'
 import { useState } from 'react'
@@ -28,27 +28,11 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
             return
         }
         await deleteInstitutionalAccount(budget._id, semester._id)
-        redirect(`/dashboard/${budget._id}/Rates`)
     }
 
     const onSubmit = async (formData: FormData) => {
-
-        // call the various api functions to do shit in here
-        /*
-            semester, year
-            inStateTuitionRate
-            outOfStateTuitionRate
-            tuitionIncrease
-            facultyFBR
-            studentFBR
-            postDocFBR
-            perdiem
-            airfare
-            lodging
-            overheadCharge
-        */
-        const acc_id = await createInstitutionalAccount(
-            budgetID,
+        await createInstitutionalAccount(
+            budget._id,
             formData.get("semester") == "Fall" ? "Fall" : "Spring",
             parseFloat(formData.get("year")?.toString() || "0"),
             parseFloat(formData.get("inStateTuitionRate")?.toString() || "0"),
@@ -63,7 +47,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
             parseFloat(formData.get("overheadCharge")?.toString() || "0")
         )
 
-        // redirect(`/dashboard/${budgetID}/Rates/${acc_id}`)
+
     }
 
     return <div>
