@@ -1,7 +1,7 @@
 import Header from "@/app/dashboard/header";
 import dbConnect from "@/lib/mongodb";
 import { Budget, InstitutionalAccount } from "@/lib/models";
-import NewInstituionForm from "./newInstitutionForm";
+import NewInstituionForm from "@/forms/newInstitutionForm";
 
 export default async function Page() {
     await dbConnect()

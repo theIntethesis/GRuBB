@@ -3,9 +3,7 @@ import { Faculty, Individual, InstitutionalAccount, SalaryAccount } from "@/lib/
 import { redirect } from "next/navigation"
 import Link from "next/link"
 
-export default async function Page({ params, children }: {params: {budgetID: string, facultyID: string}, children: any}) {
-    await dbConnect()
-    const { budgetID } = await params
+async function getFaculty(budgetID) {
 
     // if this returns more than one institutional account then budgetID is not unique1
     const salaryAccIds = await InstitutionalAccount
@@ -29,26 +27,28 @@ export default async function Page({ params, children }: {params: {budgetID: str
             .find({})
             .where('_id').in(faculty.map(x => x.indID))
             .lean()
-        return <main className="two-col">
+
+        return individuals
+    }
+    return null
+}
+
+export default async function Page({ params, children }: {params: {budgetID: string, facultyID: string}, children: any}) {
+    await dbConnect()
+    const { budgetID } = await params
+
+    const individuals = await getFaculty(budgetID)
+
+    return <main className="two-col">
             <div className="items">
 
-                {individuals.map((x, idx) => {
+                {individuals != null ? individuals.map((x, idx) => {
                     return <a key={idx} href={"/dashboard/" + budgetID + "/Faculty/" + x._id.toString()}>{x.name}</a>
-                })}
+                }) : null}
                 <Link href={`/dashboard/${budgetID}/Faculty/`}>Add New Faculty Member</Link>
             </div>
             <div>
                 {children}
             </div>
         </main>
-    }
-
-    return <main className="two-col">
-        <div className="items">
-            <Link href={`/dashboard/${budgetID}/Faculty/`}>Add New Faculty Member</Link>
-        </div>
-        <div>
-            {children}
-        </div>
-    </main>
 }

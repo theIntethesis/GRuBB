@@ -34,6 +34,7 @@ async function getStudents(budgetID) {
     }
     return null
 }
+
 export default async function Page({ params, children }) {
     await dbConnect()
     const { budgetID } = await params

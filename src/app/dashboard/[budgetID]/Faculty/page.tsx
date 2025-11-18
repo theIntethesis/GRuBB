@@ -1,4 +1,5 @@
-import { FacultyForm, FacultySetupForm } from "./form";
+import { FacultyForm } from "@/forms/individualForms"
+// new faculty
 export default function page() {
-    return <FacultySetupForm />
+    return <FacultyForm/>
 }

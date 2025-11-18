@@ -46,8 +46,8 @@
 
                 echo "StartMongo, StopMongo"
 
-                code .
-                kitty 'npm run dev'
+                # code .
+
             '';
         };
 
