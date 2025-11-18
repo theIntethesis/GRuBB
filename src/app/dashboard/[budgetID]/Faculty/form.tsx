@@ -9,9 +9,8 @@ const calculatePayment = () => {
     console.log("Rate:", rate, "Rate Unit:", rateUnit, "Percent FTE:", percentFTE);
     (document.getElementById("payment") as HTMLInputElement).value = (Number(rate) * (rateUnit === "Hour" ? 2080 : 1) * (Number(percentFTE) / 100)).toString()
 }
-const getFBR = () => {
-    // Fetch FBR logic here
-    (document.getElementById("FBR") as HTMLInputElement).value = "30" // Example static value
+const updateFBR = (role: string) => {
+    console.log("Updating FBR role to " + role)
 }
 export function FacultySetupForm() {
     const onSubmit = () => {
@@ -41,7 +40,7 @@ export function FacultySetupForm() {
                     </tr>
                     <tr>
                         <td colSpan={2} style={{textAlign: "center"}}>
-                            <select>
+                            <select onChange={(e) => updateFBR(e.target.value)}>
                                 <option>Faculty</option>
                                 <option>Staff</option>
                                 <option>Post-Doc</option>
@@ -90,10 +89,13 @@ export function FacultySetupForm() {
     </div>  
 }
 
-export function FacultyForm({facultyID} : {facultyID?: string}) {
+export function FacultyForm({name, role, semesters, rate, rateUnit, percentFTE}) {
     const onSubmit = () => {
 
-    }
+    };
+    const deleteMe = () => {
+        console.log("Deleting " + name);
+    };
     return <div>
         <Form action={onSubmit}>
             <table style={{
@@ -104,21 +106,22 @@ export function FacultyForm({facultyID} : {facultyID?: string}) {
                         <td colSpan={2} style={{
                             textAlign: "center"
                         }}>
-                            <input type="text" placeholder="Faculty Name" style={{
+                            <input type="text" style={{
                                 fontSize: "20pt",
-                                fontWeight: "bold"
-                            }}>{/* Faculty Name */}</input>
+                                fontWeight: "bold",
+                                textAlign: "center"
+                            }} defaultValue={name}/>
                             <hr/>
                             <select>
-                                <option>Fall</option>
-                                <option>Spring</option>
+                                {semesters.map((x, idx) => {
+                                    return <option key={idx}>{x}</option>
+                                })}
                             </select>
-                            <input type="number" placeholder="Year" min="2024" max="2040"/>
                         </td>
                     </tr>
                     <tr>
                         <td colSpan={2} style={{textAlign: "center"}}>
-                            <select>
+                            <select defaultValue={role} onChange={(e) => updateFBR(e.target.value)}>
                                 <option>Faculty</option>
                                 <option>Staff</option>
                                 <option>Post-Doc</option>
@@ -131,7 +134,7 @@ export function FacultyForm({facultyID} : {facultyID?: string}) {
                             <label htmlFor="rate">Rate:</label>
                         </td>
                         <td className="rightside">
-                            $<input type="number" id="rate" name="rate" onChange={calculatePayment}/> / <select id="rateUnit" onChange={calculatePayment}><option>Hour</option><option>Year</option></select>
+                            $<input type="float" id="rate" name="rate" onChange={calculatePayment} defaultValue={rate}/> / <select id="rateUnit" onChange={calculatePayment} defaultValue={rateUnit}><option>Hour</option><option>Year</option></select>
                         </td>
                     </tr>
                     <tr>
@@ -139,7 +142,7 @@ export function FacultyForm({facultyID} : {facultyID?: string}) {
                             <label htmlFor="percentFTE">Percent of Full Time Equivalent:</label>
                         </td>
                         <td className="rightside">
-                            <input type="number" id="percentFTE" name="percentFTE" min={0} max={100} onChange={calculatePayment}/>%
+                            <input type="number" id="percentFTE" name="percentFTE" min={0} max={100} onChange={calculatePayment} defaultValue={percentFTE * 100}/>%
                         </td>
                     </tr>
                     <tr>
@@ -159,7 +162,10 @@ export function FacultyForm({facultyID} : {facultyID?: string}) {
                         </td>
                     </tr>
                     <tr><td colSpan={2} style={{textAlign: "center"}}>
-                        <button style={{width: "100%"}}>Submit</button>
+                        <button style={{width: "100%"}} formAction={onSubmit}>Save</button>
+                    </td></tr>
+                    <tr><td colSpan={2} style={{textAlign: "center"}}>
+                        <button style={{width: "100%"}} formAction={deleteMe}>Delete</button>
                     </td></tr>
                 </tbody>
             </table>

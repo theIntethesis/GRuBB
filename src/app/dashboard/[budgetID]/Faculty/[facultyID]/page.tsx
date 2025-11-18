@@ -1,4 +1,5 @@
 import { Individual, Faculty, SalaryAccount } from "@/lib/models"
+import {FacultyForm} from "../form"
 
 export default async function page({params}) {
     const { facultyID } = await params
@@ -24,7 +25,15 @@ export default async function page({params}) {
         })
         .lean()
 
-
+    // Need to get FBR and pass in.
+    return <FacultyForm
+        name={individual.name}
+        role={faculty[0].role}
+        semesters={accounts.map(x => x.semester)}
+        rate={accounts[0]?.rate || 0}
+        rateUnit={accounts[0]?.rateTimeUnit || "Hour"}
+        percentFTE={accounts[0]?.percentFTE || 0}
+    />
     return <div>
         <div>
             name: {individual.name}
