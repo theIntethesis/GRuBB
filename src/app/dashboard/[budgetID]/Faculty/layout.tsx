@@ -13,35 +13,44 @@ export default async function Page({ params, children }) {
 
     // console.log(salaryAccIds)
     // console.log(salaryAccIds[0].salaryAccounts)
+    if (salaryAccIds.length > 0) {
+        const facultyIDs = await SalaryAccount
+            .find({})
+            .where('_id').in(salaryAccIds[0].salaryAccounts)
+            .lean()
 
-    const facultyIDs = await SalaryAccount
-        .find({})
-        .where('_id').in(salaryAccIds[0].salaryAccounts)
-        .lean()
+        // console.log(facultyIDs.map(x => x.id))
 
-    // console.log(facultyIDs.map(x => x.id))
+        const faculty = await Faculty
+            .find({})
+            .where('_id').in(facultyIDs.map(x => x.id))
+            .lean()
 
-    const faculty = await Faculty
-        .find({})
-        .where('_id').in(facultyIDs.map(x => x.id))
-        .lean()
-
-    // console.log(faculty)
+        // console.log(faculty)
 
 
-    const individuals = await Individual
-        .find({})
-        .where('_id').in(faculty.map(x => x.indID))
-        .lean()
+        const individuals = await Individual
+            .find({})
+            .where('_id').in(faculty.map(x => x.indID))
+            .lean()
+        return <main className="two-col">
+            <div className="items">
+
+                {individuals.map((x, idx) => {
+                    return <a key={idx} href={"/dashboard/" + budgetID + "/Faculty/" + x._id.toString()}>{x.name}</a>
+                })}
+                <button>Add New Faculty Member</button>
+            </div>
+            <div>
+                {children}
+            </div>
+        </main>
+    }
 
     // console.log(individuals)
 
     return <main className="two-col">
         <div className="items">
-
-            {individuals.map((x, idx) => {
-                return <a key={idx} href={"/dashboard/" + budgetID + "/Faculty/" + x._id.toString()}>{x.name}</a>
-            })}
             <button>Add New Faculty Member</button>
         </div>
         <div>

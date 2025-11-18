@@ -1,7 +1,7 @@
 {
   description = "creates a mongodb user service file with a specified data path and provides the ability to run mongoose, mongosh, etc...";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs?ref=b3d51a0365f6695e7dd5cdf3e180604530ed33b4";
 
   outputs = { self, nixpkgs}:
     let
@@ -34,7 +34,7 @@
             buildInputs = with pkgs; [
                 mongoose
                 mongosh
-                mongodb
+                mongodb-ce
                 mongodb-compass
             ];
             shellHook = ''
@@ -45,6 +45,9 @@
                 systemctl --user daemon-reload
 
                 echo "StartMongo, StopMongo"
+
+                code .
+                kitty 'npm run dev'
             '';
         };
 

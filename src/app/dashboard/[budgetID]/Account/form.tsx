@@ -27,7 +27,7 @@ export default function AccountForm({budget}) {
     }
     const removePI = (index: string) => {
         console.log(`Trying to remove PI ${index}`)
-        document.getElementById(index)?.remove();    
+        document.getElementById(index)?.remove();
     }
 
     console.log(budget)
@@ -41,16 +41,7 @@ export default function AccountForm({budget}) {
                         <label htmlFor="name">Budget Name:</label>
                         <input name="name" type="text" defaultValue={budget.name}></input>
 
-                        <div>
-                            <label htmlFor="type">Institutional Account Type:</label>
-                        </div>
-                        <div>
-                            <select name="type" className="institution-dropdown">
-                                <option>Primary</option>
-                                <option>Secondary</option>
-                                <option>Parallel</option>
-                            </select>
-                        </div>
+
 
                         <span/><span/>
 
@@ -69,7 +60,7 @@ export default function AccountForm({budget}) {
                             })
                         : null}
                         <div id="addhere"/><div/>
-                            
+
                         <button>Save</button>
 
                 </section>

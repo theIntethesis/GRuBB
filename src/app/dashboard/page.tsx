@@ -1,7 +1,7 @@
 import Header from "@/app/dashboard/header";
 import dbConnect from "@/lib/mongodb";
-import { Budget } from "@/lib/models";
-import InstitutionForm from "./form";
+import { Budget, InstitutionalAccount } from "@/lib/models";
+import NewInstituionForm from "./newInstitutionForm";
 
 export default async function Page() {
     await dbConnect()
@@ -15,8 +15,8 @@ export default async function Page() {
         <Header budgets={allBudgets} current_budget={null}/>
         <main>
             {/* Prompt done. Next step is create acct.*/}
-            <InstitutionForm/>
+            <NewInstituionForm/>
         </main>
-        
+
     </>
 }

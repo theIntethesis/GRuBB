@@ -15,33 +15,44 @@ export default async function Page({ params, children }) {
         // console.log(studentAccIds)
         // console.log(studentAccIds[0].studentAccounts)
 
-        const studentIDs = await StudentAccount
-            .find({})
-            .where('_id').in(studentAccIds[0].studentAccounts)
-            .lean()
+        if (studentAccIds.length > 0) {
+            const studentIDs = await StudentAccount
+                .find({})
+                .where('_id').in(studentAccIds[0].studentAccounts)
+                .lean()
 
-        // console.log(studentIDs.map(x => x.student_id))
+            // console.log(studentIDs.map(x => x.student_id))
 
-        const students = await Student
-            .find({})
-            .where('_id').in(studentIDs.map(x => x.student_id))
-            .lean()
+            const students = await Student
+                .find({})
+                .where('_id').in(studentIDs.map(x => x.student_id))
+                .lean()
 
-        console.log(students)
+            console.log(students)
 
 
-        const individuals = await Individual
-            .find({})
-            .where('_id').in(students.map(x => x.indID))
-            .lean()
+            const individuals = await Individual
+                .find({})
+                .where('_id').in(students.map(x => x.indID))
+                .lean()
+
+            return <main className="two-col">
+                <div className="items">
+                    {individuals.map((x, idx) => {
+                        return <a key={idx} href={"/dashboard/" + budgetID + "/Student/" + x._id.toString()}>{x.name}</a>
+                    })}
+                    <button>Add New Student</button>
+                </div>
+                <div>
+                    {children}
+                </div>
+            </main>
+        }
 
         // console.log(individuals)
 
     return <main className="two-col">
         <div className="items">
-            {individuals.map((x, idx) => {
-                return <a key={idx} href={"/dashboard/" + budgetID + "/Student/" + x._id.toString()}>{x.name}</a>
-            })}
             <button>Add New Student</button>
         </div>
         <div>

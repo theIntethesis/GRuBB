@@ -1,0 +1,66 @@
+"use client"
+
+import { createBudget } from "@/lib/api"
+import Form from "next/form"
+import { redirect } from "next/navigation"
+
+export default function NewInstituionForm() {
+    const onSubmit = async (formData: FormData) => {
+        const id = await createBudget(
+            formData.get("name")?.toString(),
+            formData.get("pi")?.toString(),
+            "primary"
+        );
+        redirect(`/dashboard/${id}/Student`)
+    }
+
+
+    return <div>
+
+
+        <Form action={onSubmit}>
+            <table>
+                <tbody>
+                    <tr>
+                        <td className="leftside">Institution Name</td>
+                        <td className="rightside">
+                            <input type="text" name="name"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="leftside">Initial Semester</td>
+                        <td className="rightside">
+                            <select name="startSemester">
+                                <option>Fall</option>
+                                <option>Spring</option>
+                            </select>
+                            <input type="number" name="startYear"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="leftside">Budget Type</td>
+                        <td className="rightside">
+                            <select name="budgetType">
+                                <option>Primary</option>
+                                <option>Secondary</option>
+                                <option>Parallel</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="leftside">Principle Investigator</td>
+                        <td className="rightside">
+                            <input type="test" name="pi"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button>Submit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </Form>
+    </div>
+
+}
