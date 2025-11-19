@@ -1,7 +1,7 @@
 import { StudentForm } from "@/forms/individualForms"
 // edit a semester
-export default async function page({params}: {params: {budgetID: string, studentID: string, semester: string}}) {
-    const { studentID, semester } = await params
+export default async function page({params}: {params: {budgetID: string, individualID: string, semester: string, year: string}}) {
+    const { budgetID, individualID, semester, year } = await params
 
 
     // fetch indiviudal and semester

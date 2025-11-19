@@ -3,7 +3,7 @@
 
 import Form from "next/form"
 import { useState } from "react";
-import { modifyBudget } from "@/lib/server-api";
+import { modifyBudget } from "@/api/budget";
 
 export default function AccountForm({ budget } : {budget: any}) {
 

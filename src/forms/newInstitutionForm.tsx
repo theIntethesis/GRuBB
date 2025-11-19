@@ -1,17 +1,16 @@
 "use client"
 
-import { createBudget } from "@/lib/server-api"
+import { createBudget } from "@/api/budget"
 import Form from "next/form"
-import { redirect } from "next/navigation"
 
 export default function NewInstituionForm() {
     const onSubmit = async (formData: FormData) => {
         const id = await createBudget(
             formData.get("name")?.toString() || "Unnamed",
             formData.get("pi")?.toString() || "",
-            "primary"
+            "primary" // [todo]
         );
-        redirect(`/dashboard/${id}/Student`)
+
     }
 
 

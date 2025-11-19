@@ -1,7 +1,7 @@
 // Rates
 
-import { getBudget } from '@/lib/server-api'
-import SemesterForm from './form'
+import { getBudget } from '@/api/budget'
+import SemesterForm from '@/forms/SemesterSetupForm'
 
 export default async function Page({ params }: {params: {budgetID: string}}) {
     const { budgetID } = await params

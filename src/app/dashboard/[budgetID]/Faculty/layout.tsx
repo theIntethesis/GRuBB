@@ -1,12 +1,11 @@
 import dbConnect from "@/lib/mongodb"
-import { Faculty, Individual, InstitutionalAccount, SalaryAccount } from "@/lib/models"
-import { redirect } from "next/navigation"
+import { Faculty, Individual, SemesterAccount, SalaryAccount } from "@/lib/models"
 import Link from "next/link"
 
-async function getFaculty(budgetID) {
+async function getFaculty(budgetID: string) {
 
     // if this returns more than one institutional account then budgetID is not unique1
-    const salaryAccIds = await InstitutionalAccount
+    const salaryAccIds = await SemesterAccount
         .find({budgetID: budgetID})
         .select("salaryAccounts")
         .lean()

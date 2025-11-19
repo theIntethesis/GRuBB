@@ -5,17 +5,23 @@ export interface I_Budget extends mongoose.Document {
     name: string,
     pi: string,
     coPI: string[],
+    students: string[],
+    faculty: string[],
     type: "primary" | "secondary" | "parallel"
 }
-export interface I_Faculty extends mongoose.Document  {
-    role: "faculty" | "staff" | "postdoc"
-}
+
 export interface I_Individual extends mongoose.Document {
-    id: string // uniqueness handled by mongodb
     name: string
 }
-export interface I_InstitutionalAccount extends mongoose.Document {
-    semester: string,
+
+export interface I_Faculty extends mongoose.Document  {
+    role: "faculty" | "staff" | "postdoc",
+    individual_id: string // uid from Individual
+}
+
+export interface I_SemesterAccount extends mongoose.Document {
+    semester: "Fall" | "Spring",
+    year: number,
     budgetID: string,
     // incoming,
     // outgoing,
@@ -27,8 +33,7 @@ export interface I_InstitutionalAccount extends mongoose.Document {
     postDocFBR: number,
     // incomingTuition - calculated,
     // aidAllocated - calculated
-    studentAccounts: string[],
-    salaryAccounts: string[],
+
     travelProfile: string,
     overheadCharge: string
 }
@@ -41,17 +46,19 @@ export interface I_SalaryAccount extends mongoose.Document {
     rateTimeUnit: "hour" | "year",
     percentFTE: number, // Percentage
     semester: string, // i'll type this later
-    id: string
+    individual_id: string
     // payment - calculated (payment)
     // fringe benefits rate - calculated, (fringeRate)
 }
 export interface I_Student extends mongoose.Document {
-    outOfState: boolean
+    outOfState: boolean,
+    individual_id: string // uid from Individual
+
 }
 export interface I_StudentAccount extends mongoose.Document {
     // tuition - to be looked up
     semester: string, // i'll type this later
-    id: string,
+    individual_id: string, // individual ID
     aidRecieved: number,
 }
 export interface I_TravelProfile extends mongoose.Document {
@@ -65,17 +72,21 @@ const BudgetSchema = new mongoose.Schema<I_Budget>({
     name: String,
     pi: String,
     coPI: [String],
-    type: String
+    type: String,
+    students: [mongoose.Types.ObjectId],
+    faculty: [mongoose.Types.ObjectId],
 })
+
 const FacultySchema = new mongoose.Schema<I_Faculty>({
-    role: String
+    role: String,
+    individual_id: mongoose.Types.ObjectId
 })
 const IndividualSchema = new mongoose.Schema<I_Individual>({
-    id: mongoose.Types.ObjectId,
     name: String
 })
-const InstitutionalAccountSchema = new mongoose.Schema<I_InstitutionalAccount>({
+const SemesterAccountSchema = new mongoose.Schema<I_SemesterAccount>({
     semester: String,
+    year: Number,
     budgetID: mongoose.Types.ObjectId,
     inStateTuitionRate: Number,
     outOfStateTuitionRate: Number,
@@ -83,8 +94,6 @@ const InstitutionalAccountSchema = new mongoose.Schema<I_InstitutionalAccount>({
     facultyFBR: Number,
     studentFBR: Number,
     postDocFBR: Number,
-    studentAccounts: [mongoose.Types.ObjectId],
-    salaryAccounts: [mongoose.Types.ObjectId],
     travelProfile: mongoose.Types.ObjectId,
     overheadCharge: mongoose.Types.ObjectId
 })
@@ -97,14 +106,15 @@ const SalaryAccountSchema = new mongoose.Schema<I_SalaryAccount>({
     rateTimeUnit: String,
     percentFTE: Number,
     semester: String,
-    id: mongoose.Types.ObjectId
+    individual_id: mongoose.Types.ObjectId
 })
 const StudentSchema = new mongoose.Schema<I_Student>({
-    outOfState: Boolean
+    outOfState: Boolean,
+    individual_id: mongoose.Types.ObjectId
 })
 const StudentAccountSchema = new mongoose.Schema<I_StudentAccount>({
     semester: String,
-    id: mongoose.Types.ObjectId,
+    individual_id: mongoose.Types.ObjectId,
     aidRecieved: Number
 })
 const TravelProfileSchema = new mongoose.Schema<I_TravelProfile>({
@@ -116,7 +126,7 @@ const TravelProfileSchema = new mongoose.Schema<I_TravelProfile>({
 export const Budget = mongoose.models.Budget || mongoose.model<I_Budget>("Budget", BudgetSchema, "budgets")
 export const Faculty =  mongoose.models.Faculty || mongoose.model<I_Faculty>("Faculty", FacultySchema, "facultys")
 export const Individual = mongoose.models.Individual || mongoose.model<I_Individual>("Individual", IndividualSchema, "individuals")
-export const InstitutionalAccount =  mongoose.models.InstitutionalAccount || mongoose.model<I_InstitutionalAccount>("InstitutionalAccount", InstitutionalAccountSchema, "institutionalaccounts")
+export const SemesterAccount =  mongoose.models.SemesterAccount || mongoose.model<I_SemesterAccount>("SemesterAccount", SemesterAccountSchema, "SemesterAccounts")
 export const OverheadCharge = mongoose.models.OverheadCharge || mongoose.model<I_OverheadCharge>("OverheadCharge", OverheadChargesSchema, "overheadcharges")
 export const SalaryAccount = mongoose.models.SalaryAccount || mongoose.model<I_SalaryAccount>("SalaryAccount", SalaryAccountSchema, "salarys")
 export const Student = mongoose.models.Student || mongoose.model<I_Student>("Student", StudentSchema, "students")

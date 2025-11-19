@@ -1,5 +1,5 @@
 "use client"
-import { createInstitutionalAccount, deleteInstitutionalAccount, getInstitutionalAccount, modifyInstitutionalAccount } from '@/lib/server-api'
+import { createSemesterAccount, deleteSemesterAccount, getSemesterAccount, modifySemesterAccount } from '@/api/semesterAccount'
 
 import Form from 'next/form'
 
@@ -23,11 +23,11 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
         if (semester == undefined) {
             return
         }
-        await deleteInstitutionalAccount(budget._id, semester._id)
+        await deleteSemesterAccount(budget._id, semester._id)
     }
 
     const onCreate = async (formData: FormData) => {
-        await createInstitutionalAccount(
+        await createSemesterAccount(
             budget._id,
             formData.get("semester") == "Fall" ? "Fall" : "Spring",
             parseFloat(formData.get("year")?.toString() || "0"),
@@ -44,7 +44,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
         )
     }
     const onModify = async (formData: FormData) => {
-        modifyInstitutionalAccount(
+        modifySemesterAccount(
             budget._id,
             semester._id,
             parseFloat(formData.get("inStateTuitionRate")?.toString() || "0"),

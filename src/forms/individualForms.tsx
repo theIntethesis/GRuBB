@@ -1,4 +1,5 @@
 "use client"
+import { createNewStudent } from "@/api/individuals"
 import { StudentAccount } from "@/lib/models"
 import Form from "next/form"
 
@@ -61,11 +62,14 @@ function StudentAccountSection({studentAccount}: {studentAccount?: any}) {
     return<></>
 }
 
+// individual == null implies everything else is null
 export function StudentForm(
-    {individual, student, studentAccount, salaryAccount, semesters}: {individual?: any, student?: any, studentAccount?: any, salaryAccount?: any, semesters?: string[]}
+    {budgetID, individual, student, studentAccount, salaryAccount, semesters}: {budgetID: string, individual?: any, student?: any, studentAccount?: any, salaryAccount?: any, semesters?: string[]}
 ) {
     const onSubmit = (formData: FormData) => {
-
+        console.log(formData)
+        // outOfState == undefined or "on"
+        createNewStudent(formData.get("name")?.toString() || "unnamed", formData.get("outOfState") == "on" || false, budgetID)
     }
     return <Form action={onSubmit}>
         <table style={{ margin: "auto" }}>
@@ -76,6 +80,11 @@ export function StudentForm(
 
                 <StudentAccountSection/>
                 <OptionalSalaryAccountSection/>
+                <tr>
+                    {individual != null ? <td><button>Delete</button></td> : undefined}
+                    <td><button>Submit</button></td>
+                </tr>
+
             </tbody>
         </table>
     </Form>
@@ -100,6 +109,10 @@ export function FacultyForm(
                 <FacultyLine/>
                  {/* semester switcher, uses redirects */}
                  <SalaryAccountSection/>
+                 <tr>
+                    {individual != null ? <td><button>Delete</button></td> : undefined}
+                    <td><button>Submit</button></td>
+                </tr>
             </tbody>
         </table>
 

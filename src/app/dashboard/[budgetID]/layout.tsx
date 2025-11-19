@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import Header from "@/app/dashboard/header";
 
-import { getAllBudgets, getBudget } from "@/lib/server-api";
+import { getAllBudgets, getBudget } from "@/api/budget";
 
 export default async function Layout({
     children,

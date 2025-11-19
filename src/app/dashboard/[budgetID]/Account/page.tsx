@@ -1,7 +1,6 @@
 
-import { getBudget } from "@/lib/server-api";
-import AccountForm from "./form";
-
+import { getBudget } from "@/api/budget";
+import AccountForm from "@/forms/accountForm";
 
 // Account
 export default async function Page({params}: {params: {budgetID: string}}) {

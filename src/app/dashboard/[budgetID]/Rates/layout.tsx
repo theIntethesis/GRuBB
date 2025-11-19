@@ -1,6 +1,6 @@
 "use server"
 import dbConnect from "@/lib/mongodb"
-import { getAllAccounts } from "@/lib/server-api";
+import { getAllAccounts } from "@/api/semesterAccount";
 import Link from "next/link";
 import RatesSidebar from "./sidebar";
 

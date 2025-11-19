@@ -1,5 +1,5 @@
 import { Individual, Student, StudentAccount } from "@/lib/models"
-import {StudentForm} from "../form"
+import {StudentForm} from "@/forms/individualForms"
 
 // add new semester
 export default async function page({params}: {params: {budgetID: string, studentID: string}}) {
