@@ -1,6 +1,7 @@
 "use client"
-import { createNewStudent } from "@/api/individuals"
+import { createNewStudent, createNewFaculty } from "@/api/individuals"
 import { StudentAccount } from "@/lib/models"
+import { redirect } from "next/navigation"
 import Form from "next/form"
 
 function IndividualLine({individual}: {individual?: any}) {
@@ -69,7 +70,8 @@ export function StudentForm(
     const onSubmit = (formData: FormData) => {
         console.log(formData)
         // outOfState == undefined or "on"
-        createNewStudent(formData.get("name")?.toString() || "unnamed", formData.get("outOfState") == "on" || false, budgetID)
+        let studentID = createNewStudent(formData.get("name")?.toString() || "unnamed", formData.get("outOfState") == "on" || false, budgetID)
+        //redirect(`/dashboard/${budgetID}/Student/${studentID}`)
     }
     return <Form action={onSubmit}>
         <table style={{ margin: "auto" }}>
