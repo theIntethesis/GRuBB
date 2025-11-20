@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/mongodb"
 import { Faculty, Individual, SemesterAccount, SalaryAccount } from "@/lib/models"
 import Link from "next/link"
+import { getAllFaculty } from "@/api/individuals"
 
 async function getFaculty(budgetID: string) {
 
@@ -36,7 +37,7 @@ export default async function Page({ params, children }: {params: {budgetID: str
     await dbConnect()
     const { budgetID } = await params
 
-    const individuals = await getFaculty(budgetID)
+    const individuals = await getAllFaculty(budgetID)
 
     return <main className="two-col">
             <div className="items">

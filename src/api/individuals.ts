@@ -47,3 +47,14 @@ export async function getAllStudents(budgetID: string) {
     }
     return students;
 }
+
+export async function getAllFaculty(budgetID: string) {
+    const budget = await Budget.findById(budgetID)
+    let faculty = []
+    for (let i in budget.faculty) {
+        const facultyID = budget.faculty[i].toJSON();
+        const ind = await Individual.findById(facultyID);
+        faculty.push(ind);
+    }
+    return faculty;
+}
