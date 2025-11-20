@@ -23,17 +23,76 @@ main {
   padding: 1em;
 }
 
-button, input, select {
+form {
+
+  table {
+    width: 32em;
+    margin: auto;
+  }
+}
+
+button, input, select, .inputOuterLeft, .inputOuterRight {
   background-color: #45475a;
   border-radius: 10px;
   color: #cdd6f4;
-  padding: .25em;
-  margin: .25em;
+  padding: 0.25em;
+
 }
+
+td {
+  * {
+    margin: 0.25em 0em;
+  }
+}
+
+.inputOuterLeft, .inputOuterRight {
+  input {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  display: inline-grid;
+
+}
+
+.inputOuterLeft {
+  grid-template-columns: 1em auto;
+}
+.inputOuterRight {
+  grid-template-columns: auto 1em;
+}
+
+.inputOuterLeft:hover, .inputOuterRight:hover {
+  background-color: #313244;
+
+}
+
 
 button:hover, input:hover, select:hover {
   background-color: #313244;
 }
+
+button.submitButton {
+  background-color: #a6e3a1;
+  color: #1e1e2e;
+}
+button.submitButton:hover {
+  background-color: #cdd6f4;
+}
+
+button.warning {
+  background-color: #f38ba8;
+  color: #1e1e2e;
+}
+button.warning:hover {
+  background-color: #cdd6f4;
+}
+
+button.actionButton {
+  width: 100%;
+}
+
 
 main {
   div {
@@ -47,25 +106,10 @@ main {
       transition: background-color 0.3s;
     }
 
-
-
-    table {
-      margin:5px;
-      td {
-        width: 50%;
-        margin-left: 5px;
-        margin-right: 5px;
-      }
-    }
   }
 }
 
-td.rightside {
-  text-align: right;
-}
-td.leftside {
-  text-align: left;
-}
+
 
 main.two-col {
   display: grid;
@@ -91,6 +135,7 @@ main.two-col {
       background-color: #313244;
     }
 
+
     a.active {
       background-color: #313244;
     }
@@ -99,16 +144,6 @@ main.two-col {
 
 
 
-main.rates {
-  form {
-    display: grid;
-    grid-template-columns: auto auto;
-    color: black;
-    input {
-      border: 1px solid black;
-    }
-  }
-}
 
 .tabNav {
   display: grid;
@@ -131,6 +166,9 @@ main.rates {
   background-color: #6c7086;
 }
 
+td {
+  width: 50%;
+}
 
 .account-form-table {
   margin: 0.5em;

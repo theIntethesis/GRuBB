@@ -81,18 +81,15 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                                     </td>
                                 </> :
                                 <>
-                                    <td style={{ textAlign: "center" }}>
-                                        <label htmlFor="semester" style={{
-                                            fontSize: "15pt",
-                                            textAlign: "center"
-                                        }}>Semester:</label>
+                                    <td>
+                                        <label htmlFor="semester">Semester:</label>
                                     </td>
-                                    <td style={{ textAlign: "left" }}>
-                                        <select name="semester" defaultValue={initialValues.semester.split(' ')[0]}>
+                                    <td>
+                                        <select name="semester" defaultValue={initialValues.semester} style={{height: "2em"}}>
                                             <option>Fall</option>
                                             <option>Spring</option>
                                         </select>
-                                        <input name="year" type="number" min="2024" max="2040" defaultValue={initialValues.semester.split(' ')[1]}/>
+                                        <input name="year" type="number" min="2024" max="2040" defaultValue={initialValues.year}/>
                                     </td>
                                 </>
                             }
@@ -101,51 +98,67 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                             <td colSpan={2}><hr/></td>
                         </tr>
                         <tr>
-                            <td className="leftside">
+                            <td>
                                 <label htmlFor="inStateTuitionRate">In-State Tuition Rate:</label>
                             </td>
-                            <td className="rightside">
-                                $<input name="inStateTuitionRate" type="number" min="0" className="rightside" defaultValue={initialValues.inStateTuitionRate}/>
+                            <td>
+                                <div className="inputOuterLeft">
+
+
+                                $<input name="inStateTuitionRate" type="number" min="0" defaultValue={initialValues.inStateTuitionRate}/>
+                                </div>
                             </td>
                         </tr>
                         <tr>
-                            <td className="leftside">
+                            <td>
                                 <label htmlFor="outOfStateTuitionRate">Out-of-State Tuition Rate:</label>
                             </td>
-                            <td className="rightside">
-                                $<input name="outOfStateTuitionRate" type="number" min="0" className="rightside" defaultValue={initialValues.outOfStateTuitionRate}/>
+                            <td>
+                                <div className="inputOuterLeft">
+                                $<input name="outOfStateTuitionRate" type="number" min="0" defaultValue={initialValues.outOfStateTuitionRate}/>
+                                </div>
                             </td>
                         </tr>
                         <tr>
-                            <td className="leftside">
+                            <td>
                                 <label htmlFor="tuitionIncrease">Tuition Increase (%):</label>
                             </td>
-                            <td className="rightside">
-                                <input name="tuitionIncrease" type="number" min="0" max="100" className="rightside" defaultValue={initialValues.tuitionIncrease}/>%
+                            <td>
+                                <div className="inputOuterRight">
+                                <input name="tuitionIncrease" type="number" min="0" max="100" defaultValue={initialValues.tuitionIncrease}/>%
+                                </div>
                             </td>
                         </tr>
                         <tr>
-                            <td className="leftside">
+                            <td>
                                 <label htmlFor="facultyFBR">Faculty Fringe Benefits Rate (%):</label>
                             </td>
-                            <td className="rightside">
-                                <input name="facultyFBR" type="number" min="0" max="100" className="rightside" defaultValue={initialValues.facultyFBR}/>%
+                            <td>
+                                <div className="inputOuterRight">
+                                <input name="facultyFBR" type="number" min="0" max="100" defaultValue={initialValues.facultyFBR}/>%
+                                </div>
                             </td>
                         </tr>
                         <tr>
-                            <td className="leftside">
+                            <td>
                                 <label htmlFor="studentFBR">Student Fringe Benefits Rate (%):</label>
                             </td>
-                            <td className="rightside">
-                                <input name="studentFBR" type="number" min="0" max="100" className="rightside" defaultValue={initialValues.studentFBR}/>%
+                            <td>
+                                <div className="inputOuterRight">
+                                <input name="studentFBR" type="number" min="0" max="100" defaultValue={initialValues.studentFBR}/>%
+                                </div>
                             </td>
                         </tr>
                         <tr>
-                            <td className="leftside">
+                            <td>
+
                                 <label htmlFor="postDocFBR">Post-Doc Fringe Benefits Rate (%):</label>
+
                             </td>
-                            <td className="rightside">
-                                <input name="postDgocFBR" type="number" min="0" max="100" className="rightside" defaultValue={initialValues.postDocFBR}/>%
+                            <td>
+                                <div className="inputOuterRight">
+                                <input name="postDocFBR" type="number" min="0" max="100" defaultValue={initialValues.postDocFBR}/>%
+                                </div>
                             </td>
                         </tr>
 
@@ -159,27 +172,33 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
 
                         </tr>
                         <tr>
-                            <td className='leftside'>
+                            <td>
                                 <label htmlFor="perdiem">Per Diem:</label>
                             </td>
-                            <td className='rightside'>
-                                $<input name="perdiem" type="number" min="0" className="rightside" defaultValue={initialValues.perDiem}/>
+                            <td>
+                                <div className="inputOuterLeft">
+                                $<input name="perdiem" type="number" min="0" defaultValue={initialValues.perDiem}/>
+                                </div>
                             </td>
                         </tr>
                         <tr>
-                            <td className='leftside'>
+                            <td>
                                 <label htmlFor="airfare">Airfare:</label>
                             </td>
-                            <td className='rightside'>
-                                $<input name="airfare" type="number" min="0" className="rightside" defaultValue={initialValues.airfare}/>
+                            <td>
+                                <div className="inputOuterLeft">
+                                $<input name="airfare" type="number" min="0" defaultValue={initialValues.airfare}/>
+                                </div>
                             </td>
                         </tr>
                         <tr>
-                            <td className='leftside'>
+                            <td>
                                 <label htmlFor="lodging">Lodging:</label>
                             </td>
-                            <td className='rightside'>
-                                $<input name="lodging" type="number" min="0" className="rightside" defaultValue={initialValues.lodging}/>
+                            <td>
+                                <div className="inputOuterLeft">
+                                $<input name="lodging" type="number" min="0" defaultValue={initialValues.lodging}/>
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -192,24 +211,23 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                             </td>
                         </tr>
                         <tr>
-                            <td className='leftside'>
+                            <td>
                                 <label htmlFor="overheadCharge">Charge Amount:</label>
                             </td>
-                            <td className='rightside'>
-                                $<input name="overheadCharge" type="number" min="0" className="rightside" defaultValue={initialValues.overheadCharge}/>
+                            <td>
+                                <div className="inputOuterLeft">
+                                $<input name="overheadCharge" type="number" min="0" defaultValue={initialValues.overheadCharge}/>
+                                </div>
                             </td>
                         </tr>
                         <tr>
-                            <td colSpan={2} style={{ textAlign: "center" }}>
-                                <button className='px-2 py-1 rounded' style={{
-                                    width: '50%'
-                                }}>{semester == null ? "Submit" : "Update"}</button>
-                                {semester != null ? <button formAction={onDelete} className='px-2 py-1 rounded' style={{
-                                    width: '50%'
-                                }}>
+                            <td>
+                                <button className='actionButton'>{semester == null ? "Submit" : "Update"}</button>
+                            </td>
+                            <td>
+                                {semester != null ? <button formAction={onDelete}  className="warning actionButton">
                                     Delete
                                 </button> : null}
-                            <hr/>
                             </td>
                         </tr>
                     </tbody>

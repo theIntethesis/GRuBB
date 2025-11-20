@@ -29,7 +29,7 @@ function StudentLine({student}: {student?: any}) {
     return <tr>
         <td colSpan={2} style={{textAlign: "center"}}>
             <input type="checkbox" name="outOfState" defaultChecked={student != null ? student.outOfState : false}/> Out of State
-            <hr/>
+
         </td>
 
     </tr>
@@ -51,7 +51,7 @@ function FacultyLine({faculty}: {faculty?: any}) {
                 <option value="Staff">Staff</option>
                 <option value="Post-Doc">Post-Doc</option>
             </select>
-            <hr/>
+
         </td>
     </tr>
 }
@@ -65,14 +65,18 @@ function SalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
         console.log("Rate:", rate, "Rate Unit:", rateUnit, "Percent FTE:", percentFTE);
         (document.getElementById("payment") as HTMLInputElement).value = (Number(rate) * (rateUnit === "Hour" ? 2080 : 1) * (Number(percentFTE) / 100)).toString()
     }
-    
+
     return <>
         <tr>
             <td>
                 <label htmlFor="rate">Rate:</label>
             </td>
             <td>
-                $<input type="float" id="rate" name="rate" onChange={calculatePayment}defaultValue={salaryAccount != null ? salaryAccount.rate : 0}/>  / <select id="rateUnit" onChange={calculatePayment} defaultValue={salaryAccount != null ? salaryAccount.rate : "Hour"}><option>Hour</option><option>Year</option></select>
+                <div className="inputOuterLeft" style={{width: "45%"}}>
+                    $<input type="float" id="rate" name="rate" onChange={calculatePayment} defaultValue={salaryAccount != null ? salaryAccount.rate : 0}/>
+                </div>
+                <div style={{display: "inline-block", width: "10%", textAlign: "center"}}>/</div>
+                <select id="rateUnit" style={{width: "45%", height: "2em"}} onChange={calculatePayment} defaultValue={salaryAccount != null ? salaryAccount.rate : "Hour"}><option>Hour</option><option>Year</option></select>
             </td>
         </tr>
         <tr>
@@ -80,7 +84,9 @@ function SalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
                 <label htmlFor="percentFTE">Percent of Full Time Equivalent:</label>
             </td>
             <td>
+                <div className="inputOuterRight">
                 <input type="number" id="percentFTE" name="percentFTE" min={0} max={100} onChange={calculatePayment} defaultValue={salaryAccount != null ? salaryAccount.percentFTE * 100 : 100}/>%
+                </div>
             </td>
         </tr>
         <tr>
@@ -88,7 +94,10 @@ function SalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
                 <label htmlFor="payment">Payment:</label>
             </td>
             <td>
-                $<input type="number" id="payment" name="payment" disabled={true} defaultValue={salaryAccount != null ? salaryAccount.rate * (salaryAccount.rateUnit === "Hour" ? 2080 : 1) * salaryAccount.percentFTE : 0}/>
+                <div className="inputOuterLeft">
+                    $<input type="number" id="payment" name="payment" disabled={true} defaultValue={salaryAccount != null ? salaryAccount.rate * (salaryAccount.rateUnit === "Hour" ? 2080 : 1) * salaryAccount.percentFTE : 0}/>
+
+                </div>
             </td>
         </tr>
         <tr>
@@ -96,8 +105,11 @@ function SalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
                 <label htmlFor="FBR">Fringe Benefits Rate:</label>
             </td>
             <td>
-                {/* This needs to be updated when the Faculty type is updated. */}
+                <div className="inputOuterRight">
                 <input type="number" id="FBR" name="FBR" min={0} max={100} disabled={true}/>%
+                </div>
+                {/* This needs to be updated when the Faculty type is updated. */}
+
             </td>
         </tr>
     </>
@@ -106,18 +118,35 @@ function SalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
 function OptionalSalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
     // some sort of usestate that when a button is pressed it reveals salary account section
     // only if salary account is null
-    return<></>
+    const [showSalary, setShowSalary] = useState(false)
+
+    const onShowSalary = () => {
+        setShowSalary(true)
+    }
+
+    return <>
+        {!showSalary ? <tr>
+            <td colSpan={2}>
+                <button formAction={onShowSalary} className="actionButton" >Add Salary Account</button>
+            </td>
+        </tr> : <SalaryAccountSection salaryAccount={salaryAccount}/>}
+
+    </>
 }
 
 function StudentAccountSection({studentAccount}: {studentAccount?: any}) {
     // student account stuff
+
     return <>
         <tr>
             <td>
                 <label htmlFor="tuition">Tuition:</label>
             </td>
             <td>
-                $<input type="number" id="tuition" name="tuition" defaultValue={studentAccount != null ? studentAccount.tuition : 0}/>
+                <div className="inputOuterLeft">
+                    $<input type="number" id="tuition" name="tuition" defaultValue={studentAccount != null ? studentAccount.tuition : 0}/>
+
+                </div>
             </td>
         </tr>
         <tr>
@@ -125,7 +154,10 @@ function StudentAccountSection({studentAccount}: {studentAccount?: any}) {
                 <label htmlFor="aid">Aid Received:</label>
             </td>
             <td>
-                $<input type="number" id="aid" name="aid" defaultValue={studentAccount != null ? studentAccount.aidReceived : 0}/>
+                <div className="inputOuterLeft">
+                    $<input type="number" id="aid" name="aid" defaultValue={studentAccount != null ? studentAccount.aidReceived : 0}/>
+
+                </div>
             </td>
         </tr>
     </>
@@ -175,19 +207,25 @@ export function StudentForm(
 
     }
     return <Form action={onSubmit}>
-        <table style={{ margin: "auto" }}>
+        <table>
             <tbody>
                 <IndividualLine individual={student}/>
                 <StudentLine student={student}/>
                 {/* semester switcher, uses redirects */}
+                <tr><td colSpan={2}><hr/></td></tr>
+                {student != null ? <>
+                    <StudentAccountSection/>
+                    <tr><td colSpan={2}><hr/></td></tr>
+                    <OptionalSalaryAccountSection/>
+                    <tr><td colSpan={2}><hr/></td></tr>
+                </> : undefined}
 
-                <StudentAccountSection/>
-                <OptionalSalaryAccountSection/>
                 <tr>
-                    <td><button style={{width: "100%"}}>Submit</button></td>
-                    {student != null ? <td><button formAction={onDelete} style={{width: "100%"}}>Delete</button></td> : undefined}
-                </tr>
+                    {student != null ? <td><button formAction={onDelete} className="warning actionButton">Delete</button></td> : undefined}
 
+                    <td><button className="actionButton submitButton">Submit</button></td>
+
+                </tr>
             </tbody>
         </table>
     </Form>
@@ -233,15 +271,22 @@ export function FacultyForm(
         }
     }
     return <Form action={onSubmit}>
-        <table style={{ margin: "auto" }}>
+        <table>
             <tbody>
                 <IndividualLine individual={faculty}/>
                 <FacultyLine faculty={faculty}/>
                  {/* semester switcher, uses redirects */}
-                 <SalaryAccountSection/>
+                 {faculty != null ? <>
+                    <tr><td colSpan={2}><hr/></td></tr>
+                    <SalaryAccountSection/>
+                    <tr><td colSpan={2}><hr/></td></tr>
+                 </> : undefined}
+
                  <tr>
-                    <td><button style={{width: "100%"}}>Submit</button></td>
-                    {faculty != null ? <td><button formAction={onDelete} style={{width: "100%"}}>Delete</button></td> : undefined}
+                    {faculty != null ? <td><button formAction={onDelete} className="warning actionButton">Delete</button></td> : undefined}
+
+                    <td><button className="actionButton submitButton">Submit</button></td>
+
                 </tr>
             </tbody>
         </table>
