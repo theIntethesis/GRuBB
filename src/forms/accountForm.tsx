@@ -35,27 +35,27 @@ export default function AccountForm({ budget } : {budget: any}) {
             <Form action={onSubmit}>
                 <section className="account-form-table">
 
-                        <label htmlFor="name">Budget Name:</label>
-                        <input name="name" type="text" defaultValue={budget.name}></input>
+                    <label htmlFor="name">Budget Name:</label>
+                    <input name="name" type="text" defaultValue={budget.name}></input>
 
-                        <span/><span/>
+                    <span/><span/>
 
-                        <label htmlFor="PI">Principal Investigator:</label>
-                        <input name="PI" type="text" defaultValue={budget.pi}></input>
+                    <label htmlFor="PI">Principal Investigator:</label>
+                    <input name="PI" type="text" defaultValue={budget.pi}></input>
 
-                        <input id="add-co-pi" type="text"></input>
-                        <button formAction={addPI}>Add</button>
-                        {budget != null ?
-                            coPIs.map((x, idx) => {
-                                return <div className="co-pi-row" key={idx} id={idx.toString()}>
-                                    {x}
-                                    <button formAction={() => removePI(x)}>Remove</button>
-                                </div>
-                            })
-                        : null}
-                        <div id="addhere"/><div/>
+                    <input id="add-co-pi" type="text"></input>
+                    <button formAction={addPI}>Add</button>
+                    {budget != null ?
+                        coPIs.map((x, idx) => {
+                            return <div className="co-pi-row" key={idx} id={idx.toString()}>
+                                {x}
+                                <button formAction={() => removePI(x)}>Remove</button>
+                            </div>
+                        })
+                    : null}
+                    <div id="addhere"/><div/>
 
-                        <button className="actionButton updateButton">Save</button>
+                    <button className="actionButton submitButton">Save</button>
 
                 </section>
             </Form>

@@ -35,7 +35,7 @@ export default function NewInstituionForm() {
                         </td>
                     </tr>
                     <tr>
-                        <td className="leftside">Principle Investigator</td>
+                        <td className="leftside">Principal Investigator</td>
                         <td className="rightside">
                             <input type="test" name="pi"></input>
                         </td>
