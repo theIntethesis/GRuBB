@@ -29,7 +29,7 @@ export default function Header({budgets, current_budget}: {budgets: [any], curre
                 })}
                 <option>Add new Institution</option>
             </select>
-            <button style={{backgroundColor: "white", color: "black", borderRadius: "10px", padding: "0em 0.5em"}}>Export Full Budget</button>
+            <button>Export Full Budget</button>
         </div>
 
         {current_budget != null ?

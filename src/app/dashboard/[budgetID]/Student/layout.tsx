@@ -2,6 +2,7 @@ import dbConnect from "@/lib/mongodb"
 import { Faculty, Individual, SemesterAccount, SalaryAccount, StudentAccount, Student } from "@/lib/models"
 import Link from "next/link";
 import { getAllStudents } from "@/api/individuals";
+import StudentSidebar from "./sidebar";
 
 
 export default async function Page({ params, children }) {
@@ -11,9 +12,7 @@ export default async function Page({ params, children }) {
     const students = await getAllStudents(budgetID)
     return <main className="two-col">
         <div className="items">
-            {students != null ? students.map((x, idx) => {
-                return <Link key={idx} href={"/dashboard/" + budgetID + "/Student/" + x._id.toString()}>{x.name}</Link>
-            }) : null}
+            <StudentSidebar students={students} budgetID={budgetID}/>
             <Link href={`/dashboard/${budgetID}/Student/`}>Add New Student</Link>
         </div>
         <div>

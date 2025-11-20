@@ -68,14 +68,49 @@ export async function modifySemesterAccount(
     lodging: number,
     overheadCharge: number
 ) {
+    console.log(year)
+    const acc = (await SemesterAccount.findOneAndUpdate({budgetID: budgetID, semester: semester, year: Number(year)}, {
+        inStateTuitionRate,
+        outOfStateTuitionRate,
+        tuitionIncrease,
+        facultyFBR,
+        studentFBR,
+        postDocFBR,
+    }))
 
+
+    await TravelProfile.findByIdAndUpdate(acc.travelProfile, {
+        perDiem,
+        airfare,
+        lodging
+    })
+
+    await OverheadCharge.findByIdAndUpdate(acc.overheadCharge, {
+        charge: overheadCharge
+    })
 
     revalidatePath("/dashboard", "layout")
 }
 
 export async function deleteSemesterAccount(
-    budgetID: string
+    budgetID: string,
+    semester: string,
+    year: string
 ) {
+
+    const acc = await (SemesterAccount.find({
+        budgetID: budgetID,
+        semester: semester,
+        year: Number(year)
+    }).lean())
+
+    const curr = acc[0]
+
+
+    await(TravelProfile.findByIdAndDelete(curr.travelProfile))
+    await(OverheadCharge.findByIdAndDelete(curr.overheadCharge))
+    await(SemesterAccount.findByIdAndDelete(curr._id))
+
 
     revalidatePath("/dashboard", "layout")
     redirect(`/dashboard/${budgetID}/Rates`)
@@ -112,16 +147,31 @@ export async function getSemesterAccount(
 
     const curr = acc[0]
 
-    console.log(curr)
 
-    curr._id = curr._id.toJSON()
+    const travelProfile = await(TravelProfile.findById(curr.travelProfile))
+    const overheadCharge = await(OverheadCharge.findById(curr.overheadCharge))
+    //console.log(curr)
+
     curr.budgetID = curr.budgetID.toJSON()
-    curr.travelProfile = curr.travelProfile.toJSON()
+
     curr.overheadCharge = curr.overheadCharge.toJSON()
 
-    console.log(curr)
+    //console.log(curr)
 
-    return curr
+    return {
+        inStateTuitionRate: curr.inStateTuitionRate,
+        outOfStateTuitionRate: curr.outOfStateTuitionRate,
+        tuitionIncrease: curr.tuitionIncrease,
+        year: curr.year,
+        semester: curr.semester,
+        facultyFBR: curr.facultyFBR,
+        studentFBR: curr.studentFBR,
+        postDocFBR: curr.postDocFBR,
+        perDiem: travelProfile.perDiem,
+        airfare: travelProfile.airfare,
+        lodging: travelProfile.lodging,
+        overheadCharge: overheadCharge.charge
+    }
 
-    // stuff here
+
 }

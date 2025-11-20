@@ -39,7 +39,7 @@ export async function getAllBudgets() {
         });
     })
 
-    console.log(allBudgets)
+    // console.log(allBudgets)
 
     return allBudgets
 }

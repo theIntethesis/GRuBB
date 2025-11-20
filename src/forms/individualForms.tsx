@@ -1,5 +1,5 @@
 "use client"
-import { createNewStudent, createNewFaculty } from "@/api/individuals"
+import { createNewStudent, createNewFaculty, deleteFaculty, deleteStudent } from "@/api/individuals"
 import { StudentAccount } from "@/lib/models"
 import { redirect } from "next/navigation"
 import Form from "next/form"
@@ -65,24 +65,33 @@ function StudentAccountSection({studentAccount}: {studentAccount?: any}) {
 
 // individual == null implies everything else is null
 export function StudentForm(
-    {budgetID, individual, student, studentAccount, salaryAccount, semesters}: {budgetID: string, individual?: any, student?: any, studentAccount?: any, salaryAccount?: any, semesters?: string[]}
+    {budgetID,  student, studentAccount, salaryAccount, semesters}: {budgetID: string, student?: any, studentAccount?: any, salaryAccount?: any, semesters?: {semester: "Fall" | "Spring", year: number}[]}
 ) {
     const onSubmit = (formData: FormData) => {
-        console.log(formData)
+        // console.log(formData)
         // outOfState == undefined or "on"
-        createNewStudent(formData.get("name")?.toString() || "unnamed", formData.get("outOfState") == "on" || false, budgetID)
+        if (student == null) {
+            createNewStudent(formData.get("name")?.toString() || "unnamed", formData.get("outOfState") == "on" || false, budgetID)
+        }
+
+    }
+    const onDelete = () => {
+        if (student != null) {
+            deleteStudent(student.individual_id, budgetID)
+        }
+
     }
     return <Form action={onSubmit}>
         <table style={{ margin: "auto" }}>
             <tbody>
-                <IndividualLine individual={individual}/>
+                <IndividualLine individual={student}/>
                 <StudentLine student={student}/>
                 {/* semester switcher, uses redirects */}
 
                 <StudentAccountSection/>
                 <OptionalSalaryAccountSection/>
                 <tr>
-                    {individual != null ? <td colSpan={2} style={{width: "100%"}}><button>Delete</button></td> : undefined}
+                    {student != null ? <td colSpan={2} style={{width: "100%"}}><button formAction={onDelete}>Delete</button></td> : undefined}
                     <td colSpan={2} style={{width: "100%"}}><button>Submit</button></td>
                 </tr>
 
@@ -98,20 +107,28 @@ export function StudentForm(
     semesters is an array of strings that are valid slugs
 */
 export function FacultyForm(
-    {budgetID, individual, faculty, salaryAccount, semesters}: {budgetID: string, individual?: any, faculty?: any, salaryAccount?: any, semesters?: string[]}
+    {budgetID,  faculty, salaryAccount, semesters}: {budgetID: string, faculty?: any, salaryAccount?: any, semesters?: {semester: "Fall" | "Spring", year: number}[]}
 ) {
     const onSubmit = (formData: FormData) => {
-        createNewFaculty(formData.get("name")?.toString() || "unnamed", formData.get("facultyType")?.toString() || "Faculty", budgetID)
+        if (faculty == null) {
+            createNewFaculty(formData.get("name")?.toString() || "unnamed", formData.get("facultyType")?.toString() || "Faculty", budgetID)
+        }
+
+    }
+    const onDelete = () => {
+        if (faculty != null) {
+            deleteFaculty(faculty.individual_id, budgetID)
+        }
     }
     return <Form action={onSubmit}>
         <table style={{ margin: "auto" }}>
             <tbody>
-                <IndividualLine individual={individual}/>
+                <IndividualLine individual={faculty}/>
                 <FacultyLine/>
                  {/* semester switcher, uses redirects */}
                  <SalaryAccountSection/>
                  <tr>
-                    {individual != null ? <td><button>Delete</button></td> : undefined}
+                    {faculty != null ? <td><button formAction={onDelete}>Delete</button></td> : undefined}
                     <td><button>Submit</button></td>
                 </tr>
             </tbody>
