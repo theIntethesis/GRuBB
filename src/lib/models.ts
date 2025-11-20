@@ -45,7 +45,8 @@ export interface I_SalaryAccount extends mongoose.Document {
     rate: number,
     rateTimeUnit: "hour" | "year",
     percentFTE: number, // Percentage
-    semester: string, // i'll type this later
+    semester: "Fall" | "Spring", // i'll type this later
+    year: number,
     individual_id: string
     // payment - calculated (payment)
     // fringe benefits rate - calculated, (fringeRate)
@@ -57,7 +58,8 @@ export interface I_Student extends mongoose.Document {
 }
 export interface I_StudentAccount extends mongoose.Document {
     // tuition - to be looked up
-    semester: string, // i'll type this later
+    semester: "Fall" | "Spring", // i'll type this later
+    year: number,
     individual_id: string, // individual ID
     aidRecieved: number,
 }
@@ -106,6 +108,7 @@ const SalaryAccountSchema = new mongoose.Schema<I_SalaryAccount>({
     rateTimeUnit: String,
     percentFTE: Number,
     semester: String,
+    year: Number,
     individual_id: mongoose.Types.ObjectId
 })
 const StudentSchema = new mongoose.Schema<I_Student>({
@@ -114,6 +117,7 @@ const StudentSchema = new mongoose.Schema<I_Student>({
 })
 const StudentAccountSchema = new mongoose.Schema<I_StudentAccount>({
     semester: String,
+    year: Number,
     individual_id: mongoose.Types.ObjectId,
     aidRecieved: Number
 })

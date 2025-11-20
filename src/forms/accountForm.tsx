@@ -30,7 +30,6 @@ export default function AccountForm({ budget } : {budget: any}) {
         setCoPIs(coPIs.filter(x => x != coPIName))
     }
 
-
     return <main>
         <div>
             <Form action={onSubmit}>
@@ -38,8 +37,6 @@ export default function AccountForm({ budget } : {budget: any}) {
 
                         <label htmlFor="name">Budget Name:</label>
                         <input name="name" type="text" defaultValue={budget.name}></input>
-
-
 
                         <span/><span/>
 
@@ -61,8 +58,6 @@ export default function AccountForm({ budget } : {budget: any}) {
                         <button>Save</button>
 
                 </section>
-
-
             </Form>
         </div>
     </main>

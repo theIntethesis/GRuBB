@@ -14,8 +14,6 @@ export default function Header({budgets, current_budget}: {budgets: [any], curre
         else {
             redirect ("/dashboard")
         }
-
-
     }
 
     // we'lll actually want to create a new budget here...

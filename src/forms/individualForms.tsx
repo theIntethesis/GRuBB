@@ -56,6 +56,8 @@ function FacultyLine({faculty}: {faculty?: any}) {
     </tr>
 }
 
+
+
 function SalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
     // salary stuff
     const calculatePayment = () => {
@@ -115,10 +117,28 @@ function SalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
     </>
 }
 
+// where basepath = /dashboard/${budgetID}/${Student || Faculty}/${individualID}/
+function SemesterDropdown({basePath, semesters}: {basePath: string, semesters?: {semester: "Fall" | "Spring", year: number}[]}) {
+    const handleOnChange = (e) => {
+        // probably e.target.value or smth
+    }
+
+    return <tr>
+        <td colSpan={2}>
+            <select onChange={handleOnChange}>
+                {semesters?.map(x => {
+                    return <option value={`${x.semester}/${x.year}`}>{x.semester} {x.year}</option>
+                })}
+                <option>Add New Semester</option>
+            </select>
+        </td>
+    </tr>
+}
+
 function OptionalSalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
     // some sort of usestate that when a button is pressed it reveals salary account section
     // only if salary account is null
-    const [showSalary, setShowSalary] = useState(false)
+    const [showSalary, setShowSalary] = useState(salaryAccount != undefined)
 
     const onShowSalary = () => {
         setShowSalary(true)
@@ -211,12 +231,13 @@ export function StudentForm(
             <tbody>
                 <IndividualLine individual={student}/>
                 <StudentLine student={student}/>
-                {/* semester switcher, uses redirects */}
-                <tr><td colSpan={2}><hr/></td></tr>
+
                 {student != null ? <>
+                    <SemesterDropdown basePath={`dashboard/${budgetID}/Student/${student.individual_id}`} semesters={semesters}/>
+                    <tr><td colSpan={2}><hr/></td></tr>
                     <StudentAccountSection/>
                     <tr><td colSpan={2}><hr/></td></tr>
-                    <OptionalSalaryAccountSection/>
+                    <OptionalSalaryAccountSection salaryAccount={salaryAccount}/>
                     <tr><td colSpan={2}><hr/></td></tr>
                 </> : undefined}
 
@@ -238,7 +259,13 @@ export function StudentForm(
 */
 export function FacultyForm(
     {budgetID,  faculty, salaryAccount, semesters}:
-    {budgetID: string, faculty?: any, salaryAccount?: any, semesters?: {semester: "Fall" | "Spring", year: number}[]}
+    {
+        budgetID: string,
+        faculty?: any,
+        salaryAccount?: any,
+        semesters?: {semester: "Fall" | "Spring", year: number}[], // all semesters that currently exist
+
+    }
 ) {
     const onSubmit = (formData: FormData) => {
         if (faculty == null) {
@@ -275,8 +302,9 @@ export function FacultyForm(
             <tbody>
                 <IndividualLine individual={faculty}/>
                 <FacultyLine faculty={faculty}/>
-                 {/* semester switcher, uses redirects */}
+
                  {faculty != null ? <>
+                    <SemesterDropdown basePath={`dashboard/${budgetID}/Faculty/${faculty.individual_id}`} semesters={semesters}/>
                     <tr><td colSpan={2}><hr/></td></tr>
                     <SalaryAccountSection/>
                     <tr><td colSpan={2}><hr/></td></tr>
