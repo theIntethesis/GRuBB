@@ -1,7 +1,7 @@
 "use server"
 import { Individual, Student, Faculty, Budget } from "@/lib/models";
 import { redirect } from "next/navigation"
-import { revalidatePath} from 'next/cache'
+import { refresh, revalidatePath} from 'next/cache'
 
 export async function createNewStudent(name: string, outOfState: boolean, budgetID: string) {
     const individual = new Individual({
@@ -38,18 +38,21 @@ export async function deleteStudent(individual_id: string, budgetID: string) {
     redirect(`/dashboard/${budgetID}/Student`)
 }
 
-export async function deleteFaculty(individual_id: string, budgetID: string) {
-    // make sure to delete the student, the individual, and all accounts connected to them
-    await Faculty.deleteOne({individual_id})
-    await Individual.findByIdAndDelete(individual_id)
+export async function modifyStudent(name: string, outOfState: boolean, individual_id: string) {
+    const student = await Student.findOne({individual_id})
+    student.outOfState = outOfState
+    await student.save()
 
-    const budget = await Budget.findById(budgetID)
-    budget.faculty.pull(individual_id)
-    await budget.save()
+    const individual = await Individual.findById(individual_id)
+    individual.name = name
+    await individual.save()
+
+    console.log(student)
 
     revalidatePath("/dashboard", "layout")
-    redirect(`/dashboard/${budgetID}/Faculty`)
 }
+
+
 
 
 export async function createNewFaculty(name:string, role:string, budgetID:string) {
@@ -70,6 +73,37 @@ export async function createNewFaculty(name:string, role:string, budgetID:string
     revalidatePath("/dashboard", "layout")
     redirect(`/dashboard/${budgetID}/Faculty/${faculty.individual_id.toJSON()}`)
 }
+
+export async function deleteFaculty(individual_id: string, budgetID: string) {
+    // make sure to delete the student, the individual, and all accounts connected to them
+    await Faculty.deleteOne({individual_id})
+    await Individual.findByIdAndDelete(individual_id)
+
+    const budget = await Budget.findById(budgetID)
+    budget.faculty.pull(individual_id)
+    await budget.save()
+
+    revalidatePath("/dashboard", "layout")
+    redirect(`/dashboard/${budgetID}/Faculty`)
+}
+
+
+
+export async function modifyFaculty(name: string, role: string, individual_id: string) {
+    const faculty = await Faculty.findOne({individual_id})
+    faculty.role = role
+    await faculty.save()
+
+    const individual = await Individual.findById(individual_id)
+    individual.name = name
+
+    await individual.save()
+
+
+    revalidatePath("/dashboard", "layout")
+    refresh()
+}
+
 
 export async function getStudent(individual_id: string) {
     const student = (await Student.find({individual_id: individual_id}))[0] // individualID is unique

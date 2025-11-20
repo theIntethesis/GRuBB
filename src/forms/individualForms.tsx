@@ -1,8 +1,9 @@
 "use client"
-import { createNewStudent, createNewFaculty, deleteFaculty, deleteStudent } from "@/api/individuals"
+import { createNewStudent, createNewFaculty, deleteFaculty, deleteStudent, modifyStudent, modifyFaculty } from "@/api/individuals"
 import { StudentAccount } from "@/lib/models"
 import { redirect } from "next/navigation"
 import Form from "next/form"
+import { useEffect, useState } from "react"
 
 function IndividualLine({individual}: {individual?: any}) {
     return <tr>
@@ -27,7 +28,7 @@ function IndividualLine({individual}: {individual?: any}) {
 function StudentLine({student}: {student?: any}) {
     return <tr>
         <td colSpan={2} style={{textAlign: "center"}}>
-            <input type="checkbox" name="outOfState"/> Out of State
+            <input type="checkbox" name="outOfState" defaultChecked={student != null ? student.outOfState : false}/> Out of State
             <hr/>
         </td>
 
@@ -35,12 +36,21 @@ function StudentLine({student}: {student?: any}) {
 }
 
 function FacultyLine({faculty}: {faculty?: any}) {
+    const [role, setRole] = useState(undefined)
+
+    // when you gotta pull out the useEffect you know shits fucked
+    useEffect(() => {
+        console.log(faculty?.role || "Faculty")
+        setRole(faculty?.role || "Faculty")
+
+    }, [faculty])
+
     return <tr>
         <td colSpan={2} style={{textAlign: "center"}}>
-            <select name="facultyType">
-                <option>Faculty</option>
-                <option>Staff</option>
-                <option>Post-Doc</option>
+            <select name="facultyType"  defaultValue={role} key={role}>
+                <option value="Faculty">Faculty</option>
+                <option value="Staff">Staff</option>
+                <option value="Post-Doc">Post-Doc</option>
             </select>
             <hr/>
         </td>
@@ -65,13 +75,25 @@ function StudentAccountSection({studentAccount}: {studentAccount?: any}) {
 
 // individual == null implies everything else is null
 export function StudentForm(
-    {budgetID,  student, studentAccount, salaryAccount, semesters}: {budgetID: string, student?: any, studentAccount?: any, salaryAccount?: any, semesters?: {semester: "Fall" | "Spring", year: number}[]}
+    {budgetID,  student, studentAccount, salaryAccount, semesters}:
+    {budgetID: string, student?: any, studentAccount?: any, salaryAccount?: any, semesters?: {semester: "Fall" | "Spring", year: number}[]}
 ) {
     const onSubmit = (formData: FormData) => {
         // console.log(formData)
         // outOfState == undefined or "on"
         if (student == null) {
-            createNewStudent(formData.get("name")?.toString() || "unnamed", formData.get("outOfState") == "on" || false, budgetID)
+            createNewStudent(
+                formData.get("name")?.toString() || "unnamed",
+                formData.get("outOfState") == "on" || false,
+                budgetID
+            )
+        }
+        else {
+            modifyStudent(
+                formData.get("name")?.toString() || student.name,
+                formData.get("outOfState") == "on",
+                student.individual_id
+            )
         }
 
     }
@@ -104,14 +126,25 @@ export function StudentForm(
     individual is the POJO returned from mongo
     faculty is Faculty from mongo
     salaryAccount ^
-    semesters is an array of strings that are valid slugs
 */
 export function FacultyForm(
-    {budgetID,  faculty, salaryAccount, semesters}: {budgetID: string, faculty?: any, salaryAccount?: any, semesters?: {semester: "Fall" | "Spring", year: number}[]}
+    {budgetID,  faculty, salaryAccount, semesters}:
+    {budgetID: string, faculty?: any, salaryAccount?: any, semesters?: {semester: "Fall" | "Spring", year: number}[]}
 ) {
     const onSubmit = (formData: FormData) => {
         if (faculty == null) {
-            createNewFaculty(formData.get("name")?.toString() || "unnamed", formData.get("facultyType")?.toString() || "Faculty", budgetID)
+            createNewFaculty(
+                formData.get("name")?.toString() || "unnamed",
+                formData.get("facultyType")?.toString() || "Faculty",
+                budgetID
+            )
+        }
+        else {
+            modifyFaculty(
+                formData.get("name")?.toString() || faculty.name,
+                formData.get("facultyType")?.toString() || "Faculty",
+                faculty.individual_id
+            )
         }
 
     }
@@ -124,7 +157,7 @@ export function FacultyForm(
         <table style={{ margin: "auto" }}>
             <tbody>
                 <IndividualLine individual={faculty}/>
-                <FacultyLine/>
+                <FacultyLine faculty={faculty}/>
                  {/* semester switcher, uses redirects */}
                  <SalaryAccountSection/>
                  <tr>

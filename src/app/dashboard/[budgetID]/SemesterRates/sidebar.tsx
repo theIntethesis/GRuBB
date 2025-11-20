@@ -10,7 +10,7 @@ export default function RatesSidebar({semesters, budgetID}) {
 
     return <div className="items">
         {semesters != null ? semesters.map(x => {
-            const path = `/dashboard/${budgetID}/Rates/${x.year}/${x.semester}`
+            const path = `/dashboard/${budgetID}/SemesterRates/${x.year}/${x.semester}`
             if (path == currPath) {
                 anyActive = true
                 return <Link href={path} key={x._id} className="active">{x.semester} {x.year}</Link>
@@ -20,6 +20,6 @@ export default function RatesSidebar({semesters, budgetID}) {
             }
 
         }) : null}
-        <Link href={`/dashboard/${budgetID}/Rates/`} className={!anyActive ? "active" : undefined}>Add New Semester</Link>
+        <Link href={`/dashboard/${budgetID}/SemesterRates/`} className={!anyActive ? "active" : undefined}>Add New Semester</Link>
     </div>
 }

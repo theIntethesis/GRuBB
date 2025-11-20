@@ -50,7 +50,7 @@ export async function createSemesterAccount(
     await newacc.save()
 
     revalidatePath("/dashboard", "layout")
-    redirect(`/dashboard/${budgetID}/Rates/${year}/${semester}`)
+    redirect(`/dashboard/${budgetID}/SemesterRates/${year}/${semester}`)
 }
 
 export async function modifySemesterAccount(
@@ -113,7 +113,7 @@ export async function deleteSemesterAccount(
 
 
     revalidatePath("/dashboard", "layout")
-    redirect(`/dashboard/${budgetID}/Rates`)
+    redirect(`/dashboard/${budgetID}/SemesterRates`)
 }
 
 
