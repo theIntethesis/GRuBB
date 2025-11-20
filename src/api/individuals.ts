@@ -19,7 +19,6 @@ export async function createNewStudent(name: string, outOfState: boolean, budget
 
     console.log("here")
     await budget.save()
-    // return individual._id.toString()
 }
 
 export async function createNewFaculty(name:string, role:string, budgetID:string) {
@@ -36,9 +35,15 @@ export async function createNewFaculty(name:string, role:string, budgetID:string
     
     budget.facultys.push(individual._id)
     await budget.save()
-    // return individual._id.toString()
 }
 
 export async function getAllStudents(budgetID: string) {
-    // return { individual: {name, id}, outOfState}
+    const budget = await Budget.findById(budgetID)
+    let students = []
+    for (let i in budget.students) {
+        const studentID = budget.students[i].toJSON();
+        const ind = await Individual.findById(studentID);
+        students.push(ind);
+    }
+    return students;
 }

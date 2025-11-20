@@ -14,6 +14,9 @@ export async function getBudget(budgetID: string) {
         budget.students = budget.students.map(y => {
             return y.toJSON()
         })
+        budget.faculty = budget.faculty.map(y => {
+            return y.toJSON()
+        });
         return budget
     }
     catch (e) {
@@ -31,6 +34,9 @@ export async function getAllBudgets() {
         x.students = x.students.map(y => {
             return y.toJSON()
         })
+        x.faculty = x.faculty.map(y => {
+            return y.toJSON()
+        });
     })
 
     console.log(allBudgets)
