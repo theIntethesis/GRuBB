@@ -150,10 +150,21 @@ export function StudentForm(
             modifyStudent(
                 formData.get("name")?.toString() || student.name,
                 formData.get("outOfState") == "on",
-                // formData.get("tuition"), 
-                // formData.get("aid"),
                 student.individual_id
             )
+            /*
+            modifyStudentAccount(
+                formData.get("tuition")?.toString() || studentAccount.tuition,
+                formData.get("aid")?.toString() || studentAccount.aidReceived,
+                student.individual_id
+            )
+            modifySalaryAccount(
+                formData.get("rate")?.toString() || salaryAccount.rate,
+                formData.get("rateUnit")?.toString() || salaryAccount.rateUnit,
+                formData.get("percentFTE")?.toString() || salaryAccount.percentFTE,
+                student.individual_id
+            )
+            */
         }
 
     }
@@ -203,10 +214,16 @@ export function FacultyForm(
             modifyFaculty(
                 formData.get("name")?.toString() || faculty.name,
                 formData.get("facultyType")?.toString() || "Faculty",
-                // formData.get("rate"),
-                // formData.get("percentFTE"),
                 faculty.individual_id
             )
+            /*
+            modifySalaryAccount(
+                formData.get("rate")?.toString() || salaryAccount.rate,
+                formData.get("rateUnit")?.toString() || salaryAccount.rateUnit,
+                formData.get("percentFTE")?.toString() || salaryAccount.percentFTE,
+                faculty.individual_id
+            )
+            */
         }
 
     }
