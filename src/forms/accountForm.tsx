@@ -55,7 +55,7 @@ export default function AccountForm({ budget } : {budget: any}) {
                         : null}
                         <div id="addhere"/><div/>
 
-                        <button>Save</button>
+                        <button className="actionButton updateButton">Save</button>
 
                 </section>
             </Form>

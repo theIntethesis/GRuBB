@@ -222,7 +222,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                         </tr>
                         <tr>
                             <td>
-                                <button className='actionButton'>{semester == null ? "Submit" : "Update"}</button>
+                                <button className='actionButton submitButton'>{semester == null ? "Submit" : "Update"}</button>
                             </td>
                             <td>
                                 {semester != null ? <button formAction={onDelete}  className="warning actionButton">

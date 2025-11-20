@@ -14,6 +14,7 @@ function IndividualLine({individual}: {individual?: any}) {
                 type="text"
                 placeholder="Name"
                 defaultValue={individual != null ? individual.name : ""}
+                required={true}
                 name="name"
                 style={{
                     fontSize: "20pt",
@@ -58,7 +59,7 @@ function FacultyLine({faculty}: {faculty?: any}) {
 
 
 
-function SalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
+function SalaryAccountSection({salaryAccount, FBROverride}: {salaryAccount?: any, FBROverride?: "Staff" | "Faculty" | "Post-Doc" | null}) {
     // salary stuff
     const calculatePayment = () => {
         const rate = (document.getElementById("rate") as HTMLInputElement).valueAsNumber;
@@ -75,7 +76,7 @@ function SalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
             </td>
             <td>
                 <div className="inputOuterLeft" style={{width: "45%"}}>
-                    $<input type="float" id="rate" name="rate" onChange={calculatePayment} defaultValue={salaryAccount != null ? salaryAccount.rate : 0}/>
+                    $<input type="number" step={0.1} id="rate" name="rate" min={0} onChange={calculatePayment} defaultValue={salaryAccount != null ? salaryAccount.rate : 0}/>
                 </div>
                 <div style={{display: "inline-block", width: "10%", textAlign: "center"}}>/</div>
                 <select id="rateUnit" style={{width: "45%", height: "2em"}} onChange={calculatePayment} defaultValue={salaryAccount != null ? salaryAccount.rate : "Hour"}><option>Hour</option><option>Year</option></select>
@@ -107,11 +108,11 @@ function SalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
                 <label htmlFor="FBR">Fringe Benefits Rate:</label>
             </td>
             <td>
+                {/* This needs to be updated when the Faculty type is updated.
+                    FBROverride ? getFBR(semester, FBROverride) : getFBR(semester, faculty?.role) */}
                 <div className="inputOuterRight">
                 <input type="number" id="FBR" name="FBR" min={0} max={100} disabled={true}/>%
                 </div>
-                {/* This needs to be updated when the Faculty type is updated. */}
-
             </td>
         </tr>
     </>
@@ -147,9 +148,9 @@ function OptionalSalaryAccountSection({salaryAccount}: {salaryAccount?: any}) {
     return <>
         {!showSalary ? <tr>
             <td colSpan={2}>
-                <button formAction={onShowSalary} className="actionButton" >Add Salary Account</button>
+                <button type="button" onClick={onShowSalary} className="actionButton" >Add Salary Account</button>
             </td>
-        </tr> : <SalaryAccountSection salaryAccount={salaryAccount}/>}
+        </tr> : <SalaryAccountSection salaryAccount={salaryAccount} FBROverride={"Staff"}/>}
 
     </>
 }
@@ -194,7 +195,7 @@ export function StudentForm(
         if (student == null) {
             createNewStudent(
                 formData.get("name")?.toString() || "unnamed",
-                formData.get("outOfState") == "on" || false,
+                formData.get("outOfState") == "on",
                 budgetID
             )
         }
@@ -242,10 +243,8 @@ export function StudentForm(
                 </> : undefined}
 
                 <tr>
-                    {student != null ? <td><button formAction={onDelete} className="warning actionButton">Delete</button></td> : undefined}
-
                     <td><button className="actionButton submitButton">Submit</button></td>
-
+                    {student != null ? <td><button type="button" onClick={onDelete} className="warning actionButton">Delete</button></td> : undefined}
                 </tr>
             </tbody>
         </table>
@@ -311,9 +310,8 @@ export function FacultyForm(
                  </> : undefined}
 
                  <tr>
-                    {faculty != null ? <td><button formAction={onDelete} className="warning actionButton">Delete</button></td> : undefined}
-
                     <td><button className="actionButton submitButton">Submit</button></td>
+                    {faculty != null ? <td><button type="button" onClick={onDelete} className="warning actionButton">Delete</button></td> : undefined}
 
                 </tr>
             </tbody>
