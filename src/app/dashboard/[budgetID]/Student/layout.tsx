@@ -11,10 +11,7 @@ export default async function Page({ params, children }) {
 
     const students = await getAllStudents(budgetID)
     return <main className="two-col">
-        <div className="items">
-            <StudentSidebar students={students} budgetID={budgetID}/>
-            <Link href={`/dashboard/${budgetID}/Student/`}>Add New Student</Link>
-        </div>
+        <StudentSidebar students={students} budgetID={budgetID}/>
         <div>
             {children}
         </div>

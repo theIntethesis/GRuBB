@@ -12,11 +12,7 @@ export default async function Page({ params, children }: {params: {budgetID: str
     const individuals = await getAllFaculty(budgetID)
 
     return <main className="two-col">
-            <div className="items">
-
-                <FacultySidebar budgetID={budgetID} faculty={individuals}/>
-                <Link href={`/dashboard/${budgetID}/Faculty/`}>Add New Faculty Member</Link>
-            </div>
+            <FacultySidebar budgetID={budgetID} faculty={individuals}/>
             <div>
                 {children}
             </div>
