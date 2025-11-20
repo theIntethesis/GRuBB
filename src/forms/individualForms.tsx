@@ -70,8 +70,7 @@ export function StudentForm(
     const onSubmit = (formData: FormData) => {
         console.log(formData)
         // outOfState == undefined or "on"
-        let studentID = createNewStudent(formData.get("name")?.toString() || "unnamed", formData.get("outOfState") == "on" || false, budgetID)
-        //redirect(`/dashboard/${budgetID}/Student/${studentID}`)
+        createNewStudent(formData.get("name")?.toString() || "unnamed", formData.get("outOfState") == "on" || false, budgetID)
     }
     return <Form action={onSubmit}>
         <table style={{ margin: "auto" }}>
@@ -83,8 +82,8 @@ export function StudentForm(
                 <StudentAccountSection/>
                 <OptionalSalaryAccountSection/>
                 <tr>
-                    {individual != null ? <td><button>Delete</button></td> : undefined}
-                    <td><button>Submit</button></td>
+                    {individual != null ? <td colSpan={2} style={{width: "100%"}}><button>Delete</button></td> : undefined}
+                    <td colSpan={2} style={{width: "100%"}}><button>Submit</button></td>
                 </tr>
 
             </tbody>
@@ -99,10 +98,10 @@ export function StudentForm(
     semesters is an array of strings that are valid slugs
 */
 export function FacultyForm(
-    {individual, faculty, salaryAccount, semesters}: {individual?: any, faculty?: any, salaryAccount?: any, semesters?: string[]}
+    {budgetID, individual, faculty, salaryAccount, semesters}: {budgetID: string, individual?: any, faculty?: any, salaryAccount?: any, semesters?: string[]}
 ) {
     const onSubmit = (formData: FormData) => {
-
+        createNewFaculty(formData.get("name")?.toString() || "unnamed", formData.get("facultyType")?.toString() || "Faculty", budgetID)
     }
     return <Form action={onSubmit}>
         <table style={{ margin: "auto" }}>
