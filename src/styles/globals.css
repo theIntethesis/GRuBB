@@ -53,14 +53,20 @@ td {
   }
 
   display: inline-grid;
+  width: 100%;
+  grid-template-rows: 2em;
+  align-items: center;
+  column-gap: 0.25em;
 
 }
 
 .inputOuterLeft {
   grid-template-columns: 1em auto;
+
 }
 .inputOuterRight {
   grid-template-columns: auto 1em;
+
 }
 
 .inputOuterLeft:hover, .inputOuterRight:hover {

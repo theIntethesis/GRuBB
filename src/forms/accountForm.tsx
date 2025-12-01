@@ -43,19 +43,19 @@ export default function AccountForm({ budget } : {budget: any}) {
                     <label htmlFor="PI">Principal Investigator:</label>
                     <input name="PI" type="text" defaultValue={budget.pi}></input>
 
-                    <input id="add-co-pi" type="text"></input>
-                    <button formAction={addPI}>Add</button>
-                    {budget != null ?
-                        coPIs.map((x, idx) => {
-                            return <div className="co-pi-row" key={idx} id={idx.toString()}>
-                                {x}
-                                <button formAction={() => removePI(x)}>Remove</button>
-                            </div>
-                        })
-                    : null}
-                    <div id="addhere"/><div/>
-
-                    <button className="actionButton submitButton">Save</button>
+                        <input id="add-co-pi" type="text"></input>
+                        <button formAction={addPI}>Add</button>
+                        {budget != null ?
+                            coPIs.map((x, idx) => {
+                                return <div className="co-pi-row" key={idx} id={idx.toString()}>
+                                    {x}
+                                    <button formAction={() => removePI(x)}>Remove</button>
+                                </div>
+                            })
+                        : null}
+                        <div id="addhere"/><div/>
+                        {/* make span 2 */}
+                        <button>Save</button>
 
                 </section>
             </Form>

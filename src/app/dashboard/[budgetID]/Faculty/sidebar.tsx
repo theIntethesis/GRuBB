@@ -10,7 +10,7 @@ export default function FacultySidebar({faculty, budgetID}: {faculty: any[], bud
     return <div className="items">
         {faculty != null ? faculty.map(x => {
             const path = `/dashboard/${budgetID}/Faculty/${x.individual_id.toString()}`
-            if (path == currPath) {
+            if (currPath.startsWith(path)) {
                 anyActive = true
                 return <Link key={x.individual_id} href={path} className="active">{x.name}</Link>
             }

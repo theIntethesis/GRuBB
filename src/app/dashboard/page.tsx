@@ -11,7 +11,6 @@ export default async function Page() {
     return <>
         <Header budgets={allBudgets} current_budget={null}/>
         <main>
-            {/* Prompt done. Next step is create acct.*/}
             <NewInstituionForm/>
         </main>
 

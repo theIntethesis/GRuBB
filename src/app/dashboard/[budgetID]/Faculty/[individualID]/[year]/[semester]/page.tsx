@@ -1,12 +1,22 @@
+import { getFaculty } from "@/api/individuals"
 import { FacultyForm } from "@/forms/individualForms"
 import { getAllSalaryAccounts } from "@/api/accounts"
-// modify semester
-export default function page({params}: {params: {budgetID: string, individualID: string, semester: string, year: string}}) {
-    //  need to fetch all semesters they are in
+import { getAllAccounts } from "@/api/semesterAccount"
+// new semester
+export default async function page({params}: {params: Promise<{budgetID: string, individualID: string, year: string, semester: string}>}) {
+    const {budgetID, individualID, year, semester} = await params
     const faculty = await getFaculty(individualID)
-    const salaryAccounts = getAllSalaryAccounts(student.individual_id)
 
-    // find the current salaryAccount
+    const salaryAccounts = await getAllSalaryAccounts(faculty.individual_id)
+    const semesterAccounts = await getAllAccounts(budgetID)
 
-    return <FacultyForm budgetID={budgetID} faculty={faculty} />
+
+    // add new semester - need to fetch all semesters they are in
+    return <FacultyForm
+        budgetID={budgetID}
+        faculty={faculty}
+        semesterAccounts={semesterAccounts}
+        salaryAccounts={salaryAccounts}
+        inputSemester={{semester: semester, year: Number(year)}}
+    />
 }

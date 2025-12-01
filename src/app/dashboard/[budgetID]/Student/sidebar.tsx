@@ -10,7 +10,9 @@ export default function StudentSidebar({students, budgetID}) {
     return <div className="items">
         {students != null ? students.map(x => {
             const path = `/dashboard/${budgetID}/Student/${x.individual_id.toString()}`
-            if (path == currPath) {
+
+
+            if (currPath.startsWith(path)) {
                 anyActive = true
                 return <Link key={x.individual_id} href={path} className="active">{x.name}</Link>
             }
