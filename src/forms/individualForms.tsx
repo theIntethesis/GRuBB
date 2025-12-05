@@ -191,7 +191,6 @@ function StudentAccountSection({student, studentAccounts, semesterAccounts, curr
     const [tuitionRate, setTuitionRate] = useState(undefined)
 
     useEffect(() => {
-
         const account = semesterAccounts.find((val) => val.semester == currentSemester.semester && val.year == currentSemester.year)
         console.log(account)
         setTuitionRate(student.outOfState ? account.outOfStateTuitionRate : account.inStateTuitionRate)
@@ -260,12 +259,15 @@ export function StudentForm(
             if (inputSemester == undefined) {
                 //use 'currentSemester' instead of "semester-year" because of useState stuff
 
-                // const split = formData.get("semester-year")?.toString().split(' ')
-                // console.log(split)
-                // createStudentAccount(student.individual_id, split[0], split[1], Number(formData.get("aid")?.toString()))
+                // create student account
+
+                // check if salary account is needed
+                // check salary account
             }
             else {
                 // modify values
+
+                // create salary account if needed
             }
         }
 
@@ -357,9 +359,6 @@ export function FacultyForm(
             if (inputSemester == undefined) {
                 //use 'currentSemester' instead of "semester-year" because of useState stuff
 
-                // const split = formData.get("semester-year")?.toString().split(' ')
-                // console.log(split)
-                // createStudentAccount(student.individual_id, split[0], split[1], Number(formData.get("aid")?.toString()))
             }
             else {
 

@@ -9,7 +9,7 @@ export default function Header({budgets, current_budget}: {budgets: [any], curre
     const handleOnChange = (e) => {
         const ret = budgets.filter((x) => x.name == e.target.value)
         if (ret.length == 1) {
-            redirect("/dashboard/" + ret[0]._id + "/Student")
+            redirect("/dashboard/" + ret[0]._id + "/SemesterRates")
         }
         else {
             redirect ("/dashboard")
@@ -32,9 +32,9 @@ export default function Header({budgets, current_budget}: {budgets: [any], curre
 
         {current_budget != null ?
             <nav className="tabNav">
+                <Link href={"/dashboard/"  + current_budget._id + "/SemesterRates"} className={"tab " + (path.includes("SemesterRates") ? "active" : "")}>Per Semester Rates</Link>
                 <Link href={"/dashboard/"  + current_budget._id + "/Student"} className={"tab " + (path.includes("Student") ? "active" : "")}>Student</Link>
                 <Link href={"/dashboard/"  + current_budget._id + "/Faculty"} className={"tab " + (path.includes("Faculty") ? "active" : "")}>Faculty</Link>
-                <Link href={"/dashboard/"  + current_budget._id + "/SemesterRates"} className={"tab " + (path.includes("SemesterRates") ? "active" : "")}>Per Semester Rates</Link>
                 <Link href={"/dashboard/"  + current_budget._id + "/Account"} className={"tab " + (path.includes("Account") ? "active" : "")}>Account</Link>
             </nav>
         : <nav className="tabNav"></nav>}

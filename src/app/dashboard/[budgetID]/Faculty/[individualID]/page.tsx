@@ -10,6 +10,8 @@ export default async function page({params}: {params: Promise<{budgetID: string,
     const salaryAccounts = await getAllSalaryAccounts(faculty.individual_id)
     const semesterAccounts = await getAllAccounts(budgetID)
 
+    // [TODO] if semesterAccounts is null then do something
+
     // add new semester - need to fetch all semesters they are in
     return <FacultyForm
         budgetID={budgetID}
