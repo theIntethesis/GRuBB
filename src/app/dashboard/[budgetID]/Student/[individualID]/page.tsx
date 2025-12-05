@@ -14,7 +14,6 @@ export default async function page({params}: {params: Promise<{budgetID: string,
     const salaryAccounts = await getAllSalaryAccounts(student.individual_id)
     const semesterAccounts = await getAllAccounts(budgetID)
 
-    // [TODO] if semesterAccounts is null then do something
 
     // fetch individual and all a list of all the semesters applicable
     return <StudentForm

@@ -47,7 +47,6 @@ export async function modifyStudent(name: string, outOfState: boolean, individua
     individual.name = name
     await individual.save()
 
-    console.log(student)
 
     revalidatePath("/dashboard", "layout")
 }

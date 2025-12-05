@@ -2,6 +2,7 @@
 
 import { SalaryAccount, Student, StudentAccount } from "@/lib/models"
 import { revalidatePath } from "next/cache"
+import { redirect } from "next/navigation"
 
 export async function getAllStudentAccounts(individual_id: string) {
     const accounts = await StudentAccount.find({individual_id: individual_id}).lean()
@@ -23,8 +24,10 @@ export async function createStudentAccount(
     individual_id: string,
     semester: "Fall" | "Spring",
     year: number,
-    aidRecieved: number
+    aidRecieved: number,
+    budgetID: string
 ) {
+    // need to make sure that a duplicate isn't added
 
     const account = new StudentAccount({
         semester,
@@ -43,7 +46,7 @@ export async function createStudentAccount(
 export async function getAllSalaryAccounts(individual_id: string) {
     const accounts = await SalaryAccount.find({individual_id: individual_id}).lean()
 
-    console.log(accounts)
+    // console.log(accounts)
 
     return accounts.map(x => {
         return {
@@ -75,4 +78,7 @@ export async function createSalaryAccount(
     })
 
     await account.save()
+
+    revalidatePath("/dashboard", "layout")
+
 }

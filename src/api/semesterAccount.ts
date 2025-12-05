@@ -68,7 +68,7 @@ export async function modifySemesterAccount(
     lodging: number,
     overheadCharge: number
 ) {
-    console.log(year)
+
     const acc = (await SemesterAccount.findOneAndUpdate({budgetID: budgetID, semester: semester, year: Number(year)}, {
         inStateTuitionRate,
         outOfStateTuitionRate,
