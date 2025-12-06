@@ -3,7 +3,7 @@ import { createNewStudent, createNewFaculty, deleteFaculty, deleteStudent, modif
 import { redirect } from "next/navigation"
 import Form from "next/form"
 import { useEffect, useState } from "react"
-import { createSalaryAccount, createStudentAccount } from "@/api/accounts"
+import { createSalaryAccount, createStudentAccount, modifyStudentAccount } from "@/api/accounts"
 
 
 interface Semester {
@@ -12,6 +12,7 @@ interface Semester {
 }
 
 function IndividualLine({individual}: {individual?: any}) {
+    console.log(individual)
     return <tr>
         <td colSpan={2} style={{
             textAlign: "center"
@@ -101,8 +102,8 @@ function ChooseSemesterDropdown({semesters, setSemester} : {semesters: Semester[
     </td>
 }
 
+function SalaryAccountSection({salaryAccounts, semesterAccounts, currentSemester,  role}: {semesterAccounts: any[], salaryAccounts?: any[], currentSemester: Semester, role: "faculty" | "staff" | "postdoc" | "student"}) {
 
-function SalaryAccountSection({semesterAccounts, currentSemester, salaryAccounts,  role}: {salaryAccount?: any, semesterAccounts: any[], salaryAccounts?: any[], currentSemester: Semester, role: "faculty" | "staff" | "postdoc" | "student"}) {
 
     useEffect(() => {
 
@@ -124,7 +125,7 @@ function SalaryAccountSection({semesterAccounts, currentSemester, salaryAccounts
                 </div>
                 <div style={{display: "inline-block", width: "10%", textAlign: "center"}}>/</div>
                 <div className="inputOuterRight"  style={{width: "45%", height: "100%", padding: "0.25em"}}>
-                <select id="rateUnit" defaultValue={salaryAccount != null ? salaryAccount.rate : "hour"}><option value={"hour"}>Hour</option><option value={"year"}>Year</option></select>
+                <select name="rateUnit" defaultValue={salaryAccount != null ? salaryAccount.rate : "hour"}><option value={"hour"}>Hour</option><option value={"year"}>Year</option></select>
 
                 </div>
             </td>
@@ -167,10 +168,9 @@ function SalaryAccountSection({semesterAccounts, currentSemester, salaryAccounts
 }
 
 
-function OptionalSalaryAccountSection({salaryAccount, semesterAccounts, currentSemester}: {salaryAccount?: any, semesterAccounts: any[], currentSemester: Semester}) {
+function StudentSalaryAccountSection({semesterAccounts, currentSemester, showSalary, setShowSalary}: {semesterAccounts: any[], currentSemester: Semester, showSalary: boolean, setShowSalary: (value) => undefined}) {
     // some sort of usestate that when a button is pressed it reveals salary account section
     // only if salary account is null
-    const [showSalary, setShowSalary] = useState(salaryAccount != undefined)
 
     const onShowSalary = () => {
         setShowSalary(true)
@@ -181,17 +181,13 @@ function OptionalSalaryAccountSection({salaryAccount, semesterAccounts, currentS
             <td colSpan={2}>
                 <button type="button" onClick={onShowSalary} className="actionButton" >Add Salary Account</button>
             </td>
-        </tr> : <SalaryAccountSection salaryAccount={salaryAccount} role={"student"} semesterAccounts={semesterAccounts} currentSemester={currentSemester}/> }
+        </tr> : <SalaryAccountSection role={"student"} semesterAccounts={semesterAccounts} currentSemester={currentSemester}/> }
 
     </>
 }
 
-
-
-
 function StudentAccountSection({student, studentAccounts, semesterAccounts, currentSemester }: {student: any, studentAccounts?: any[], semesterAccounts: any[], currentSemester: Semester}) {
     // student account stuff
-
     const [tuitionRate, setTuitionRate] = useState(undefined)
 
     useEffect(() => {
@@ -209,13 +205,13 @@ function StudentAccountSection({student, studentAccounts, semesterAccounts, curr
         </tr>
         <tr>
             <td><label htmlFor="aid">Aid Received:</label></td>
-            <td><div className="inputOuterLeft">$<input type="number" id="aid" name="aid" defaultValue={studentAccount?.aidReceived || 0}/></div></td>
+            <td><div className="inputOuterLeft">$<input type="number" id="aid" name="aid" defaultValue={studentAccount?.aidRecieved || 0}/></div></td>
         </tr>
     </>
 }
 
 
-function getSemesterData(budgetID : string, semesterAccounts: any[], salaryAccounts: any[], studentAccounts: any[]) {
+function getSemesterData(budgetID : string, semesterAccounts: any[], salaryAccounts: any[], studentAccounts: any[]): {semesters: Semester[], absentSemesters: Semester[]} {
 
     const allSemesters = semesterAccounts?.map(x => {
         return {
@@ -280,6 +276,10 @@ export function StudentForm(
 
     const [currentSemester, setCurrentSemester] = useState(inputSemester || absentSemesters[0])
 
+    const initialShowSalary = false
+    const [showSalary, setShowSalary] = useState(initialShowSalary)
+
+
     // debug - remove in future
     // useEffect(() => {
     //     console.log(currentSemester)
@@ -307,17 +307,21 @@ export function StudentForm(
             )
 
             if (inputSemester == undefined) {
-                createStudentAccount(student.individual_id, currentSemester.semester, currentSemester.year, Number(formData.get("aid") || '0'), budgetID)
+                createStudentAccount(student.individual_id, currentSemester.semester, currentSemester.year, Number(formData.get("aid") || '0'))
 
                 //use 'currentSemester' instead of "semester-year" because of useState stuff
 
                 // create salary account if needed
 
+                if (showSalary) {
+                    createSalaryAccount(student.individual_id, currentSemester.semester, currentSemester.year, Number(formData.get("rate")), formData.get("rateUnit"), formData.get("percentFTE"))
+                }
+
                 redirect(`/dashboard/${budgetID}/Student/${student.individual_id}/${currentSemester.year}/${currentSemester.semester}`)
 
             }
             else {
-                // modify values
+                modifyStudentAccount(student.individual_id, currentSemester.semester, currentSemester.year, Number(formData.get("aid") || '0'))
 
                 // create salary account if needed
             }
@@ -355,9 +359,9 @@ export function StudentForm(
                         }
                     </tr>
                     <tr><td colSpan={2}><hr/></td></tr>
-                    <StudentAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} student={student}/>
+                    <StudentAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} student={student} studentAccounts={studentAccounts}/>
                     <tr><td colSpan={2}><hr/></td></tr>
-                    <OptionalSalaryAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} />
+                    <StudentSalaryAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} showSalary={showSalary} setShowSalary={setShowSalary}/>
                     <tr><td colSpan={2}><hr/></td></tr>
                 </> : undefined}
 
@@ -414,7 +418,7 @@ export function FacultyForm(
 
             if (inputSemester == undefined) {
                 //use 'currentSemester' instead of "semester-year" because of useState stuff
-                createSalaryAccount(faculty.individual_id, currentSemester.semester, currentSemester.year, Number(formData.get("rate"), 0), formData.get("rateUnit"), formData.get("percentFTE"))
+                createSalaryAccount(faculty.individual_id, currentSemester.semester, currentSemester.year, Number(formData.get("rate")), formData.get("rateUnit"), formData.get("percentFTE"))
 
                 redirect(`/dashboard/${budgetID}/Faculty/${faculty.individual_id}/${currentSemester.year}/${currentSemester.semester}`)
             }

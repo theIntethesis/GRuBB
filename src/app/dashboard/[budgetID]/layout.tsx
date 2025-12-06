@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import Header from "@/app/dashboard/header";
 
-import { getAllBudgets, getBudget } from "@/api/budget";
+import BudgetAPI from "@/lib/models/budget";
 
 export default async function Layout({
     children,
@@ -14,8 +14,8 @@ export default async function Layout({
 }) {
     const { budgetID } = await params
 
-    const budget = await getBudget(budgetID)
-    const allBudgets = await getAllBudgets()
+    const budget = await BudgetAPI.getOne({budgetID})
+    const allBudgets = await BudgetAPI.getAll()
 
 
     return <>

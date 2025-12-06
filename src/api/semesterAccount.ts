@@ -3,6 +3,7 @@ import dbConnect from "@/lib/mongodb";
 import { SemesterAccount, OverheadCharge, TravelProfile} from "@/lib/models";
 import { revalidatePath } from 'next/cache'
 import { redirect } from "next/navigation";
+import * as models from "@/lib/models"
 
 export async function createSemesterAccount(
     budgetID: string,
@@ -116,8 +117,7 @@ export async function deleteSemesterAccount(
     redirect(`/dashboard/${budgetID}/SemesterRates`)
 }
 
-
-export async function getAllAccounts(budgetID: string) {
+export async function getAllAccounts(budgetID: string):  Promise<models.I_SemesterAccount[]> {
     const accs = await SemesterAccount
         .find({budgetID: budgetID})
         .lean()
@@ -138,39 +138,30 @@ export async function getSemesterAccount(
     budgetID: string,
     semester: string,
     year: number
-) {
+): Promise<{semesterAccount: models.I_SemesterAccount, overheadCharge: models.I_OverheadCharge, travelProfile: models.I_TravelProfile}> {
     const acc = await (SemesterAccount.find({
         budgetID: budgetID,
         semester: semester,
         year: year
     }).lean())
 
-    const curr = acc[0]
+    const semesterAccount = acc[0]
 
 
-    const travelProfile = await(TravelProfile.findById(curr.travelProfile))
-    const overheadCharge = await(OverheadCharge.findById(curr.overheadCharge))
-    //console.log(curr)
+    const travelProfile = await(TravelProfile.findById(semesterAccount.travelProfile))
+    const overheadCharge = await(OverheadCharge.findById(semesterAccount.overheadCharge))
+    //console.log(semesterAccount)
 
-    curr.budgetID = curr.budgetID.toJSON()
+    semesterAccount.budgetID = semesterAccount.budgetID.toJSON()
 
-    curr.overheadCharge = curr.overheadCharge.toJSON()
+    semesterAccount.overheadCharge = semesterAccount.overheadCharge.toJSON()
 
     //console.log(curr)
 
     return {
-        inStateTuitionRate: curr.inStateTuitionRate,
-        outOfStateTuitionRate: curr.outOfStateTuitionRate,
-        tuitionIncrease: curr.tuitionIncrease,
-        year: curr.year,
-        semester: curr.semester,
-        facultyFBR: curr.facultyFBR,
-        studentFBR: curr.studentFBR,
-        postDocFBR: curr.postDocFBR,
-        perDiem: travelProfile.perDiem,
-        airfare: travelProfile.airfare,
-        lodging: travelProfile.lodging,
-        overheadCharge: overheadCharge.charge
+        semesterAccount,
+        overheadCharge,
+        travelProfile
     }
 
 
