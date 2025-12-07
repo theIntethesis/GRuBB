@@ -4,6 +4,7 @@ import { ForeignKeyModelAPI } from "./_modelAPI"
 import { RateTimeUnit, Semester, SemesterCombo } from "../common"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { refresh } from "next/cache"
 import dbConnect from "../mongodb"
 
 interface I_SalaryAccount_FK {
@@ -71,7 +72,6 @@ const SalaryAccountAPI: ForeignKeyModelAPI<
 }
 */
 
-// ---- create ----
 export async function create(
     val: I_SalaryAccount,
     fk: I_SalaryAccount_FK
@@ -82,9 +82,9 @@ export async function create(
     await acc.save()
 
     revalidatePath("/dashboard", "layout")
+    refresh()
 }
 
-// ---- delete ----
 export async function del(
     pk: I_SalaryAccount_PK,
     fk: I_SalaryAccount_FK
@@ -94,9 +94,9 @@ export async function del(
     await SalaryAccount.deleteOne({...pk, ...fk})
 
     revalidatePath("/dashboard", "layout")
+    refresh()
 }
 
-// ---- modify ----
 export async function modify(
     val: I_SalaryAccount
 ): Promise<void> {
@@ -111,16 +111,15 @@ export async function modify(
     await acc.save()
 
     revalidatePath("/dashboard", "layout")
+    refresh()
 }
 
-// ---- getOne ----
 export async function getOne(
     pk: I_SalaryAccount_PK
 ): Promise<I_SalaryAccount | undefined> {
     return undefined
 }
 
-// ---- getAll ----
 export async function getAll(
     fk: I_SalaryAccount_FK
 ): Promise<I_SalaryAccount[]> {

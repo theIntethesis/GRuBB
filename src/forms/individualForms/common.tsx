@@ -64,11 +64,11 @@ export function ChooseSemesterDropdown({semesters, setSemester} : {semesters: Se
     const handleOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         // console.log(e.target.value)
         setSemester(semesters[Number(e.target.value)])
-
     }
 
+
     return <td>
-        <select onChange={handleOnChange}>
+        <select onChange={handleOnChange} defaultValue={0}>
             {semesters?.map((x, idx) => {
                 return <option value={idx} key={idx}>{x.semester} {x.year}</option>
             })}
@@ -112,7 +112,7 @@ export function SalaryAccountSection(
         switch (salAcc?.rateTimeUnit) {
             case "Hour":
                 setPaymentAmnt(salAcc.rate * ((salAcc.percentFTE / 100) * 40) * 15) // assuming 15 weeks in a semester and that they don't get paid over the summer. this is probably a gross miscalculation but I don't care.
-                console.log(salAcc.rate * ((salAcc.percentFTE / 100) * 40) * 15)
+                // (salAcc.rate * ((salAcc.percentFTE / 100) * 40) * 15)
                 break;
             case "Year":
                 setPaymentAmnt(salAcc.rate)
@@ -155,7 +155,7 @@ export function SalaryAccountSection(
         </tr>
         <tr>
             <td>
-                <label htmlFor="payment">Payment:</label>
+                <label htmlFor="payment">Gross Payment:</label>
             </td>
             <td>
                 <div className="inputOuterLeft">

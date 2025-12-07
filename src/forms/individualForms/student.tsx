@@ -14,12 +14,22 @@ import { I_StudentPK } from "@/lib/models/student"
 import { SalaryAccountAPI } from "@/lib/models"
 
 function StudentLine({student}: {student?: I_Student}) {
+    const [role, setRole] = useState<"on" | "off">("off")
+
+    // when you gotta pull out the useEffect you know shits fucked
+    useEffect(() => {
+        if (student != null) setRole(student.outOfState ? "on" : "off")
+    }, [student])
+
     return <tr>
         <td>
-            <label>Out of State:</label>
+            <label>Tuition Type:</label>
         </td>
         <td>
-            <input type="checkbox" name="outOfState" style={{height: "unset", width: "unset"}} defaultChecked={student != null ? student.outOfState : false}/>
+            <select name="outOfState" defaultValue={role} key={role}>
+                <option value="off">In State</option>
+                <option value="on"> Out Of State</option>
+            </select>
         </td>
     </tr>
 }
@@ -99,6 +109,7 @@ export default function StudentForm(
 
     const [showSalary, setShowSalary] = useState(initialShowSalary)
 
+    console.log(currentSemester)
 
     const onSubmit = (formData: FormData) => {
         if (student != undefined) {
@@ -124,7 +135,7 @@ export default function StudentForm(
 
         const vals = castFormDataToObject(formData)
 
-        console.log(vals)
+        // console.log(vals)
 
         StudentAPI.modify({
             student: {
@@ -199,27 +210,31 @@ export default function StudentForm(
                 return
             }
 
-            // delete all student and salary accounts - done on the server side
-            // delete student
+            if (confirm("Are you sure about this?")) {
+                StudentAPI.del({individualID: student.student.individualID}, {budgetID})
+            }
 
-            StudentAPI.del({individualID: student.student.individualID}, {budgetID})
+
         }
     }
     const deleteCurrentSemester = () => {
         if (student == undefined || student.student.individualID == undefined) {
             return
         }
-
-        if (initialShowSalary) {
-            SalaryAccountAPI.del({individualID: student.student.individualID, ...currentSemester}, {individualID: student.student.individualID})
+        if (confirm("Are you sure about this")) {
+            if (initialShowSalary) {
+                SalaryAccountAPI.del({individualID: student.student.individualID, ...currentSemester}, {individualID: student.student.individualID})
+            }
+            StudentAccountAPI.del({individualID: student.student.individualID, ...currentSemester}, {individualID: student.student.individualID})
         }
-        StudentAccountAPI.del({individualID: student.student.individualID, ...currentSemester}, {individualID: student.student.individualID})
+
     }
 
     return <Form action={student == undefined ? onSubmit : onUpdate} >
         <table>
             <tbody>
                 <IndividualLine individual={student?.individual}/>
+
                 <StudentLine student={student?.student}/>
 
                 {student != null ? <>

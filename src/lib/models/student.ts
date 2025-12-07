@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 import { I_Individual, Individual } from "./_individual"
 import { Budget } from "./budget"
 import { ForeignKeyModelAPI } from "./_modelAPI"
-import { revalidatePath } from "next/cache"
+import { refresh, revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import dbConnect from "../mongodb"
 import { SalaryAccount } from "./salaryAccount"
@@ -185,6 +185,7 @@ export async function modify(
     await individual.save()
 
     revalidatePath("/dashboard", "layout")
+    refresh()
 }
 
 /// deletes student/salary accounts connected to student

@@ -113,7 +113,6 @@ const FacultyAPI: ForeignKeyModelAPI<
 
 
 
-// ---- getOne ----
 export async function getOne(
     { individualID }: I_Faculty_PK
 ): Promise<FacultyIndividual | undefined> {
@@ -129,7 +128,6 @@ export async function getOne(
 }
 
 
-// ---- getAll ----
 export async function getAll(
     { budgetID }: { budgetID: string }
 ): Promise<Array<FacultyIndividual>> {
@@ -150,7 +148,6 @@ export async function getAll(
     return JSON.parse(JSON.stringify(facultyArr))
 }
 
-// ---- create ----
 export async function create(
     input: FacultyIndividual,
     fk: { budgetID: string }
@@ -176,7 +173,6 @@ export async function create(
     redirect(`/dashboard/${fk.budgetID}/Faculty/${faculty.individualID.toJSON()}`)
 }
 
-// ---- modify ----
 export async function modify(
     input: FacultyIndividual
 ): Promise<void> {
@@ -199,7 +195,6 @@ export async function modify(
 }
 
 
-// ---- delete ----
 export async function del(
     { individualID }: { individualID: string },
     { budgetID }: { budgetID: string }

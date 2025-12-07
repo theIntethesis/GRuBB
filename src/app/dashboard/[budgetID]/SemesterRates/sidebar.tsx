@@ -16,10 +16,10 @@ export default function RatesSidebar({semesters, budgetID}: {semesters: Semester
                     const path = `/dashboard/${budgetID}/SemesterRates/${x.year}/${x.semester}`
                     if (path == currPath) {
                         anyActive = true
-                        return <tr><td><Link href={path} key={JSON.stringify(x)} className="active">{x.semester} {x.year}</Link></td></tr>
+                        return <tr key={JSON.stringify(x)}><td><Link href={path}  className="active">{x.semester} {x.year}</Link></td></tr>
                     }
                     else {
-                        return <tr><td><Link href={path} key={JSON.stringify(x)}>{x.semester} {x.year}</Link></td></tr>
+                        return <tr key={JSON.stringify(x)}><td><Link href={path} >{x.semester} {x.year}</Link></td></tr>
                     }
 
                 }) : null}

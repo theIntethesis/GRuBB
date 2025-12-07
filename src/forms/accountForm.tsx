@@ -64,20 +64,24 @@ export default function AccountForm({ budget } : {budget: I_Budget}) {
                             <td><input name="pi" type="text" defaultValue={budget.pi}></input></td>
                         </tr>
                         <tr><td colSpan={2}><hr/></td></tr>
-                            <tr>
-                                <td><input id="add-co-pi" type="text" placeholder="Name"></input></td>
-                                <td><button onClick={addPI} className="actionButton submitButton">Add</button></td>
-                            </tr>
-                            {budget != null ?
-                                coPIs.map((x, idx) => {
-                                    return <tr key={idx} id={idx.toString()}>
-                                        <td><input disabled={true} value={x}/></td>
-                                        <td><button onClick={() => removePI(x)} className="actionButton warning">Remove</button></td>
-                                    </tr>
-                                })
-                            : null}
-
-                            <tr><td><button className="actionButton submitButton">Save</button></td></tr>
+                        <tr><td colSpan={2}><h2>Co - PIs</h2></td></tr>
+                        <tr>
+                            <td><input id="add-co-pi" type="text" placeholder="Name"></input></td>
+                            <td><button onClick={addPI} className="actionButton submitButton">Add</button></td>
+                        </tr>
+                        {budget != null ?
+                            coPIs.map((x, idx) => {
+                                return <tr key={idx} id={idx.toString()}>
+                                    <td><input disabled={true} value={x}/></td>
+                                    <td><button onClick={() => removePI(x)} className="actionButton warning">Remove</button></td>
+                                </tr>
+                            })
+                        : null}
+                        <tr><td colSpan={2}><hr/></td></tr>
+                        <tr>
+                            <td><button className="actionButton submitButton">Save</button></td>
+                            <td><button className="actionButton warning">Delete Institution</button></td>
+                        </tr>
 
                     </tbody>
 

@@ -25,6 +25,7 @@ body {
   margin: auto;
   display: flex;
   flex-direction: column;
+
   row-gap: 10px;
   column-gap: 10px;
   height: 100%;
@@ -160,20 +161,14 @@ button.actionButton {
 
 
 main {
+  padding: 0em;
 
   div {
-
     border-radius: inherit;
 
     height: 100%;
     display: flex;
     flex-direction: column;
-
-
-    button {
-      transition: background-color 0.3s;
-    }
-
   }
 }
 
@@ -185,7 +180,7 @@ main.two-col {
   padding: 0em;
   grid-template-columns: 30em auto;
   grid-template-rows: auto;
-  column-gap: 1em;
+  column-gap: inherit;
 
   > div {
     background-color: var(--mantle);

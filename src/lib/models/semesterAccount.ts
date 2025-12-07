@@ -5,6 +5,7 @@ import { Semester, SemesterCombo } from "../common"
 import dbConnect from "../mongodb"
 import { revalidatePath } from 'next/cache'
 import { redirect } from "next/navigation";
+import { refresh } from "next/cache"
 
 /* BEGIN OVERHEAD CHARGE */
 
@@ -189,7 +190,6 @@ const SemesterAccountAPI: ForeignKeyModelAPI<
 }
 */
 
-// ---- create ----
 export async function create(
     val: SemesterAccountCombo,
     fk: I_SemesterAccountFK
@@ -229,7 +229,6 @@ export async function create(
     )
 }
 
-// ---- delete ----
 export async function del(
     pk: I_SemesterAccountPK,
     fk: I_SemesterAccountFK
@@ -237,6 +236,8 @@ export async function del(
     await dbConnect()
 
     const acc = await SemesterAccount.findOne(pk).exec()
+
+    // this needs to also delete all associated semester/salary accounts!
 
     await TravelProfile.findByIdAndDelete(acc.travelProfileID)
     await OverheadCharge.findByIdAndDelete(acc.overheadChargeID)
@@ -246,13 +247,12 @@ export async function del(
     redirect(`/dashboard/${fk.budgetID}/SemesterRates`)
 }
 
-// ---- modify ----
 export async function modify(
     val: SemesterAccountCombo
 ): Promise<void> {
     await dbConnect()
 
-    const acc = await SemesterAccount.findOne(val.semesterAccount as I_SemesterAccountPK).exec()
+    const acc = await SemesterAccount.findOne({budgetID: val.semesterAccount.budgetID}).exec()
 
     acc.inStateTuitionRate = val.semesterAccount.inStateTuitionRate
     acc.outOfStateTuitionRate = val.semesterAccount.outOfStateTuitionRate
@@ -276,9 +276,9 @@ export async function modify(
     await overheadCharge.save()
 
     revalidatePath("/dashboard", "layout")
+    refresh()
 }
 
-// ---- getOne ----
 export async function getOne(
     pk: I_SemesterAccountPK
 ): Promise<SemesterAccountCombo | undefined> {
@@ -300,7 +300,6 @@ export async function getOne(
     }))
 }
 
-// ---- getAll ----
 export async function getAll(
     fk: I_SemesterAccountFK
 ): Promise<SemesterAccountCombo[]> {

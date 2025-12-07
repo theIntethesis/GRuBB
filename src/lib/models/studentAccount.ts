@@ -4,6 +4,7 @@ import { ForeignKeyModelAPI} from "./_modelAPI"
 import { revalidatePath } from "next/cache"
 import { Semester, SemesterCombo } from "../common"
 import dbConnect from "../mongodb"
+import { refresh } from "next/cache"
 
 interface I_StudentAccount_FK {
     individualID: string
@@ -71,6 +72,7 @@ export async function create(
     await account.save()
 
     revalidatePath("/dashboard", "layout")
+    refresh()
 }
 
 export async function del(
@@ -82,6 +84,7 @@ export async function del(
     await StudentAccount.deleteOne({...pk, ...fk})
 
     revalidatePath("/dashboard", "layout")
+    refresh()
 }
 
 export async function modify(
@@ -90,12 +93,13 @@ export async function modify(
     await dbConnect()
 
     const acc = await StudentAccount.findOne({individualID: val.individualID}).exec()
-    console.log(acc)
+    // console.log(acc)
 
     acc.aidRecieved = val.aidRecieved
     await acc.save()
 
     revalidatePath("/dashboard", "layout")
+    refresh()
 }
 
 export async function getOne(

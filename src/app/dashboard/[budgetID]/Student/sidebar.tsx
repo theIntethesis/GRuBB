@@ -8,8 +8,7 @@ export default function StudentSidebar({students, budgetID}: {students: StudentI
 
     const currPath = usePathname()
     let anyActive: boolean = false
-
-    console.log(students)
+    // console.log(students)
 
     return <div className="items">
         <table>

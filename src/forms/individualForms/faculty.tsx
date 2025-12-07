@@ -60,6 +60,9 @@ export default function FacultyForm(
         }, {budgetID})
     }
 
+
+    console.log(currentSemester)
+
     const onUpdate = (formData: FormData) => {
         if (faculty == undefined || faculty?.faculty.individualID == undefined) {
             return
@@ -98,12 +101,21 @@ export default function FacultyForm(
     }
 
     const onDelete = () => {
-        if (faculty != null) {
-            // deleteFaculty(faculty.individual_id, budgetID)
+        if (faculty == undefined || faculty?.faculty.individualID == undefined) {
+            return
+        }
+        if (confirm("Are you sure about this")) {
+            FacultyAPI.del({individualID: faculty.faculty.individualID}, {budgetID})
         }
     }
     const deleteCurrentSemester = () => {
+        if (faculty == undefined || faculty?.faculty.individualID == undefined) {
+            return
+        }
 
+        if (confirm("Are you sure about this")) {
+            SalaryAccountAPI.del({individualID: faculty.faculty.individualID, ...currentSemester}, {individualID: faculty.faculty.individualID})
+        }
     }
 
     return <Form action={faculty == undefined ? onSubmit : onUpdate} type="submit">

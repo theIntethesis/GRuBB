@@ -124,7 +124,6 @@ export async function getOne(
 }
 
 
-// ---- getAll ----
 export async function getAll(): Promise<I_Budget[]> {
     await dbConnect()
 
@@ -134,7 +133,6 @@ export async function getAll(): Promise<I_Budget[]> {
 }
 
 
-// ---- create ----
 export async function create(val: I_Budget): Promise<void> {
     await dbConnect()
 
@@ -146,7 +144,6 @@ export async function create(val: I_Budget): Promise<void> {
 }
 
 
-// ---- modify ----
 export async function modify(val: I_Budget): Promise<void> {
     await dbConnect()
 
@@ -160,7 +157,6 @@ export async function modify(val: I_Budget): Promise<void> {
 }
 
 
-// ---- delete ----
 export async function del(
     pk: { _id: string }
 ): Promise<void> {

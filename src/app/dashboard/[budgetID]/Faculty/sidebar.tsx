@@ -15,10 +15,10 @@ export default function FacultySidebar({faculty, budgetID}: {faculty: FacultyInd
                     const path = `/dashboard/${budgetID}/Faculty/${x.faculty.individualID}`
                     if (currPath.startsWith(path)) {
                         anyActive = true
-                        return <tr><td><Link key={x.faculty.individualID} href={path} className="active">{x.individual.name}</Link></td></tr>
+                        return <tr key={x.faculty.individualID}><td><Link href={path} className="active">{x.individual.name}</Link></td></tr>
                     }
                     else {
-                        return <tr><td><Link key={x.faculty.individualID} href={path}>{x.individual.name}</Link></td></tr>
+                        return <tr key={x.faculty.individualID}><td><Link href={path}>{x.individual.name}</Link></td></tr>
                     }
                 }) : null}
                 <tr><td><Link href={`/dashboard/${budgetID}/Faculty/`} className={!anyActive ? "active" : undefined}>Add New Faculty</Link></td></tr>

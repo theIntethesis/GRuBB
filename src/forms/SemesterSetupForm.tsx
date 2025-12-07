@@ -62,10 +62,13 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
         if (semester == undefined) {
             return
         }
-        await SemesterAccountAPI.del(
-            semester.semesterAccount as I_SemesterAccountPK,
-            semester.semesterAccount as I_SemesterAccountFK
-        )
+        if (confirm("Are you sure about this?")) {
+            await SemesterAccountAPI.del(
+                semester.semesterAccount as I_SemesterAccountPK,
+                semester.semesterAccount as I_SemesterAccountFK
+            )
+        }
+
     }
 
     const onCreate = async (formData: FormData) => {
@@ -74,7 +77,7 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
         }
         const vals = castFormDataToObject(formData)
 
-        console.log(vals)
+        // console.log(vals)
 
         // make sure semester hasn't been used before!!!
 
@@ -133,7 +136,7 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
 
     const onSemSelected = (e: ChangeEvent<HTMLSelectElement>) => {
 
-        console.log({semester: e.target.value as Semester, year: newSemester.year})
+        // console.log({semester: e.target.value as Semester, year: newSemester.year})
         if (semesters.find(x => semesterEq(x.semesterAccount, {semester: e.target.value as Semester, year: newSemester.year})) == undefined) {
             setNewSemester({semester: e.target.value as Semester, year: newSemester.year})
         }
@@ -206,7 +209,7 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
                         </tr>
                         <tr>
                             <td>
-                                <label htmlFor="tuitionIncrease">Tuition Increase (%):</label>
+                                <label htmlFor="tuitionIncrease">Tuition Increase:</label>
                             </td>
                             <td>
                                 <div className="inputOuterRight">
@@ -216,7 +219,7 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
                         </tr>
                         <tr>
                             <td>
-                                <label htmlFor="facultyFBR">Faculty Fringe Benefits Rate (%):</label>
+                                <label htmlFor="facultyFBR">Faculty Fringe Benefits Rate:</label>
                             </td>
                             <td>
                                 <div className="inputOuterRight">
@@ -226,7 +229,7 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
                         </tr>
                         <tr>
                             <td>
-                                <label htmlFor="studentFBR">Student Fringe Benefits Rate (%):</label>
+                                <label htmlFor="studentFBR">Student Fringe Benefits Rate:</label>
                             </td>
                             <td>
                                 <div className="inputOuterRight">
@@ -237,7 +240,7 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
                         <tr>
                             <td>
 
-                                <label htmlFor="postDocFBR">Post-Doc Fringe Benefits Rate (%):</label>
+                                <label htmlFor="postDocFBR">Post-Doc Fringe Benefits Rate:</label>
 
                             </td>
                             <td>
