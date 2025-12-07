@@ -91,6 +91,8 @@ export async function del(
 ): Promise<void> {
     await dbConnect()
 
+    await SalaryAccount.deleteOne({...pk, ...fk})
+
     revalidatePath("/dashboard", "layout")
 }
 

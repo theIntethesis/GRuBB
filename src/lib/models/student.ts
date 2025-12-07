@@ -6,6 +6,8 @@ import { ForeignKeyModelAPI } from "./_modelAPI"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import dbConnect from "../mongodb"
+import { SalaryAccount } from "./salaryAccount"
+import { StudentAccount } from "./studentAccount"
 
 export interface I_Student {
     outOfState: boolean,
@@ -185,21 +187,24 @@ export async function modify(
     revalidatePath("/dashboard", "layout")
 }
 
+/// deletes student/salary accounts connected to student
 export async function del(
     { individualID }: { individualID: string },
     { budgetID }: { budgetID: string }
 ): Promise<void> {
     await dbConnect()
 
-    // Keeping your commented-out deletion logic intact
+    await SalaryAccount.deleteMany({individualID})
+    await StudentAccount.deleteMany({individualID})
 
-    // await Student.deleteOne({ individualID })
-    // await Individual.findByIdAndDelete(individualID)
+    await Student.deleteOne({individualID})
+    await Individual.findByIdAndDelete(individualID)
 
-    // const budget = await Budget.findById(budgetID)
-    // budget.students.pull(individualID)
-    // await budget.save()
+    const budget = await Budget.findById(budgetID)
+    budget.students.pull(individualID)
+    await budget.save()
 
-    // revalidatePath("/dashboard", "layout")
-    // redirect(`/dashboard/${budgetID}/Student`)
+    revalidatePath("/dashboard", "layout")
+    redirect(`/dashboard/${budgetID}/Student`)
+
 }

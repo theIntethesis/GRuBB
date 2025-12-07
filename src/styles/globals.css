@@ -67,15 +67,6 @@ form {
     td:nth-child(1) {
       text-align: right;
     }
-    width: 100%;
-
-    border-collapse: separate;
-    border-spacing: 0.5em;
-
-    td {
-      width: 50%;
-      height: 2em;
-    }
   }
 
   h2 {
@@ -86,11 +77,26 @@ form {
   }
 }
 
+
+table {
+
+  width: 100%;
+
+  border-collapse: separate;
+  border-spacing: 0.5em;
+
+  td {
+    width: 50%;
+    height: 2em;
+  }
+}
+
 button, input, select, .inputOuterLeft, .inputOuterRight {
   background-color: var(--base);
   border-radius: 10px;
   color: var(--text);
   height: 2em;
+  width: 100%;
   padding: 0em 0.5em;
 }
 
@@ -186,23 +192,25 @@ main.two-col {
   }
 
   .items {
-    display: flex;
-    flex-direction: column;
-    row-gap: 0.25em;
-    padding: 0.5em;
+    * {
+      width: 100%;
+    }
+
+    td {
+      height: unset;
+    }
 
     a {
+      display: block;
       background-color: var(--base);
-
       border-radius: 10px;
 
-      padding: 0px 10px;
+
       text-align: center;
     }
     a:hover {
       background-color: var(--overlay0);
     }
-
 
     a.active {
       background-color: var(--surface0);
@@ -231,24 +239,13 @@ main.two-col {
   border-radius: 10px;
   text-align: center;
 }
+
 .tab.active {
   background-color: var(--surface0);
 }
 
 .tab:hover {
   background-color: var(--overlay0);
-}
-
-
-
-.account-form-table {
-  margin: 0.5em;
-  display: grid;
-  grid-template-columns: auto auto;
-  text-align: right;
-  justify-content: left;
-  row-gap: 0.5em;
-  column-gap: 0.5em;
 }
 
 .co-pi-row {

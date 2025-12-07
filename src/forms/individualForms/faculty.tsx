@@ -20,7 +20,8 @@ function FacultyLine({faculty}: {faculty?: I_Faculty}) {
     }, [faculty])
 
     return <tr>
-        <td colSpan={2} style={{textAlign: "center"}}>
+        <td><label>Role:</label></td>
+        <td>
             <select name="role"  defaultValue={role} key={role}>
                 <option value="Faculty">Faculty</option>
                 <option value="Staff">Staff</option>
@@ -131,7 +132,10 @@ export default function FacultyForm(
 
                  <tr>
                     <td><button className="actionButton submitButton">{faculty != undefined ? "Update" : "Create"}</button></td>
-                    {faculty != null ? <td><button  formAction={onDelete} className="warning actionButton">Remove {faculty.individual.name}</button></td> : undefined}
+                    {faculty != null
+                        ? <td><button formAction={onDelete} className="warning actionButton">Remove {faculty.individual.name}</button></td>
+                        : undefined
+                    }
 
                 </tr>
             </tbody>

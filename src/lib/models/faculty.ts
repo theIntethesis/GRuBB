@@ -7,6 +7,9 @@ import { refresh, revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { FacultyRole } from "../common"
 import dbConnect from "../mongodb"
+import { SalaryAccount } from "./salaryAccount"
+import { Student } from "./student"
+import { StudentAccount } from "./studentAccount"
 
 export interface I_Faculty_PK {
     individualID?: string // uid from Individual
@@ -202,16 +205,16 @@ export async function del(
     { budgetID }: { budgetID: string }
 ): Promise<void> {
 
-    // Keeping your commented-out original logic:
+    await SalaryAccount.deleteMany({individualID})
 
-    // await dbConnect()
-    // await Faculty.deleteOne({ individualID })
-    // await Individual.findByIdAndDelete(individualID)
+    await Faculty.deleteOne({individualID})
+    await Individual.findByIdAndDelete(individualID)
 
-    // const budget = await Budget.findById(budgetID)
-    // budget.faculty.pull(individualID)
-    // await budget.save()
+    const budget = await Budget.findById(budgetID)
+    budget.faculty.pull(individualID)
+    await budget.save()
 
-    // revalidatePath("/dashboard", "layout")
-    // redirect(`/dashboard/${budgetID}/Faculty`)
+    revalidatePath("/dashboard", "layout")
+    redirect(`/dashboard/${budgetID}/Faculty`)
+
 }

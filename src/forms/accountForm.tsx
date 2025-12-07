@@ -2,11 +2,15 @@
 "use client"
 
 import { BudgetAPI } from "@/lib/models";
+import { I_Budget } from "@/lib/models/budget";
 import { castFormDataToObject } from "@/lib/utils";
 import Form from "next/form"
 import { useState } from "react";
 
-export default function AccountForm({ budget } : {budget: any}) {
+export default function AccountForm({ budget } : {budget: I_Budget}) {
+    if (budget.coPI == undefined) {
+        return
+    }
 
     const [coPIs, setCoPIs] = useState<string[]>(budget.coPI)
 
@@ -34,31 +38,50 @@ export default function AccountForm({ budget } : {budget: any}) {
     return <main>
         <div>
             <Form action={onSubmit}>
-                <section className="account-form-table">
+                <table>
+                    <tbody>
 
-                    <label htmlFor="name">Budget Name:</label>
-                    <input name="name" type="text" defaultValue={budget.name}></input>
+                        <tr>
+                            <td colSpan={2} style={{
+                                textAlign: "center"
+                            }}>
+                                <input
+                                    type="text"
+                                    placeholder="Name"
+                                    defaultValue={budget.name}
+                                    required={true}
+                                    name="name"
+                                    style={{
+                                        fontSize: "20pt",
+                                        fontWeight: "bold"
+                                    }}
+                                />
+                            </td>
+                        </tr>
 
-                    <span/><span/>
+                        <tr>
+                            <td><label htmlFor="pi">Principal Investigator:</label></td>
+                            <td><input name="pi" type="text" defaultValue={budget.pi}></input></td>
+                        </tr>
+                        <tr><td colSpan={2}><hr/></td></tr>
+                            <tr>
+                                <td><input id="add-co-pi" type="text" placeholder="Name"></input></td>
+                                <td><button onClick={addPI} className="actionButton submitButton">Add</button></td>
+                            </tr>
+                            {budget != null ?
+                                coPIs.map((x, idx) => {
+                                    return <tr key={idx} id={idx.toString()}>
+                                        <td><input disabled={true} value={x}/></td>
+                                        <td><button onClick={() => removePI(x)} className="actionButton warning">Remove</button></td>
+                                    </tr>
+                                })
+                            : null}
 
-                    <label htmlFor="pi">Principal Investigator:</label>
-                    <input name="pi" type="text" defaultValue={budget.pi}></input>
+                            <tr><td><button className="actionButton submitButton">Save</button></td></tr>
 
-                        <input id="add-co-pi" type="text"></input>
-                        <button formAction={addPI}>Add</button>
-                        {budget != null ?
-                            coPIs.map((x, idx) => {
-                                return <div className="co-pi-row" key={idx} id={idx.toString()}>
-                                    {x}
-                                    <button formAction={() => removePI(x)}>Remove</button>
-                                </div>
-                            })
-                        : null}
-                        <div id="addhere"/><div/>
-                        {/* make span 2 */}
-                        <button>Save</button>
+                    </tbody>
 
-                </section>
+                </table>
             </Form>
         </div>
     </main>

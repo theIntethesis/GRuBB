@@ -30,7 +30,7 @@ export default function Header({budgets, currentBudget}: {budgets: I_Budget[], c
                 })}
                 <option>Add new Institution</option>
             </select>
-            <button>Export Full Budget</button>
+            <button className="submitButton">Export Full Budget</button>
         </div>
 
         {currentBudget != null ?

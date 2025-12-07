@@ -10,17 +10,22 @@ export default function RatesSidebar({semesters, budgetID}: {semesters: Semester
     let anyActive: boolean = false
 
     return <div className="items">
-        {semesters != null ? (sortBySemester(semesters)).map(x => {
-            const path = `/dashboard/${budgetID}/SemesterRates/${x.year}/${x.semester}`
-            if (path == currPath) {
-                anyActive = true
-                return <Link href={path} key={JSON.stringify(x)} className="active">{x.semester} {x.year}</Link>
-            }
-            else {
-                return <Link href={path} key={JSON.stringify(x)}>{x.semester} {x.year}</Link>
-            }
+        <table>
+            <tbody>
+                {semesters != null ? (sortBySemester(semesters)).map(x => {
+                    const path = `/dashboard/${budgetID}/SemesterRates/${x.year}/${x.semester}`
+                    if (path == currPath) {
+                        anyActive = true
+                        return <tr><td><Link href={path} key={JSON.stringify(x)} className="active">{x.semester} {x.year}</Link></td></tr>
+                    }
+                    else {
+                        return <tr><td><Link href={path} key={JSON.stringify(x)}>{x.semester} {x.year}</Link></td></tr>
+                    }
 
-        }) : null}
-        <Link href={`/dashboard/${budgetID}/SemesterRates/`} className={!anyActive ? "active" : undefined}>Add New Semester</Link>
+                }) : null}
+                <tr><td><Link href={`/dashboard/${budgetID}/SemesterRates/`} className={!anyActive ? "active" : undefined}>Add New Semester</Link></td></tr>
+            </tbody>
+
+        </table>
     </div>
 }

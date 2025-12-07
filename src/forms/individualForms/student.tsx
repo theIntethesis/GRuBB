@@ -16,10 +16,10 @@ import { SalaryAccountAPI } from "@/lib/models"
 function StudentLine({student}: {student?: I_Student}) {
     return <tr>
         <td>
-            <label>Out of State</label>
+            <label>Out of State:</label>
         </td>
         <td>
-            <input type="checkbox" name="outOfState" style={{height: "unset"}} defaultChecked={student != null ? student.outOfState : false}/>
+            <input type="checkbox" name="outOfState" style={{height: "unset", width: "unset"}} defaultChecked={student != null ? student.outOfState : false}/>
         </td>
     </tr>
 }
@@ -182,10 +182,11 @@ export default function StudentForm(
             }
             else {
                 if (initialShowSalary) {
-                    // delete salary account
+                    SalaryAccountAPI.del({individualID: student.student.individualID, ...currentSemester}, {individualID: student.student.individualID})
                 }
                 else {
                     // do nothing? !initialShowSalary and !showSalary
+                    // this is left blank intentionally
                 }
             }
         }
@@ -194,13 +195,26 @@ export default function StudentForm(
 
     const onDelete = () => {
         if (student != null) {
+            if (student == undefined || student.student.individualID == undefined) {
+                return
+            }
 
+            // delete all student and salary accounts - done on the server side
+            // delete student
+
+            StudentAPI.del({individualID: student.student.individualID}, {budgetID})
         }
     }
     const deleteCurrentSemester = () => {
+        if (student == undefined || student.student.individualID == undefined) {
+            return
+        }
 
+        if (initialShowSalary) {
+            SalaryAccountAPI.del({individualID: student.student.individualID, ...currentSemester}, {individualID: student.student.individualID})
+        }
+        StudentAccountAPI.del({individualID: student.student.individualID, ...currentSemester}, {individualID: student.student.individualID})
     }
-
 
     return <Form action={student == undefined ? onSubmit : onUpdate} >
         <table>
