@@ -79,7 +79,7 @@ export function ChooseSemesterDropdown({semesters, setSemester} : {semesters: Se
 
 export function SalaryAccountSection(
     {salaryAccounts, semesterAccounts, currentSemester, role}:
-    {semesterAccounts: SemesterAccountCombo[], salaryAccounts?: I_SalaryAccount[], currentSemester: SemesterCombo, role: EmpolymentType}
+    {salaryAccounts?: I_SalaryAccount[], semesterAccounts: SemesterAccountCombo[], currentSemester: SemesterCombo, role: EmpolymentType}
 ) {
     const salaryAccount = salaryAccounts?.find((val) => semesterEq(val, currentSemester))
 

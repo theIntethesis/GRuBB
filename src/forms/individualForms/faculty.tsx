@@ -2,44 +2,39 @@
 import { useState, useEffect } from "react"
 import { redirect } from "next/navigation"
 import { getSemesterData, ChooseSemesterDropdown, IndividualLine, SalaryAccountSection, SelectSemesterDropdown } from "./common"
-import { SemesterCombo } from "@/lib/common"
+import { SemesterCombo, FacultyRole } from "@/lib/common"
 import Form from "next/form"
+import { FacultyIndividual, I_Faculty } from "@/lib/models/faculty"
+import { I_SalaryAccount } from "@/lib/models/salaryAccount"
+import { SemesterAccountCombo } from "@/lib/models/semesterAccount"
 
-function FacultyLine({faculty}: {faculty?: any}) {
-    const [role, setRole] = useState(undefined)
+function FacultyLine({faculty}: {faculty?: I_Faculty}) {
+    const [role, setRole] = useState<FacultyRole>("Faculty")
 
     // when you gotta pull out the useEffect you know shits fucked
     useEffect(() => {
-        // console.log(faculty?.role || "Faculty")
-        setRole(faculty?.role || "Faculty")
+        if (faculty != null) setRole(faculty.role)
     }, [faculty])
 
     return <tr>
         <td colSpan={2} style={{textAlign: "center"}}>
-            <select name="facultyType"  defaultValue={role} key={role}>
+            <select name="role"  defaultValue={role} key={role}>
                 <option value="Faculty">Faculty</option>
                 <option value="Staff">Staff</option>
                 <option value="Post-Doc">Post-Doc</option>
             </select>
-
         </td>
     </tr>
 }
 
 export function FacultyForm(
     {budgetID, faculty, salaryAccounts, semesterAccounts, inputSemester}:
-    {
-        budgetID: string,
-        faculty?: any,
-        salaryAccounts?: any[]
-        semesterAccounts: any[],
-        inputSemester?: SemesterCombo
-    }
+    {budgetID: string, faculty?: FacultyIndividual, salaryAccounts?: I_SalaryAccount[], semesterAccounts: SemesterAccountCombo[], inputSemester?: SemesterCombo}
 ) {
     const {semesters, absentSemesters} = getSemesterData(budgetID, semesterAccounts, salaryAccounts || [], [])
 
     if (inputSemester == undefined && absentSemesters.length == 0 && faculty != undefined) {
-        redirect(`/dashboard/${budgetID}/Faculty/${faculty.individual_id}/${semesters[0].year}/${semesters[0].semester}`)
+        redirect(`/dashboard/${budgetID}/Faculty/${faculty.faculty.individualID}/${semesters[0].year}/${semesters[0].semester}`)
     }
 
     const [currentSemester, setCurrentSemester] = useState(inputSemester || absentSemesters[0])
@@ -49,6 +44,7 @@ export function FacultyForm(
     }
 
     const onSubmit = (formData: FormData) => {
+        /*
         if (faculty == null) {
             createNewFaculty(
                 formData.get("name")?.toString() || "unnamed",
@@ -73,23 +69,23 @@ export function FacultyForm(
 
             }
         }
-
+        */
     }
     const onDelete = () => {
         if (faculty != null) {
-            deleteFaculty(faculty.individual_id, budgetID)
+            // deleteFaculty(faculty.individual_id, budgetID)
         }
     }
     return <Form action={onSubmit}>
         <table>
             <tbody>
-                <IndividualLine individual={faculty}/>
-                <FacultyLine faculty={faculty}/>
+                <IndividualLine individual={faculty?.individual}/>
+                <FacultyLine faculty={faculty?.faculty}/>
 
                  {faculty != null ? <>
                    <tr>
                         <SelectSemesterDropdown
-                            basePath={`/dashboard/${budgetID}/Faculty/${faculty.individual_id}/`}
+                            basePath={`/dashboard/${budgetID}/Faculty/${faculty.faculty.individualID}/`}
                             semesters={semesters}
                             currentSemester={inputSemester}
                             displayAddNew={absentSemesters.length > 0}
@@ -100,7 +96,7 @@ export function FacultyForm(
                         }
                     </tr>
                     <tr><td colSpan={2}><hr/></td></tr>
-                    <SalaryAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} faculty={faculty} salaryAccounts={salaryAccounts}/>
+                    <SalaryAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} salaryAccounts={salaryAccounts} role={faculty.faculty.role}/>
                     <tr><td colSpan={2}><hr/></td></tr>
                  </> : undefined}
 

@@ -1,14 +1,15 @@
 "use client"
 import { SemesterAccountCombo } from "@/lib/models/semesterAccount"
 import { SemesterCombo, semesterEq } from "@/lib/common"
-import { I_Student } from "@/lib/models/student"
+import { I_Student, StudentIndividual } from "@/lib/models/student"
 import { I_StudentAccount } from "@/lib/models/studentAccount"
 import { useState, useEffect, Dispatch } from "react"
 import { getSemesterData, ChooseSemesterDropdown, IndividualLine, SalaryAccountSection, SelectSemesterDropdown } from "./common"
 import { redirect } from "next/navigation"
 import Form from "next/form"
+import { I_SalaryAccount } from "@/lib/models/salaryAccount"
 
-function StudentLine({student}: {student?: any}) {
+function StudentLine({student}: {student?: I_Student}) {
     return <tr>
         <td colSpan={2} style={{textAlign: "center"}}>
             <input type="checkbox" name="outOfState" defaultChecked={student != null ? student.outOfState : false}/> Out of State
@@ -17,8 +18,8 @@ function StudentLine({student}: {student?: any}) {
 }
 
 function StudentSalaryAccountSection(
-    {semesterAccounts, currentSemester, showSalary, setShowSalary}:
-    {semesterAccounts: any[], currentSemester: SemesterCombo, showSalary: boolean, setShowSalary: Dispatch<any>}) {
+    {semesterAccounts, currentSemester, salaryAccounts,  showSalary, setShowSalary}:
+    {semesterAccounts: any[], currentSemester: SemesterCombo, salaryAccounts?: I_SalaryAccount[], showSalary: boolean, setShowSalary: Dispatch<any>}) {
     // some sort of usestate that when a button is pressed it reveals salary account section
     // only if salary account is null
 
@@ -31,7 +32,7 @@ function StudentSalaryAccountSection(
             <td colSpan={2}>
                 <button type="button" onClick={onShowSalary} className="actionButton" >Add Salary Account</button>
             </td>
-        </tr> : <SalaryAccountSection role={"Student"} semesterAccounts={semesterAccounts} currentSemester={currentSemester}/> }
+        </tr> : <SalaryAccountSection role={"Student"} salaryAccounts={salaryAccounts} semesterAccounts={semesterAccounts} currentSemester={currentSemester}/> }
 
     </>
 }
@@ -56,12 +57,12 @@ function StudentAccountSection(
 
     return <>
         <tr>
-            <td><label htmlFor="tuition">Tuition:</label></td>
+            <td><label>Tuition:</label></td>
             <td><div className="inputOuterLeft">$ <p>{tuitionRate}</p></div></td>
         </tr>
         <tr>
-            <td><label htmlFor="aid">Aid Received:</label></td>
-            <td><div className="inputOuterLeft">$<input type="number" id="aid" name="aid" defaultValue={studentAccount?.aidRecieved || 0}/></div></td>
+            <td><label htmlFor="aidRecieved">Aid Received:</label></td>
+            <td><div className="inputOuterLeft">$<input type="number" id="aidRecieved" name="aidRecieved" defaultValue={studentAccount?.aidRecieved || 0}/></div></td>
         </tr>
     </>
 }
@@ -70,12 +71,12 @@ function StudentAccountSection(
 // individual == null implies everything else is null
 export function StudentForm(
     {budgetID,  student, studentAccounts, salaryAccounts, semesterAccounts, inputSemester}:
-    {budgetID: string, student?: any, studentAccounts?: any[], salaryAccounts?: any[], semesterAccounts: any[], inputSemester?: Semester}
+    {budgetID: string, student?: StudentIndividual, studentAccounts?: I_StudentAccount[], salaryAccounts?: I_SalaryAccount[], semesterAccounts: SemesterAccountCombo[], inputSemester?: SemesterCombo}
 ) {
     const {semesters, absentSemesters} = getSemesterData(budgetID, semesterAccounts, salaryAccounts || [], studentAccounts || [])
 
     if (inputSemester == undefined && absentSemesters.length == 0 && student != undefined) {
-        redirect(`/dashboard/${budgetID}/Student/${student.individual_id}/${semesters[0].year}/${semesters[0].semester}`)
+        redirect(`/dashboard/${budgetID}/Student/${student.student.individualID}/${semesters[0].year}/${semesters[0].semester}`)
     }
 
     const [currentSemester, setCurrentSemester] = useState(inputSemester || absentSemesters[0])
@@ -91,6 +92,7 @@ export function StudentForm(
 
 
     const onSubmit = (formData: FormData) => {
+        /*
         console.log(formData)
         console.log(currentSemester)
 
@@ -131,11 +133,11 @@ export function StudentForm(
             }
 
         }
-
+        */
     }
     const onDelete = () => {
         if (student != null) {
-            deleteStudent(student.individual_id, budgetID)
+            // deleteStudent(student.individual_id, budgetID)
         }
 
     }
@@ -146,13 +148,13 @@ export function StudentForm(
     return <Form action={onSubmit}>
         <table>
             <tbody>
-                <IndividualLine individual={student}/>
-                <StudentLine student={student}/>
+                <IndividualLine individual={student?.individual}/>
+                <StudentLine student={student?.student}/>
 
                 {student != null ? <>
                     <tr>
                         <SelectSemesterDropdown
-                            basePath={`/dashboard/${budgetID}/Student/${student.individual_id}/`}
+                            basePath={`/dashboard/${budgetID}/Student/${student.student.individualID}/`}
                             semesters={semesters}
                             currentSemester={inputSemester}
                             displayAddNew={absentSemesters.length > 0}
@@ -163,7 +165,7 @@ export function StudentForm(
                         }
                     </tr>
                     <tr><td colSpan={2}><hr/></td></tr>
-                    <StudentAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} student={student} studentAccounts={studentAccounts}/>
+                    <StudentAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} student={student.student} studentAccounts={studentAccounts}/>
                     <tr><td colSpan={2}><hr/></td></tr>
                     <StudentSalaryAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} showSalary={showSalary} setShowSalary={setShowSalary}/>
                     <tr><td colSpan={2}><hr/></td></tr>

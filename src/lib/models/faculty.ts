@@ -16,9 +16,10 @@ interface I_Faculty_Data {
     role: FacultyRole,
 }
 
+export interface I_Faculty extends I_Faculty_PK, I_Faculty_Data {}
+
 export interface FacultyIndividual { faculty: I_Faculty; individual: I_Individual }
 
-export interface I_Faculty extends I_Faculty_PK, I_Faculty_Data {}
 
 const FacultySchema = new mongoose.Schema<I_Faculty>({
     role: String,
