@@ -127,5 +127,5 @@ export async function getAll(
     const accs = await SalaryAccount.find(fk).exec()
 
     // todo: sanitize
-    return accs
+    return JSON.parse(JSON.stringify(accs))
 }

@@ -293,11 +293,12 @@ export async function getOne(
     const travelProfile = await TravelProfile.findById(semesterAccount.travelProfileID).exec()
     const overheadCharge = await OverheadCharge.findById(semesterAccount.overheadChargeID).exec()
 
-    return {
+    // console.log(semesterAccount)
+    return JSON.parse(JSON.stringify({
         semesterAccount,
         travelProfile,
         overheadCharge
-    }
+    }))
 }
 
 // ---- getAll ----
@@ -308,6 +309,10 @@ export async function getAll(
 
     const accs = await SemesterAccount.find(fk).exec()
 
-    // todo: sanitize
-    return accs
+
+    const accsPaired = await Promise.all(accs.map(async (x) => {
+        return await getOne({budgetID: x.budgetID, semester: x.semester, year: x.year})
+    }))
+
+    return JSON.parse(JSON.stringify(accsPaired))
 }

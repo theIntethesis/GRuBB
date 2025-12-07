@@ -1,5 +1,5 @@
 'use client'
-import dbConnect from "@/lib/mongodb";
+
 import Link from "next/link";
 import { redirect, usePathname } from "next/navigation";
 

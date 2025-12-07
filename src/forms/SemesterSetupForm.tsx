@@ -5,6 +5,7 @@ import { SemesterAccountAPI } from '@/lib/models'
 import { castFormDataToObject } from '@/lib/utils'
 
 import Form from 'next/form'
+import { redirect } from 'next/navigation'
 
 type SemesterAccountCombo = SemesterAccountAPI.SemesterAccountCombo
 type I_SemesterAccountPK = SemesterAccountAPI.I_SemesterAccountPK
@@ -12,9 +13,13 @@ type I_SemesterAccountFK = SemesterAccountAPI.I_SemesterAccountFK
 
 export default function SemesterSetupForm({ semester, budget }: { semester?: SemesterAccountCombo, budget: I_Budget }) {
 
+    if (budget._id == undefined) {
+        redirect("/dashboard")
+    }
+
     const initialValues: SemesterAccountCombo = semester != null ? semester : {
         semesterAccount: {
-            budgetID: budget._id || "", // this should in theory never happen
+            budgetID: budget._id, // this should in theory never happen
             semester: "Fall",
             year: 2025,
             inStateTuitionRate: 0,
@@ -47,9 +52,38 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: Sem
     }
 
     const onCreate = async (formData: FormData) => {
+        if (budget._id == undefined) {
+            redirect("/dashboard")
+        }
         const vals = castFormDataToObject(formData)
 
         console.log(vals)
+
+        // make sure semester hasn't been used before!!!
+
+        SemesterAccountAPI.create({
+            overheadCharge: {
+                charge: vals.overheadCharge,
+                description: ""
+            },
+            travelProfile: {
+                perDiem: vals.perdiem,
+                airfare: vals.airfare,
+                lodging: vals.lodging
+            },
+            semesterAccount: {
+                budgetID: budget._id,
+                semester: vals.semester,
+                year: vals.year,
+                facultyFBR: vals.facultyFBR,
+                postDocFBR: vals.postDocFBR,
+                studentFBR: vals.studentFBR,
+                inStateTuitionRate: vals.inStateTuitionRate,
+                outOfStateTuitionRate: vals.outOfStateTuitionRate,
+                tuitionIncrease: vals.tuitionIncrease
+            }
+        }, {budgetID: budget._id})
+
         // await createSemesterAccount(
         //     budget._id,
         //     formData.get("semester") == "Fall" ? "Fall" : "Spring",

@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import dbConnect from "../mongodb"
 
-interface I_Student {
+export interface I_Student {
     outOfState: boolean,
     individualID: string // uid from Individual
 }
@@ -112,10 +112,11 @@ export async function getOne(
     const student = (await Student.find({ individualID }))[0] // unique
     const individual = await Individual.findById(individualID)
 
-    return {
+
+    return JSON.parse(JSON.stringify({
         individual,
         student
-    }
+    }))
 }
 
 export async function getAll(
@@ -135,7 +136,7 @@ export async function getAll(
         if (stu != undefined) students.push(stu)
     }
 
-    return students
+    return JSON.parse(JSON.stringify(students))
 }
 
 export async function create(

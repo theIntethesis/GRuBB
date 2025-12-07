@@ -16,6 +16,8 @@ interface I_Faculty_Data {
     role: FacultyRole,
 }
 
+export interface FacultyIndividual { faculty: I_Faculty; individual: I_Individual }
+
 export interface I_Faculty extends I_Faculty_PK, I_Faculty_Data {}
 
 const FacultySchema = new mongoose.Schema<I_Faculty>({
@@ -108,23 +110,23 @@ const FacultyAPI: ForeignKeyModelAPI<
 // ---- getOne ----
 export async function getOne(
     { individualID }: I_Faculty_PK
-): Promise<{ faculty: I_Faculty; individual: I_Individual } | undefined> {
+): Promise<FacultyIndividual | undefined> {
     await dbConnect()
 
     const individual = await Individual.findById(individualID)
     const faculty = await Faculty.findOne({ individualID })
 
-    return {
+    return JSON.parse(JSON.stringify({
         individual: individual,
         faculty: faculty,
-    }
+    }))
 }
 
 
 // ---- getAll ----
 export async function getAll(
     { budgetID }: { budgetID: string }
-): Promise<Array<{ faculty: I_Faculty; individual: I_Individual }>> {
+): Promise<Array<FacultyIndividual>> {
     await dbConnect()
 
     const budget = await Budget.findById(budgetID)
@@ -139,12 +141,12 @@ export async function getAll(
         if (fac != undefined) facultyArr.push(fac)
     }
 
-    return facultyArr
+    return JSON.parse(JSON.stringify(facultyArr))
 }
 
 // ---- create ----
 export async function create(
-    input: { faculty: I_Faculty; individual: I_Individual },
+    input: FacultyIndividual,
     fk: { budgetID: string }
 ): Promise<void> {
     await dbConnect()
@@ -170,7 +172,7 @@ export async function create(
 
 // ---- modify ----
 export async function modify(
-    input: { faculty: I_Faculty; individual: I_Individual }
+    input: FacultyIndividual
 ): Promise<void> {
     await dbConnect()
 

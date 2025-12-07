@@ -5,13 +5,6 @@ import { BudgetAPI } from "@/lib/models";
 import { castFormDataToObject } from "@/lib/utils";
 import Form from "next/form"
 import { useState } from "react";
-import { BudgetType } from "@/lib/common";
-
-interface FormKeys {
-    name: string,
-    pi: string
-}
-
 
 export default function AccountForm({ budget } : {budget: any}) {
 

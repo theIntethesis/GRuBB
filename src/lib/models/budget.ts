@@ -116,7 +116,7 @@ export async function getOne(
 
             // TODO: fix original code: should return the budget here
             // for now we match your existing behavior
-            return budget
+            return JSON.parse(JSON.stringify(budget))
         }
 
         return undefined
@@ -133,7 +133,7 @@ export async function getAll(): Promise<I_Budget[]> {
 
     const allBudgets = await Budget.find({}).exec()
 
-    return allBudgets
+    return JSON.parse(JSON.stringify(allBudgets))
 }
 
 
@@ -145,7 +145,7 @@ export async function create(val: I_Budget): Promise<void> {
     await newBudget.save()
 
     revalidatePath("/dashboard", "layout")
-    redirect(`/dashboard/${newBudget._id.toJSON()}/Student`)
+    redirect(`/dashboard/${newBudget._id.toJSON()}`)
 }
 
 

@@ -5,11 +5,6 @@ import {BudgetAPI} from "@/lib/models"
 import { castFormDataToObject } from "@/lib/utils"
 import Form from "next/form"
 
-interface FormKeys {
-    name: string,
-    budgetType: BudgetType,
-    pi: string
-}
 
 export default function NewInstituionForm() {
     const onSubmit = async (formData: FormData) => {

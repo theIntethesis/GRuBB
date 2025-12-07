@@ -13,8 +13,10 @@ export default async function Page({ params, children }: {params: {budgetID: str
 
     // if this returns more than one institutional account then budgetID is not unique and something has fucked up.
     // this needs to be
+    // console.log((await SemesterAccountAPI.getAll({budgetID})))
     const semesters = (await SemesterAccountAPI.getAll({budgetID})).map(x => {return x.semesterAccount as SemesterCombo})
 
+    // console.log(semesters)
 
 
     return <main className="two-col">

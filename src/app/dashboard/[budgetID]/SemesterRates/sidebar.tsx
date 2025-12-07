@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 
 export default function RatesSidebar({semesters, budgetID}: {semesters: SemesterCombo[], budgetID: string}) {
-
+    // console.log(semesters)
     const currPath = usePathname()
     let anyActive: boolean = false
 

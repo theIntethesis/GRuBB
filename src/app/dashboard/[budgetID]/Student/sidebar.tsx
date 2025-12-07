@@ -8,6 +8,8 @@ export default function StudentSidebar({students, budgetID}: {students: StudentI
     const currPath = usePathname()
     let anyActive: boolean = false
 
+    console.log(students)
+
     return <div className="items">
         {students != null ? students.map(x => {
             const path = `/dashboard/${budgetID}/Student/${x.student.individualID.toString()}`

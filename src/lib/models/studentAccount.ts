@@ -109,5 +109,5 @@ export async function getAll(
     const accs = await StudentAccount.find(fk).exec()
 
     // todo: sanitize
-    return accs
+    return JSON.parse(JSON.stringify(accs))
 }
