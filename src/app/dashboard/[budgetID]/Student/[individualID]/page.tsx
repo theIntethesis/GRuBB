@@ -1,5 +1,5 @@
 import {StudentForm} from "@/forms/individualForms"
-import { DashboardSlugs } from "@/lib/_common"
+import { DashboardSlugs } from "@/lib/common"
 import {StudentAPI} from "@/lib/models"
 import {StudentAccountAPI} from "@/lib/models"
 import {SalaryAccountAPI} from "@/lib/models"

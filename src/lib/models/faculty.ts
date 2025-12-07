@@ -5,7 +5,7 @@ import { I_Individual, Individual } from "./_individual"
 import { Budget } from "./budget"
 import { refresh, revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
-import { FacultyRole } from "../_common"
+import { FacultyRole } from "../common"
 import dbConnect from "../mongodb"
 
 interface I_Faculty_PK {

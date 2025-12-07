@@ -1,14 +1,17 @@
 "use client"
 
 import { I_Budget } from '@/lib/models/budget'
-import SemesterAccountAPI, { I_SemesterAccountPK, I_SemesterAccountFK, SemesterAccountCombo } from '@/lib/models/semesterAccount'
+import { SemesterAccountAPI } from '@/lib/models'
 import { castFormDataToObject } from '@/lib/utils'
-import { assert } from 'console'
 
 import Form from 'next/form'
 
+type SemesterAccountCombo = SemesterAccountAPI.SemesterAccountCombo
+type I_SemesterAccountPK = SemesterAccountAPI.I_SemesterAccountPK
+type I_SemesterAccountFK = SemesterAccountAPI.I_SemesterAccountFK
+
 export default function SemesterSetupForm({ semester, budget }: { semester?: SemesterAccountCombo, budget: I_Budget }) {
-    assert(budget._id != undefined)
+
     const initialValues: SemesterAccountCombo = semester != null ? semester : {
         semesterAccount: {
             budgetID: budget._id || "", // this should in theory never happen
@@ -37,7 +40,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: Sem
         if (semester == undefined) {
             return
         }
-        await SemesterAccountAPI.delete(
+        await SemesterAccountAPI.del(
             semester.semesterAccount as I_SemesterAccountPK,
             semester.semesterAccount as I_SemesterAccountFK
         )

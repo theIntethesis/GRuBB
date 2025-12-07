@@ -1,9 +1,8 @@
 "use client"
-import { createNewStudent, createNewFaculty, deleteFaculty, deleteStudent, modifyStudent, modifyFaculty } from "@/api/individuals"
 import { redirect } from "next/navigation"
 import Form from "next/form"
 import { useEffect, useState } from "react"
-import { createSalaryAccount, createStudentAccount, modifyStudentAccount } from "@/api/accounts"
+
 
 
 interface Semester {

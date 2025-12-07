@@ -1,6 +1,6 @@
 import { FacultyForm } from "@/forms/individualForms"
 
-import { DashboardSlugs } from "@/lib/_common"
+import { DashboardSlugs } from "@/lib/common"
 import {SemesterAccountAPI} from "@/lib/models"
 // new faculty
 export default async function Page({params}: {params: Promise<DashboardSlugs>}) {

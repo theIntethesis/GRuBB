@@ -1,6 +1,6 @@
 "use client"
 
-import { BudgetType } from "@/lib/_common"
+import { BudgetType } from "@/lib/common"
 import {BudgetAPI} from "@/lib/models"
 import { castFormDataToObject } from "@/lib/utils"
 import Form from "next/form"

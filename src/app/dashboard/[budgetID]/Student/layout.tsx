@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/mongodb"
 
 import StudentSidebar from "./sidebar";
-import { DashboardSlugs } from "@/lib/_common";
+import { DashboardSlugs } from "@/lib/common";
 import {StudentAPI} from "@/lib/models";
 
 

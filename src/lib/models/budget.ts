@@ -4,7 +4,7 @@ import dbConnect from "@/lib/mongodb"
 import { redirect } from "next/navigation"
 import { revalidatePath } from 'next/cache'
 import ModelAPI from "./_modelAPI"
-import { BudgetType } from "../_common"
+import { BudgetType } from "../common"
 
 export interface I_Budget {
     name: string,

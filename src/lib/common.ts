@@ -1,5 +1,3 @@
-import dbConnect from "mongodb"
-import { revalidatePath } from "next/cache"
 
 export type Semester = "Fall" | "Spring"
 export type FacultyRole = "Faculty" | "Staff" | "Postdoc"

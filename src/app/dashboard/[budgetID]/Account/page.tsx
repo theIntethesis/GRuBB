@@ -1,7 +1,7 @@
 
 import { BudgetAPI } from "@/lib/models";
 import AccountForm from "@/forms/accountForm";
-import { DashboardSlugs } from "@/lib/_common";
+import { DashboardSlugs } from "@/lib/common";
 
 // Account
 export default async function Page({params}: {params: Promise<DashboardSlugs>}) {

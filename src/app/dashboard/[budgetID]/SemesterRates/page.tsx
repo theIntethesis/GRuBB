@@ -2,7 +2,7 @@
 
 import {BudgetAPI} from '@/lib/models'
 import SemesterForm from '@/forms/SemesterSetupForm'
-import { DashboardSlugs } from '@/lib/_common'
+import { DashboardSlugs } from '@/lib/common'
 
 export default async function Page({params}: {params: Promise<DashboardSlugs>}) {
     const { budgetID } = await params

@@ -1,6 +1,6 @@
 import {BudgetAPI} from '@/lib/models'
 import SemesterForm from '@/forms/SemesterSetupForm'
-import { DashboardSlugs } from '@/lib/_common'
+import { DashboardSlugs } from '@/lib/common'
 import {SemesterAccountAPI} from '@/lib/models'
 import { redirect } from 'next/navigation'
 

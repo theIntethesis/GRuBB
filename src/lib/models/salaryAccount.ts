@@ -1,7 +1,7 @@
 "use server"
 import mongoose from "mongoose"
 import { ForeignKeyModelAPI } from "./_modelAPI"
-import { Semester, SemesterCombo } from "../_common"
+import { Semester, SemesterCombo } from "../common"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import dbConnect from "../mongodb"

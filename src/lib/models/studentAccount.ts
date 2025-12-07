@@ -2,7 +2,7 @@
 import mongoose from "mongoose"
 import { ForeignKeyModelAPI} from "./_modelAPI"
 import { revalidatePath } from "next/cache"
-import { Semester, SemesterCombo } from "../_common"
+import { Semester, SemesterCombo } from "../common"
 import dbConnect from "../mongodb"
 
 interface I_StudentAccount_FK {
