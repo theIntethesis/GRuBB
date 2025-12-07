@@ -178,9 +178,7 @@ export function getSemesterData(budgetID : string, semesterAccounts: SemesterAcc
         return true;
     })
 
-
     return {
-
         semesters: semesters,
         absentSemesters: absentSemesters
     }

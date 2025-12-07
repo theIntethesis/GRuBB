@@ -27,7 +27,7 @@ function FacultyLine({faculty}: {faculty?: I_Faculty}) {
     </tr>
 }
 
-export function FacultyForm(
+export default function FacultyForm(
     {budgetID, faculty, salaryAccounts, semesterAccounts, inputSemester}:
     {budgetID: string, faculty?: FacultyIndividual, salaryAccounts?: I_SalaryAccount[], semesterAccounts: SemesterAccountCombo[], inputSemester?: SemesterCombo}
 ) {
@@ -39,44 +39,22 @@ export function FacultyForm(
 
     const [currentSemester, setCurrentSemester] = useState(inputSemester || absentSemesters[0])
 
-    const deleteCurrentSemester = () => {
+    const onSubmit = (formData: FormData) => {
 
     }
+    const onUpdate = (formData: FormData) => {
 
-    const onSubmit = (formData: FormData) => {
-        /*
-        if (faculty == null) {
-            createNewFaculty(
-                formData.get("name")?.toString() || "unnamed",
-                formData.get("facultyType")?.toString() || "Faculty",
-                budgetID
-            )
-        }
-        else {
-            modifyFaculty(
-                formData.get("name")?.toString() || faculty.name,
-                formData.get("facultyType")?.toString() || "Faculty",
-                faculty.individual_id
-            )
-
-            if (inputSemester == undefined) {
-                //use 'currentSemester' instead of "semester-year" because of useState stuff
-                createSalaryAccount(faculty.individual_id, currentSemester.semester, currentSemester.year, Number(formData.get("rate")), formData.get("rateUnit"), formData.get("percentFTE"))
-
-                redirect(`/dashboard/${budgetID}/Faculty/${faculty.individual_id}/${currentSemester.year}/${currentSemester.semester}`)
-            }
-            else {
-
-            }
-        }
-        */
     }
     const onDelete = () => {
         if (faculty != null) {
             // deleteFaculty(faculty.individual_id, budgetID)
         }
     }
-    return <Form action={onSubmit}>
+    const deleteCurrentSemester = () => {
+
+    }
+
+    return <Form action={inputSemester == undefined ? onSubmit : onUpdate}>
         <table>
             <tbody>
                 <IndividualLine individual={faculty?.individual}/>

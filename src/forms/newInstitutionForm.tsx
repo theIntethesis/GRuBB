@@ -16,12 +16,6 @@ export default function NewInstituionForm() {
             type: vals.budgetType as BudgetType,
             pi: vals.pi
         })
-        // const id = await createBudget(
-        //     formData.get("name")?.toString() || "Unnamed",
-        //     formData.get("pi")?.toString() || "",
-        //     "primary" // [todo]
-        // );
-
     }
 
 

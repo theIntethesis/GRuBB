@@ -252,11 +252,7 @@ export async function modify(
 ): Promise<void> {
     await dbConnect()
 
-    const acc = await SemesterAccount.findOne({
-        budgetID: val.semesterAccount.budgetID,
-        semester: val.semesterAccount.semester,
-        year: val.semesterAccount.year
-    }).exec()
+    const acc = await SemesterAccount.findOne(val.semesterAccount as I_SemesterAccountPK).exec()
 
     acc.inStateTuitionRate = val.semesterAccount.inStateTuitionRate
     acc.outOfStateTuitionRate = val.semesterAccount.outOfStateTuitionRate

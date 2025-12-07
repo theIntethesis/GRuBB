@@ -1,5 +1,7 @@
 "use server"
 
+/* This is all technically depreciated because I didn't know you couldn't export an object from a server module */
+
 export default interface ModelAPI<PrimaryKey, RowType> {
     // getOne: ({ budgetID }: { budgetID: string; }) => Promise<undefined>;
     getOne: (pk: PrimaryKey) => Promise<RowType | undefined>

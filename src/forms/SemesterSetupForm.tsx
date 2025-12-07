@@ -84,38 +84,34 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: Sem
             }
         }, {budgetID: budget._id})
 
-        // await createSemesterAccount(
-        //     budget._id,
-        //     formData.get("semester") == "Fall" ? "Fall" : "Spring",
-        //     parseFloat(formData.get("year")?.toString() || "0"),
-        //     parseFloat(formData.get("inStateTuitionRate")?.toString() || "0"),
-        //     parseFloat(formData.get("outOfStateTuitionRate")?.toString() || "0"),
-        //     parseFloat(formData.get("tuitionIncrease")?.toString() || "0"),
-        //     parseFloat(formData.get("facultyFBR")?.toString() || "0"),
-        //     parseFloat(formData.get("studentFBR")?.toString() || "0"),
-        //     parseFloat(formData.get("postDocFBR")?.toString() || "0"),
-        //     parseFloat(formData.get("perdiem")?.toString() || "0"),
-        //     parseFloat(formData.get("airfare")?.toString() || "0"),
-        //     parseFloat(formData.get("lodging")?.toString() || "0"),
-        //     parseFloat(formData.get("overheadCharge")?.toString() || "0")
-        // )
     }
     const onModify = async (formData: FormData) => {
-        // modifySemesterAccount(
-        //     budget._id,
-        //     semester.semester,
-        //     semester.year,
-        //     parseFloat(formData.get("inStateTuitionRate")?.toString() || "0"),
-        //     parseFloat(formData.get("outOfStateTuitionRate")?.toString() || "0"),
-        //     parseFloat(formData.get("tuitionIncrease")?.toString() || "0"),
-        //     parseFloat(formData.get("facultyFBR")?.toString() || "0"),
-        //     parseFloat(formData.get("studentFBR")?.toString() || "0"),
-        //     parseFloat(formData.get("postDocFBR")?.toString() || "0"),
-        //     parseFloat(formData.get("perdiem")?.toString() || "0"),
-        //     parseFloat(formData.get("airfare")?.toString() || "0"),
-        //     parseFloat(formData.get("lodging")?.toString() || "0"),
-        //     parseFloat(formData.get("overheadCharge")?.toString() || "0")
-        // )
+        if (budget._id == undefined || semester == undefined) {
+            redirect("/dashboard")
+        }
+
+        const vals = castFormDataToObject(formData)
+
+        SemesterAccountAPI.modify({
+            overheadCharge: {
+                charge: vals.overheadCharge,
+                description: ""
+            },
+            travelProfile: {
+                perDiem: vals.perdiem,
+                airfare: vals.airfare,
+                lodging: vals.lodging
+            },
+            semesterAccount: {
+                ...(semester.semesterAccount as I_SemesterAccountPK),
+                facultyFBR: vals.facultyFBR,
+                postDocFBR: vals.postDocFBR,
+                studentFBR: vals.studentFBR,
+                inStateTuitionRate: vals.inStateTuitionRate,
+                outOfStateTuitionRate: vals.outOfStateTuitionRate,
+                tuitionIncrease: vals.tuitionIncrease
+            }
+        })
     }
 
     return <div>

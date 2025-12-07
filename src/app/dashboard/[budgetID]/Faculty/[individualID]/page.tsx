@@ -1,4 +1,4 @@
-import { FacultyForm } from "@/forms/individualForms"
+import FacultyForm from "@/forms/individualForms/faculty"
 import { DashboardSlugs } from "@/lib/common"
 import {SalaryAccountAPI} from "@/lib/models"
 import {SemesterAccountAPI} from "@/lib/models"

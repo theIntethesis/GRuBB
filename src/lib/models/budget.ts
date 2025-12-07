@@ -111,9 +111,6 @@ export async function getOne(
             // normalize id
             budget._id = budget._id.toJSON()
 
-            budget.students = budget.students.map(y => y.toJSON())
-            budget.faculty = budget.faculty.map(y => y.toJSON())
-
             // TODO: fix original code: should return the budget here
             // for now we match your existing behavior
             return JSON.parse(JSON.stringify(budget))

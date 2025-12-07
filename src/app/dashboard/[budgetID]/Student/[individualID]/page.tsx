@@ -1,4 +1,4 @@
-import {StudentForm} from "@/forms/individualForms"
+import StudentForm from "@/forms/individualForms/student"
 import { DashboardSlugs } from "@/lib/common"
 import {StudentAPI} from "@/lib/models"
 import {StudentAccountAPI} from "@/lib/models"

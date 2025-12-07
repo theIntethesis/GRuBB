@@ -18,7 +18,8 @@ export default function AccountForm({ budget } : {budget: any}) {
             name: vals.name,
             type: budget.type,
             pi: vals.pi,
-            coPI: coPIs
+            coPI: coPIs,
+            _id: budget._id
         })
     };
 

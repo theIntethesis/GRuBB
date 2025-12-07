@@ -69,7 +69,7 @@ function StudentAccountSection(
 
 
 // individual == null implies everything else is null
-export function StudentForm(
+export default function StudentForm(
     {budgetID,  student, studentAccounts, salaryAccounts, semesterAccounts, inputSemester}:
     {budgetID: string, student?: StudentIndividual, studentAccounts?: I_StudentAccount[], salaryAccounts?: I_SalaryAccount[], semesterAccounts: SemesterAccountCombo[], inputSemester?: SemesterCombo}
 ) {
@@ -85,67 +85,23 @@ export function StudentForm(
     const [showSalary, setShowSalary] = useState(initialShowSalary)
 
 
-    // debug - remove in future
-    // useEffect(() => {
-    //     console.log(currentSemester)
-    // }, [currentSemester])
-
-
     const onSubmit = (formData: FormData) => {
-        /*
-        console.log(formData)
-        console.log(currentSemester)
 
-        // outOfState == undefined or "on"
-        if (student == null) {
-            createNewStudent(
-                formData.get("name")?.toString() || "unnamed",
-                formData.get("outOfState") == "on",
-                budgetID
-            )
-        }
-        else {
-
-            modifyStudent(
-                formData.get("name")?.toString() || student.name,
-                formData.get("outOfState") == "on",
-                student.individual_id
-            )
-
-            if (inputSemester == undefined) {
-                createStudentAccount(student.individual_id, currentSemester.semester, currentSemester.year, Number(formData.get("aid") || '0'))
-
-                //use 'currentSemester' instead of "semester-year" because of useState stuff
-
-                // create salary account if needed
-
-                if (showSalary) {
-                    createSalaryAccount(student.individual_id, currentSemester.semester, currentSemester.year, Number(formData.get("rate")), formData.get("rateUnit"), formData.get("percentFTE"))
-                }
-
-                redirect(`/dashboard/${budgetID}/Student/${student.individual_id}/${currentSemester.year}/${currentSemester.semester}`)
-
-            }
-            else {
-                modifyStudentAccount(student.individual_id, currentSemester.semester, currentSemester.year, Number(formData.get("aid") || '0'))
-
-                // create salary account if needed
-            }
-
-        }
-        */
     }
+    const onUpdate = (formData: FormData) => {
+
+    }
+
     const onDelete = () => {
         if (student != null) {
-            // deleteStudent(student.individual_id, budgetID)
-        }
 
+        }
     }
     const deleteCurrentSemester = () => {
 
     }
 
-    return <Form action={onSubmit}>
+    return <Form action={inputSemester == undefined ? onSubmit : onUpdate}>
         <table>
             <tbody>
                 <IndividualLine individual={student?.individual}/>
