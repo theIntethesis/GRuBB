@@ -4,7 +4,7 @@ import dbConnect from "@/lib/mongodb"
 import Link from "next/link";
 import RatesSidebar from "./sidebar";
 import {SemesterAccountAPI} from "@/lib/models";
-import { SemesterCombo } from "@/lib/_common";
+import { SemesterCombo } from "@/lib/common";
 
 
 export default async function Page({ params, children }: {params: {budgetID: string}, children: any}) {

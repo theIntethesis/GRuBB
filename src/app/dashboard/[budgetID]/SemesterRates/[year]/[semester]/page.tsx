@@ -9,10 +9,10 @@ export default async function Page({params}: {params: Promise<DashboardSlugs>}) 
 
     const budget = await BudgetAPI.getOne({_id: budgetID})
 
-    const semesterAcc = await SemesterAccountAPI.getOne({budgetID, semester, year})
+    const semesterAcc = await SemesterAccountAPI.getAll({budgetID})
 
     if (budget != undefined) {
-        return <SemesterForm budget={budget} semester={semesterAcc}/>
+        return <SemesterForm budget={budget} semesters={semesterAcc} selectedSemester={{semester, year}}/>
     }
     else {
         redirect("/dashboard")

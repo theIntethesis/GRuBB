@@ -105,7 +105,7 @@ export default function FacultyForm(
 
     }
 
-    return <Form action={faculty == undefined ? onSubmit : onUpdate}>
+    return <Form action={faculty == undefined ? onSubmit : onUpdate} type="submit">
         <table>
             <tbody>
                 <IndividualLine individual={faculty?.individual}/>
@@ -130,8 +130,8 @@ export default function FacultyForm(
                  </> : undefined}
 
                  <tr>
-                    <td><button className="actionButton submitButton">Submit</button></td>
-                    {faculty != null ? <td><button type="button" onClick={onDelete} className="warning actionButton">Delete</button></td> : undefined}
+                    <td><button className="actionButton submitButton">{faculty != undefined ? "Update" : "Create"}</button></td>
+                    {faculty != null ? <td><button  formAction={onDelete} className="warning actionButton">Remove {faculty.individual.name}</button></td> : undefined}
 
                 </tr>
             </tbody>

@@ -1,55 +1,114 @@
 @import "tailwindcss";
 
+*:focus-visible {
+  border: none;
+  outline: none;
+}
+
+:root {
+  --overlay0: #6e738d;
+  --surface0: #363a4f;
+  --base: #24273a;
+  --mantle: #1e2030;
+  --crust: #181926;
+  --text: #cad3f5;
+  --green: #a6da95;
+  --red: #ed8796;
+}
+
 
 body {
-  background: #11111b;
-  color: #cdd6f4;
+  background: var(--crust);
+  color: var(--text);
   font-family: Arial, Helvetica, sans-serif;
-  max-width: 85%;
-  height: 100vh;
+  width: 80em;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  column-gap: 10px;
+  height: 100%;
+  min-height: 100vh;
 }
 
 header {
   margin-top: 1em;
   display: flex;
   flex-direction: column;
-  row-gap: 0.5em;
+  row-gap: inherit;
+  column-gap: inherit;
 }
 
 main {
-  background-color: #1e1e2e;
+  background-color: var(--mantle);
   height: 100%;
   padding: 1em;
+  border-radius: 10px;
+
+}
+
+footer {
+  background-color: var(--mantle);
+  height: 100%;
+  padding: 1em;
+  border-radius: 10px;
+  margin-bottom: 10px;
+
 }
 
 form {
+  min-width: 32em;
+  text-align: left;
 
   table {
-    width: 32em;
-    margin: auto;
+    td:nth-child(2) {
+      text-align: left;
+    }
+    td:nth-child(1) {
+      text-align: right;
+    }
+    width: 100%;
+
+    border-collapse: separate;
+    border-spacing: 0.5em;
+
+    td {
+      width: 50%;
+      height: 2em;
+    }
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+
   }
 }
 
 button, input, select, .inputOuterLeft, .inputOuterRight {
-  background-color: #45475a;
+  background-color: var(--base);
   border-radius: 10px;
-  color: #cdd6f4;
-  padding: 0.25em;
-
+  color: var(--text);
+  height: 2em;
+  padding: 0em 0.5em;
 }
 
-td {
-  * {
-    margin: 0.25em 0em;
-  }
+
+button:focus-visible, input:focus-visible, select:focus-visible,
+.inputOuterLeft:focus-visible, .inputOuterRight:focus-visible, .inputOuterCombo:focus-visible,
+.inputOuterLeft:focus-within, .inputOuterRight:focus-within, .inputOuterCombo:focus-within {
+  border: none;
+  outline: none;
+  background-color: var(--surface0);
 }
 
-.inputOuterLeft, .inputOuterRight {
-  input {
+.inputOuterLeft, .inputOuterRight, .inputOuterCombo {
+  button, input, select {
     padding: 0;
     margin: 0;
     width: 100%;
+    background-color: transparent;
   }
 
   display: inline-grid;
@@ -57,7 +116,6 @@ td {
   grid-template-rows: 2em;
   align-items: center;
   column-gap: 0.25em;
-
 }
 
 .inputOuterLeft {
@@ -66,33 +124,28 @@ td {
 }
 .inputOuterRight {
   grid-template-columns: auto 1em;
-
-}
-
-.inputOuterLeft:hover, .inputOuterRight:hover {
-  background-color: #313244;
-
 }
 
 
-button:hover, input:hover, select:hover {
-  background-color: #313244;
+button:hover, input:hover, select:hover, .inputOuterLeft:hover, .inputOuterRight:hover {
+  background-color: var(--overlay0);
+
 }
 
 button.submitButton {
-  background-color: #a6e3a1;
-  color: #1e1e2e;
+  background-color: var(--green);
+  color: var(--base);
 }
 button.submitButton:hover {
-  background-color: #cdd6f4;
+  background-color: var(--text);
 }
 
 button.warning {
-  background-color: #f38ba8;
-  color: #1e1e2e;
+  background-color: var(--red);
+  color: var(--base);
 }
 button.warning:hover {
-  background-color: #cdd6f4;
+  background-color: var(--text);
 }
 
 button.actionButton {
@@ -101,7 +154,10 @@ button.actionButton {
 
 
 main {
+
   div {
+
+    border-radius: inherit;
 
     height: 100%;
     display: flex;
@@ -118,10 +174,16 @@ main {
 
 
 main.two-col {
+  background-color: transparent;
   display: grid;
+  padding: 0em;
   grid-template-columns: 30em auto;
   grid-template-rows: auto;
   column-gap: 1em;
+
+  > div {
+    background-color: var(--mantle);
+  }
 
   .items {
     display: flex;
@@ -130,7 +192,7 @@ main.two-col {
     padding: 0.5em;
 
     a {
-      background-color: #45475a;
+      background-color: var(--base);
 
       border-radius: 10px;
 
@@ -138,12 +200,12 @@ main.two-col {
       text-align: center;
     }
     a:hover {
-      background-color: #313244;
+      background-color: var(--overlay0);
     }
 
 
     a.active {
-      background-color: #313244;
+      background-color: var(--surface0);
     }
   }
 }
@@ -152,29 +214,32 @@ main.two-col {
 
 
 .tabNav {
-  display: grid;
-  grid-template-columns: auto auto auto auto auto;
-  grid-template-rows: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  column-gap: inherit;
+  width: 100%;
+  * {
+    flex-grow: 1;
+  }
 
 }
 .tab {
   display: block;
-  background-color: #181825;
-  color: #cdd6f4;
-  border-radius: 10px 10px 0px 0px;
+  background-color: var(--base);
+  color: var(--text);
+  border-radius: 10px;
   text-align: center;
 }
 .tab.active {
-  background-color: #1e1e2e;
+  background-color: var(--surface0);
 }
 
 .tab:hover {
-  background-color: #6c7086;
+  background-color: var(--overlay0);
 }
 
-td {
-  width: 50%;
-}
+
 
 .account-form-table {
   margin: 0.5em;

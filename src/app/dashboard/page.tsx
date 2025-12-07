@@ -8,7 +8,7 @@ export default async function Page() {
     const allBudgets = await BudgetAPI.getAll()
 
     return <>
-        <Header budgets={allBudgets} current_budget={null}/>
+        <Header budgets={allBudgets}/>
         <main>
             <NewInstituionForm/>
         </main>

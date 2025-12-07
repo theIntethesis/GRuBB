@@ -124,6 +124,7 @@ export function SalaryAccountSection(
 
 
     return <>
+        <tr><td colSpan={2}><h2>Salary</h2></td></tr>
         <tr>
             <td>
                 <label htmlFor="rate">Rate:</label>
@@ -133,7 +134,7 @@ export function SalaryAccountSection(
                     $<input type="float" id="rate" name="rate" defaultValue={salaryAccount != null ? salaryAccount.rate : 0}/>
                 </div>
                 <div style={{display: "inline-block", width: "10%", textAlign: "center"}}>/</div>
-                <div className="inputOuterRight"  style={{width: "45%", height: "100%", padding: "0.25em"}}>
+                <div className="inputOuterRight"  style={{width: "45%", height: "100%"}}>
                     <select name="rateTimeUnit" defaultValue={rateTimeUnit} onChange={e => setRateTimeUnit(e.target.value as RateTimeUnit)} key={rateTimeUnit}>
                         <option key="Hour" value="Hour" id="Hour">Hour</option>
                         <option key="Year" value="Year" id="Year">Year</option>

@@ -1,5 +1,5 @@
 "use client"
-import { SemesterCombo } from "@/lib/_common";
+import { SemesterCombo, sortBySemester } from "@/lib/common";
 import Link from "next/link"
 import { usePathname } from "next/navigation";
 
@@ -10,7 +10,7 @@ export default function RatesSidebar({semesters, budgetID}: {semesters: Semester
     let anyActive: boolean = false
 
     return <div className="items">
-        {semesters != null ? semesters.map(x => {
+        {semesters != null ? (sortBySemester(semesters)).map(x => {
             const path = `/dashboard/${budgetID}/SemesterRates/${x.year}/${x.semester}`
             if (path == currPath) {
                 anyActive = true

@@ -15,14 +15,17 @@ import { SalaryAccountAPI } from "@/lib/models"
 
 function StudentLine({student}: {student?: I_Student}) {
     return <tr>
-        <td colSpan={2} style={{textAlign: "center"}}>
-            <input type="checkbox" name="outOfState" defaultChecked={student != null ? student.outOfState : false}/> Out of State
+        <td>
+            <label>Out of State</label>
+        </td>
+        <td>
+            <input type="checkbox" name="outOfState" style={{height: "unset"}} defaultChecked={student != null ? student.outOfState : false}/>
         </td>
     </tr>
 }
 
 function StudentSalaryAccountSection(
-    {semesterAccounts, currentSemester, salaryAccounts,  showSalary, setShowSalary}:
+    {semesterAccounts, currentSemester, salaryAccounts,  showSalary, setShowSalary }:
     {semesterAccounts: any[], currentSemester: SemesterCombo, salaryAccounts?: I_SalaryAccount[], showSalary: boolean, setShowSalary: Dispatch<any>}) {
     // some sort of usestate that when a button is pressed it reveals salary account section
     // only if salary account is null
@@ -30,13 +33,19 @@ function StudentSalaryAccountSection(
     const onShowSalary = () => {
         setShowSalary(true)
     }
+    const onHideSalary = () => {
+        setShowSalary(false)
+    }
 
     return <>
         {!showSalary ? <tr>
-            <td colSpan={2}>
-                <button type="button" onClick={onShowSalary} className="actionButton" >Add Salary Account</button>
+            <td>
+                <button type="button" onClick={onShowSalary} className="actionButton submitButton" >Add Salary</button>
             </td>
-        </tr> : <SalaryAccountSection role={"Student"} salaryAccounts={salaryAccounts} semesterAccounts={semesterAccounts} currentSemester={currentSemester}/> }
+        </tr> : <>
+            <SalaryAccountSection role={"Student"} salaryAccounts={salaryAccounts} semesterAccounts={semesterAccounts} currentSemester={currentSemester}/>
+            <tr><td><button onClick={onHideSalary} className="actionButton warning">Remove Salary</button></td></tr>
+        </>}
 
     </>
 }
@@ -60,6 +69,7 @@ function StudentAccountSection(
     const studentAccount = studentAccounts?.find((val) => semesterEq(val, currentSemester))
 
     return <>
+        <tr><td colSpan={2}><h2>Tuition</h2></td></tr>
         <tr>
             <td><label>Tuition:</label></td>
             <td><div className="inputOuterLeft">$ <p>{tuitionRate}</p></div></td>
@@ -170,6 +180,14 @@ export default function StudentForm(
                     })
                 }
             }
+            else {
+                if (initialShowSalary) {
+                    // delete salary account
+                }
+                else {
+                    // do nothing? !initialShowSalary and !showSalary
+                }
+            }
         }
 
     }
@@ -183,7 +201,8 @@ export default function StudentForm(
 
     }
 
-    return <Form action={student == undefined ? onSubmit : onUpdate}>
+
+    return <Form action={student == undefined ? onSubmit : onUpdate} >
         <table>
             <tbody>
                 <IndividualLine individual={student?.individual}/>
@@ -203,15 +222,29 @@ export default function StudentForm(
                         }
                     </tr>
                     <tr><td colSpan={2}><hr/></td></tr>
-                    <StudentAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} student={student.student} studentAccounts={studentAccounts}/>
+                    <StudentAccountSection
+                        currentSemester={currentSemester}
+                        semesterAccounts={semesterAccounts}
+                        student={student.student}
+                        studentAccounts={studentAccounts}
+                    />
                     <tr><td colSpan={2}><hr/></td></tr>
-                    <StudentSalaryAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} showSalary={showSalary} setShowSalary={setShowSalary} salaryAccounts={salaryAccounts}/>
+                    <StudentSalaryAccountSection
+                        currentSemester={currentSemester}
+                        semesterAccounts={semesterAccounts}
+                        showSalary={showSalary}
+                        setShowSalary={setShowSalary}
+                        salaryAccounts={salaryAccounts}
+                    />
                     <tr><td colSpan={2}><hr/></td></tr>
                 </> : undefined}
 
                 <tr>
-                    <td><button className="actionButton submitButton">Submit</button></td>
-                    {student != null ? <td><button type="button" onClick={onDelete} className="warning actionButton">Delete</button></td> : undefined}
+                    <td><button className="actionButton submitButton">{student != undefined ? "Update" : "Create"}</button></td>
+                    {student != null
+                        ? <td><button formAction={onDelete} className="warning actionButton">Remove {student.individual.name}</button></td>
+                        : undefined
+                    }
                 </tr>
             </tbody>
         </table>

@@ -6,39 +6,56 @@ import { castFormDataToObject } from '@/lib/utils'
 
 import Form from 'next/form'
 import { redirect } from 'next/navigation'
+import { getNextSemester, Semester, SemesterCombo, semesterEq, sortBySemester } from '@/lib/common'
+import { ChangeEvent, useState } from 'react'
 
 type SemesterAccountCombo = SemesterAccountAPI.SemesterAccountCombo
 type I_SemesterAccountPK = SemesterAccountAPI.I_SemesterAccountPK
 type I_SemesterAccountFK = SemesterAccountAPI.I_SemesterAccountFK
 
-export default function SemesterSetupForm({ semester, budget }: { semester?: SemesterAccountCombo, budget: I_Budget }) {
+export default function SemesterSetupForm({ semesters, budget, selectedSemester }: { semesters: SemesterAccountCombo[], budget: I_Budget, selectedSemester?: SemesterCombo }) {
 
     if (budget._id == undefined) {
         redirect("/dashboard")
     }
 
-    const initialValues: SemesterAccountCombo = semester != null ? semester : {
-        semesterAccount: {
-            budgetID: budget._id, // this should in theory never happen
-            semester: "Fall",
-            year: 2025,
-            inStateTuitionRate: 0,
-            outOfStateTuitionRate: 0,
-            tuitionIncrease: 0,
-            facultyFBR: 0,
-            studentFBR: 0,
-            postDocFBR: 0,
-        },
-        travelProfile: {
-            perDiem: 0,
-            airfare: 0,
-            lodging: 0
-        },
-        overheadCharge: {
-            charge: 0,
-            description: ""
+    const semester = selectedSemester != undefined
+        ? semesters.find((x) => semesterEq(x.semesterAccount, selectedSemester))
+        : undefined
+
+    const [newSemester, setNewSemester] = useState<SemesterCombo>(
+        selectedSemester != undefined
+            ? selectedSemester
+            : (semesters.length > 0
+                ? getNextSemester(sortBySemester(semesters.map((x) => {return {semester: x.semesterAccount.semester, year: x.semesterAccount.year}})).reverse()[0])
+                : { semester: "Fall", year: 2025})
+    )
+
+
+    const initialValues: SemesterAccountCombo = semester != null
+        ? semester
+        : {
+            semesterAccount: {
+                budgetID: budget._id, // this should in theory never happen
+                semester: "Fall",
+                year: 2025,
+                inStateTuitionRate: 0,
+                outOfStateTuitionRate: 0,
+                tuitionIncrease: 0,
+                facultyFBR: 0,
+                studentFBR: 0,
+                postDocFBR: 0,
+            },
+            travelProfile: {
+                perDiem: 0,
+                airfare: 0,
+                lodging: 0
+            },
+            overheadCharge: {
+                charge: 0,
+                description: ""
+            }
         }
-    }
 
 
     const onDelete = async () => {
@@ -73,14 +90,13 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: Sem
             },
             semesterAccount: {
                 budgetID: budget._id,
-                semester: vals.semester,
-                year: vals.year,
                 facultyFBR: vals.facultyFBR,
                 postDocFBR: vals.postDocFBR,
                 studentFBR: vals.studentFBR,
                 inStateTuitionRate: vals.inStateTuitionRate,
                 outOfStateTuitionRate: vals.outOfStateTuitionRate,
-                tuitionIncrease: vals.tuitionIncrease
+                tuitionIncrease: vals.tuitionIncrease,
+                ...newSemester
             }
         }, {budgetID: budget._id})
 
@@ -114,6 +130,22 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: Sem
         })
     }
 
+
+    const onSemSelected = (e: ChangeEvent<HTMLSelectElement>) => {
+
+        console.log({semester: e.target.value as Semester, year: newSemester.year})
+        if (semesters.find(x => semesterEq(x.semesterAccount, {semester: e.target.value as Semester, year: newSemester.year})) == undefined) {
+            setNewSemester({semester: e.target.value as Semester, year: newSemester.year})
+        }
+    }
+
+    const onYearSelected = (e: ChangeEvent<HTMLInputElement>) => {
+
+        if (semesters.find(x => semesterEq(x.semesterAccount, {year: Number(e.target.value), semester: newSemester.semester})) == undefined) {
+            setNewSemester({year: Number(e.target.value), semester: newSemester.semester})
+        }
+    }
+
     return <div>
             <Form action={semester == null ? onCreate : onModify}>
                 <table style={{
@@ -133,15 +165,16 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: Sem
                                     </td>
                                 </> :
                                 <>
+                                    <td><label htmlFor="semester">Semester:</label></td>
                                     <td>
-                                        <label htmlFor="semester">Semester:</label>
-                                    </td>
-                                    <td>
-                                        <select name="semester" defaultValue={initialValues.semesterAccount.semester} style={{height: "2em"}}>
-                                            <option>Fall</option>
-                                            <option>Spring</option>
-                                        </select>
-                                        <input name="year" type="number" min="2024" max="2040" defaultValue={initialValues.semesterAccount.year}/>
+                                        <div style={{display: 'inline-grid', gridTemplateColumns: "auto auto", columnGap: "0.5em"}}>
+                                            <select onChange={onSemSelected} style={{height: "2em"}} value={newSemester.semester}>
+                                                <option>Fall</option>
+                                                <option>Spring</option>
+                                            </select>
+                                            <input type="number" onChange={onYearSelected} value={newSemester.year}/>
+                                        </div>
+
                                     </td>
                                 </>
                             }
