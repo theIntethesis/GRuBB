@@ -4,15 +4,18 @@ import dbConnect from "@/lib/mongodb"
 import { redirect } from "next/navigation"
 import { revalidatePath } from 'next/cache'
 import ModelAPI from "./_modelAPI"
+import { BudgetType } from "../_common"
 
 export interface I_Budget {
     name: string,
     pi: string,
+    type: BudgetType,
+
     coPI?: string[],
     students?: string[],
     faculty?: string[],
     _id?: string,
-    type: "primary" | "secondary" | "parallel"
+
 }
 
 const BudgetSchema = new mongoose.Schema<I_Budget>({
@@ -27,6 +30,7 @@ const BudgetSchema = new mongoose.Schema<I_Budget>({
 export const Budget = mongoose.models.Budget || mongoose.model<I_Budget>("Budget", BudgetSchema, "Budgets")
 
 
+/*
 const BudgetAPI: ModelAPI<{_id: string}, I_Budget> = {
     getOne: async ({_id}) => {
         await dbConnect()
@@ -91,9 +95,78 @@ const BudgetAPI: ModelAPI<{_id: string}, I_Budget> = {
 
         revalidatePath("/dashboard", "layout")
     },
-    delete: async ({_id}) => {
+    delete: async (pk) => {return undefined}
+}
+*/
 
+export async function getOne(
+    { _id }: { _id: string }
+): Promise<I_Budget | undefined> {
+    await dbConnect()
+
+    try {
+        const budget = await Budget.findById(_id).exec()
+
+        if (budget != null) {
+            // normalize id
+            budget._id = budget._id.toJSON()
+
+            budget.students = budget.students.map(y => y.toJSON())
+            budget.faculty = budget.faculty.map(y => y.toJSON())
+
+            // TODO: fix original code: should return the budget here
+            // for now we match your existing behavior
+            return budget
+        }
+
+        return undefined
+    } catch (e) {
+        console.log(e)
+        return undefined
     }
 }
 
-export default BudgetAPI
+
+// ---- getAll ----
+export async function getAll(): Promise<I_Budget[]> {
+    await dbConnect()
+
+    const allBudgets = await Budget.find({}).exec()
+
+    return allBudgets
+}
+
+
+// ---- create ----
+export async function create(val: I_Budget): Promise<void> {
+    await dbConnect()
+
+    const newBudget = new Budget(val)
+    await newBudget.save()
+
+    revalidatePath("/dashboard", "layout")
+    redirect(`/dashboard/${newBudget._id.toJSON()}/Student`)
+}
+
+
+// ---- modify ----
+export async function modify(val: I_Budget): Promise<void> {
+    await dbConnect()
+
+    await Budget.findByIdAndUpdate(val._id, {
+        name: val.name,
+        pi: val.pi,
+        coPI: val.coPI
+    })
+
+    revalidatePath("/dashboard", "layout")
+}
+
+
+// ---- delete ----
+export async function del(
+    pk: { _id: string }
+): Promise<void> {
+    // original does nothing
+    return undefined
+}

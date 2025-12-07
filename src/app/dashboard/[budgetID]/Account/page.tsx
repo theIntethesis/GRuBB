@@ -1,13 +1,13 @@
 
-import BudgetAPI from "@/lib/models/budget";
+import { BudgetAPI } from "@/lib/models";
 import AccountForm from "@/forms/accountForm";
+import { DashboardSlugs } from "@/lib/_common";
 
 // Account
-export default async function Page({params}: {params: {budgetID: string}}) {
+export default async function Page({params}: {params: Promise<DashboardSlugs>}) {
     const { budgetID } = await params
 
-    const budget = await BudgetAPI.getOne({budgetID})
-
+    const budget = await BudgetAPI.getOne({_id: budgetID})
 
     return <AccountForm budget={budget}></AccountForm>
 

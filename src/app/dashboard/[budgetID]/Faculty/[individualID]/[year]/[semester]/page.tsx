@@ -1,15 +1,17 @@
-import { getFaculty } from "@/api/individuals"
 import { FacultyForm } from "@/forms/individualForms"
-import { getAllSalaryAccounts } from "@/api/accounts"
-import { getAllAccounts } from "@/api/semesterAccount"
+import { DashboardSlugs } from "@/lib/_common"
+import {SalaryAccountAPI} from "@/lib/models"
+import {SemesterAccountAPI} from "@/lib/models"
+import {FacultyAPI} from "@/lib/models"
+
+
 // new semester
-export default async function page({params}: {params: Promise<{budgetID: string, individualID: string, year: string, semester: string}>}) {
+export default async function page({params}: {params: Promise<DashboardSlugs>}) {
     const {budgetID, individualID, year, semester} = await params
-    const faculty = await getFaculty(individualID)
+    const faculty = await FacultyAPI.getOne({individualID})
 
-    const salaryAccounts = await getAllSalaryAccounts(faculty.individual_id)
-    const semesterAccounts = await getAllAccounts(budgetID)
-
+    const salaryAccounts = await SalaryAccountAPI.getAll({individualID})
+    const semesterAccounts = await SemesterAccountAPI.getAll({budgetID})
 
     // add new semester - need to fetch all semesters they are in
     return <FacultyForm

@@ -1,15 +1,16 @@
 import dbConnect from "@/lib/mongodb"
-import { Faculty, Individual, SemesterAccount, SalaryAccount, StudentAccount, Student } from "@/lib/models"
-import Link from "next/link";
-import { getAllStudents } from "@/api/individuals";
+
 import StudentSidebar from "./sidebar";
+import { DashboardSlugs } from "@/lib/_common";
+import {StudentAPI} from "@/lib/models";
 
 
-export default async function Page({ params, children }) {
+export default async function Page({ params, children }: {params: DashboardSlugs, children: any[]}) {
     await dbConnect()
     const { budgetID } = await params
 
-    const students = await getAllStudents(budgetID)
+    const students = await StudentAPI.getAll({budgetID})
+
     return <main className="two-col">
         <StudentSidebar students={students} budgetID={budgetID}/>
         <div>

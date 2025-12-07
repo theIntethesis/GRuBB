@@ -1,19 +1,19 @@
 import { StudentForm } from "@/forms/individualForms"
-import { getAllSalaryAccounts, getAllStudentAccounts } from "@/api/accounts"
-import { getStudent } from "@/api/individuals"
-import { getAllAccounts } from "@/api/semesterAccount"
+
+import { DashboardSlugs } from "@/lib/_common"
+import {SalaryAccountAPI} from "@/lib/models"
+import {SemesterAccountAPI} from "@/lib/models"
+import {StudentAPI} from "@/lib/models"
+import {StudentAccountAPI} from "@/lib/models"
 // edit a semester
-export default async function page({params}: {params: {budgetID: string, individualID: string, semester: string, year: string}}) {
+export default async function page({params}: {params: Promise<DashboardSlugs>}) {
     const { budgetID, individualID, semester, year } = await params
 
-    const student = await getStudent(individualID)
+    const student = await StudentAPI.getOne({individualID})
 
-
-    const studentAccounts = await getAllStudentAccounts(student.individual_id)
-    const salaryAccounts = await getAllSalaryAccounts(student.individual_id)
-    const semesterAccounts = await getAllAccounts(budgetID)
-
-
+    const studentAccounts = await StudentAccountAPI.getAll({individualID})
+    const salaryAccounts = await SalaryAccountAPI.getAll({individualID})
+    const semesterAccounts = await SemesterAccountAPI.getAll({budgetID})
 
     // search these values for the selected semester/year
 

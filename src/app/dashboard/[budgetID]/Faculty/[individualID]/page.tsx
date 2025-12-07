@@ -1,14 +1,16 @@
-import { getFaculty } from "@/api/individuals"
 import { FacultyForm } from "@/forms/individualForms"
-import { getAllSalaryAccounts } from "@/api/accounts"
-import { getAllAccounts } from "@/api/semesterAccount"
-// new semester
-export default async function page({params}: {params: Promise<{budgetID: string, individualID: string}>}) {
-    const {budgetID, individualID} = await params
-    const faculty = await getFaculty(individualID)
+import { DashboardSlugs } from "@/lib/_common"
+import {SalaryAccountAPI} from "@/lib/models"
+import {SemesterAccountAPI} from "@/lib/models"
+import {FacultyAPI} from "@/lib/models"
 
-    const salaryAccounts = await getAllSalaryAccounts(faculty.individual_id)
-    const semesterAccounts = await getAllAccounts(budgetID)
+// new semester
+export default async function page({params}: {params: Promise<DashboardSlugs>}) {
+    const {budgetID, individualID} = await params
+    const faculty = await FacultyAPI.getOne({individualID})
+
+    const salaryAccounts = await SalaryAccountAPI.getAll({individualID})
+    const semesterAccounts = await SemesterAccountAPI.getAll({budgetID})
 
     // [TODO] if semesterAccounts is null then do something
 

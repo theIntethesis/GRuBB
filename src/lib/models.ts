@@ -1,0 +1,6 @@
+export * as BudgetAPI from "./models/budget"
+export * as FacultyAPI from "./models/faculty"
+export * as SalaryAccountAPI from "./models/salaryAccount"
+export * as SemesterAccountAPI from "./models/semesterAccount"
+export * as StudentAPI from "./models/student"
+export * as StudentAccountAPI from "./models/studentAccount"

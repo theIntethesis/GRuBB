@@ -1,14 +1,21 @@
 "use server"
 import mongoose from "mongoose"
-import ModelAPI from "./_modelAPI"
+import { ForeignKeyModelAPI } from "./_modelAPI"
+import { Semester, SemesterCombo } from "../_common"
+import { revalidatePath } from "next/cache"
+import { redirect } from "next/navigation"
+import dbConnect from "../mongodb"
 
-export interface I_SalaryAccount {
+interface I_SalaryAccount_FK {
+    individualID: string
+}
+interface I_SalaryAccount_PK extends I_SalaryAccount_FK, SemesterCombo {}
+
+export interface I_SalaryAccount  extends I_SalaryAccount_PK{
     rate: number,
     rateTimeUnit: "hour" | "year",
     percentFTE: number, // Percentage
-    semester: "Fall" | "Spring", // i'll type this later
-    year: number,
-    individual_id: string
+
     // payment - calculated (payment)
     // fringe benefits rate - calculated, (fringeRate)
 }
@@ -19,28 +26,106 @@ const SalaryAccountSchema = new mongoose.Schema<I_SalaryAccount>({
     percentFTE: Number,
     semester: String,
     year: Number,
-    individual_id: mongoose.Types.ObjectId
+    individualID: mongoose.Types.ObjectId
 })
 
 export const SalaryAccount = mongoose.models.SalaryAccount || mongoose.model<I_SalaryAccount>("SalaryAccount", SalaryAccountSchema, "SalaryAccounts")
 
-const SalaryAccountAPI: ModelAPI<
-    {semester: string, year: number, individual_id: string},
-    I_SalaryAccount
+/*
+const SalaryAccountAPI: ForeignKeyModelAPI<
+    I_SalaryAccount_PK,
+    I_SalaryAccount,
+    I_SalaryAccount_FK
 > = {
-    create: async (val) => {
+    create: async (val, fk) => {
+        await dbConnect()
 
+        const acc = new SalaryAccount(val)
+        await acc.save()
+
+        revalidatePath("/dashboard", "layout")
     },
-    delete: async (pk) => {
+    delete: async (pk, fk) => {
+        await dbConnect()
 
+        revalidatePath("/dashboard", "layout")
     },
     modify: async (val) => {
+        await dbConnect()
+        const acc = await SalaryAccount.findOne(val as I_SalaryAccount_PK).exec()
+        acc.rate = val.rate
+        acc.rateTimeUnit = val.rateTimeUnit
+        acc.percentFTE = val.percentFTE
+        await acc.save()
 
+        revalidatePath("/dashboard", "layout")
     },
-    getOne: async (pk) => {
+    getOne: async (pk) => {return undefined},
+    getAll: async (fk) => {
+        await dbConnect()
+        const accs = await SalaryAccount.find(fk).exec()
 
+        // todo: sanitize
+        return accs
     },
-    getAll: async () => {
+}
+*/
 
-    },
+// ---- create ----
+export async function create(
+    val: I_SalaryAccount,
+    fk: I_SalaryAccount_FK
+): Promise<void> {
+    await dbConnect()
+
+    const acc = new SalaryAccount(val)
+    await acc.save()
+
+    revalidatePath("/dashboard", "layout")
+}
+
+// ---- delete ----
+export async function del(
+    pk: I_SalaryAccount_PK,
+    fk: I_SalaryAccount_FK
+): Promise<void> {
+    await dbConnect()
+
+    revalidatePath("/dashboard", "layout")
+}
+
+// ---- modify ----
+export async function modify(
+    val: I_SalaryAccount
+): Promise<void> {
+    await dbConnect()
+
+    const acc = await SalaryAccount.findOne(val as I_SalaryAccount_PK).exec()
+
+    acc.rate = val.rate
+    acc.rateTimeUnit = val.rateTimeUnit
+    acc.percentFTE = val.percentFTE
+
+    await acc.save()
+
+    revalidatePath("/dashboard", "layout")
+}
+
+// ---- getOne ----
+export async function getOne(
+    pk: I_SalaryAccount_PK
+): Promise<I_SalaryAccount | undefined> {
+    return undefined
+}
+
+// ---- getAll ----
+export async function getAll(
+    fk: I_SalaryAccount_FK
+): Promise<I_SalaryAccount[]> {
+    await dbConnect()
+
+    const accs = await SalaryAccount.find(fk).exec()
+
+    // todo: sanitize
+    return accs
 }

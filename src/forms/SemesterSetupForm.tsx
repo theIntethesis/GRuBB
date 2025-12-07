@@ -1,22 +1,35 @@
 "use client"
-import { createSemesterAccount, deleteSemesterAccount, getSemesterAccount, modifySemesterAccount } from '@/api/semesterAccount'
+
+import { I_Budget } from '@/lib/models/budget'
+import SemesterAccountAPI, { I_SemesterAccountPK, I_SemesterAccountFK, SemesterAccountCombo } from '@/lib/models/semesterAccount'
+import { castFormDataToObject } from '@/lib/utils'
+import { assert } from 'console'
 
 import Form from 'next/form'
 
-export default function SemesterSetupForm({ semester, budget }: { semester?: any, budget: any }) {
-    const initialValues = semester != null ? semester : {
-        semester: "Fall",
-        year: "2025",
-        inStateTuitionRate: 0,
-        outOfStateTuitionRate: 0,
-        tuitionIncrease: 0,
-        facultyFBR: 0,
-        studentFBR: 0,
-        postDocFBR: 0,
-        perDiem: 0,
-        airfare: 0,
-        lodging: 0,
-        overheadCharge: 0
+export default function SemesterSetupForm({ semester, budget }: { semester?: SemesterAccountCombo, budget: I_Budget }) {
+    assert(budget._id != undefined)
+    const initialValues: SemesterAccountCombo = semester != null ? semester : {
+        semesterAccount: {
+            budgetID: budget._id || "", // this should in theory never happen
+            semester: "Fall",
+            year: 2025,
+            inStateTuitionRate: 0,
+            outOfStateTuitionRate: 0,
+            tuitionIncrease: 0,
+            facultyFBR: 0,
+            studentFBR: 0,
+            postDocFBR: 0,
+        },
+        travelProfile: {
+            perDiem: 0,
+            airfare: 0,
+            lodging: 0
+        },
+        overheadCharge: {
+            charge: 0,
+            description: ""
+        }
     }
 
 
@@ -24,42 +37,48 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
         if (semester == undefined) {
             return
         }
-        await deleteSemesterAccount(budget._id, semester.semester, semester.year)
+        await SemesterAccountAPI.delete(
+            semester.semesterAccount as I_SemesterAccountPK,
+            semester.semesterAccount as I_SemesterAccountFK
+        )
     }
 
     const onCreate = async (formData: FormData) => {
-        await createSemesterAccount(
-            budget._id,
-            formData.get("semester") == "Fall" ? "Fall" : "Spring",
-            parseFloat(formData.get("year")?.toString() || "0"),
-            parseFloat(formData.get("inStateTuitionRate")?.toString() || "0"),
-            parseFloat(formData.get("outOfStateTuitionRate")?.toString() || "0"),
-            parseFloat(formData.get("tuitionIncrease")?.toString() || "0"),
-            parseFloat(formData.get("facultyFBR")?.toString() || "0"),
-            parseFloat(formData.get("studentFBR")?.toString() || "0"),
-            parseFloat(formData.get("postDocFBR")?.toString() || "0"),
-            parseFloat(formData.get("perdiem")?.toString() || "0"),
-            parseFloat(formData.get("airfare")?.toString() || "0"),
-            parseFloat(formData.get("lodging")?.toString() || "0"),
-            parseFloat(formData.get("overheadCharge")?.toString() || "0")
-        )
+        const vals = castFormDataToObject(formData)
+
+        console.log(vals)
+        // await createSemesterAccount(
+        //     budget._id,
+        //     formData.get("semester") == "Fall" ? "Fall" : "Spring",
+        //     parseFloat(formData.get("year")?.toString() || "0"),
+        //     parseFloat(formData.get("inStateTuitionRate")?.toString() || "0"),
+        //     parseFloat(formData.get("outOfStateTuitionRate")?.toString() || "0"),
+        //     parseFloat(formData.get("tuitionIncrease")?.toString() || "0"),
+        //     parseFloat(formData.get("facultyFBR")?.toString() || "0"),
+        //     parseFloat(formData.get("studentFBR")?.toString() || "0"),
+        //     parseFloat(formData.get("postDocFBR")?.toString() || "0"),
+        //     parseFloat(formData.get("perdiem")?.toString() || "0"),
+        //     parseFloat(formData.get("airfare")?.toString() || "0"),
+        //     parseFloat(formData.get("lodging")?.toString() || "0"),
+        //     parseFloat(formData.get("overheadCharge")?.toString() || "0")
+        // )
     }
     const onModify = async (formData: FormData) => {
-        modifySemesterAccount(
-            budget._id,
-            semester.semester,
-            semester.year,
-            parseFloat(formData.get("inStateTuitionRate")?.toString() || "0"),
-            parseFloat(formData.get("outOfStateTuitionRate")?.toString() || "0"),
-            parseFloat(formData.get("tuitionIncrease")?.toString() || "0"),
-            parseFloat(formData.get("facultyFBR")?.toString() || "0"),
-            parseFloat(formData.get("studentFBR")?.toString() || "0"),
-            parseFloat(formData.get("postDocFBR")?.toString() || "0"),
-            parseFloat(formData.get("perdiem")?.toString() || "0"),
-            parseFloat(formData.get("airfare")?.toString() || "0"),
-            parseFloat(formData.get("lodging")?.toString() || "0"),
-            parseFloat(formData.get("overheadCharge")?.toString() || "0")
-        )
+        // modifySemesterAccount(
+        //     budget._id,
+        //     semester.semester,
+        //     semester.year,
+        //     parseFloat(formData.get("inStateTuitionRate")?.toString() || "0"),
+        //     parseFloat(formData.get("outOfStateTuitionRate")?.toString() || "0"),
+        //     parseFloat(formData.get("tuitionIncrease")?.toString() || "0"),
+        //     parseFloat(formData.get("facultyFBR")?.toString() || "0"),
+        //     parseFloat(formData.get("studentFBR")?.toString() || "0"),
+        //     parseFloat(formData.get("postDocFBR")?.toString() || "0"),
+        //     parseFloat(formData.get("perdiem")?.toString() || "0"),
+        //     parseFloat(formData.get("airfare")?.toString() || "0"),
+        //     parseFloat(formData.get("lodging")?.toString() || "0"),
+        //     parseFloat(formData.get("overheadCharge")?.toString() || "0")
+        // )
     }
 
     return <div>
@@ -77,7 +96,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                                         fontSize: "15pt",
                                         fontWeight: "bold"
                                     }}>
-                                        {initialValues.semester} {initialValues.year}
+                                        {initialValues.semesterAccount.semester} {initialValues.semesterAccount.year}
                                     </td>
                                 </> :
                                 <>
@@ -85,11 +104,11 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                                         <label htmlFor="semester">Semester:</label>
                                     </td>
                                     <td>
-                                        <select name="semester" defaultValue={initialValues.semester} style={{height: "2em"}}>
+                                        <select name="semester" defaultValue={initialValues.semesterAccount.semester} style={{height: "2em"}}>
                                             <option>Fall</option>
                                             <option>Spring</option>
                                         </select>
-                                        <input name="year" type="number" min="2024" max="2040" defaultValue={initialValues.year}/>
+                                        <input name="year" type="number" min="2024" max="2040" defaultValue={initialValues.semesterAccount.year}/>
                                     </td>
                                 </>
                             }
@@ -105,7 +124,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                                 <div className="inputOuterLeft">
 
 
-                                $<input name="inStateTuitionRate" type="number" min="0" defaultValue={initialValues.inStateTuitionRate}/>
+                                $<input name="inStateTuitionRate" type="number" min="0" defaultValue={initialValues.semesterAccount.inStateTuitionRate}/>
                                 </div>
                             </td>
                         </tr>
@@ -115,7 +134,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                             </td>
                             <td>
                                 <div className="inputOuterLeft">
-                                $<input name="outOfStateTuitionRate" type="number" min="0" defaultValue={initialValues.outOfStateTuitionRate}/>
+                                $<input name="outOfStateTuitionRate" type="number" min="0" defaultValue={initialValues.semesterAccount.outOfStateTuitionRate}/>
                                 </div>
                             </td>
                         </tr>
@@ -125,7 +144,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                             </td>
                             <td>
                                 <div className="inputOuterRight">
-                                <input name="tuitionIncrease" type="number" min="0" max="100" defaultValue={initialValues.tuitionIncrease}/>%
+                                <input name="tuitionIncrease" type="number" min="0" max="100" defaultValue={initialValues.semesterAccount.tuitionIncrease}/>%
                                 </div>
                             </td>
                         </tr>
@@ -135,7 +154,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                             </td>
                             <td>
                                 <div className="inputOuterRight">
-                                <input name="facultyFBR" type="number" min="0" max="100" defaultValue={initialValues.facultyFBR}/>%
+                                <input name="facultyFBR" type="number" min="0" max="100" defaultValue={initialValues.semesterAccount.facultyFBR}/>%
                                 </div>
                             </td>
                         </tr>
@@ -145,7 +164,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                             </td>
                             <td>
                                 <div className="inputOuterRight">
-                                <input name="studentFBR" type="number" min="0" max="100" defaultValue={initialValues.studentFBR}/>%
+                                <input name="studentFBR" type="number" min="0" max="100" defaultValue={initialValues.semesterAccount.studentFBR}/>%
                                 </div>
                             </td>
                         </tr>
@@ -157,7 +176,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                             </td>
                             <td>
                                 <div className="inputOuterRight">
-                                <input name="postDocFBR" type="number" min="0" max="100" defaultValue={initialValues.postDocFBR}/>%
+                                <input name="postDocFBR" type="number" min="0" max="100" defaultValue={initialValues.semesterAccount.postDocFBR}/>%
                                 </div>
                             </td>
                         </tr>
@@ -177,7 +196,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                             </td>
                             <td>
                                 <div className="inputOuterLeft">
-                                $<input name="perdiem" type="number" min="0" defaultValue={initialValues.perDiem}/>
+                                $<input name="perdiem" type="number" min="0" defaultValue={initialValues.travelProfile.perDiem}/>
                                 </div>
                             </td>
                         </tr>
@@ -187,7 +206,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                             </td>
                             <td>
                                 <div className="inputOuterLeft">
-                                $<input name="airfare" type="number" min="0" defaultValue={initialValues.airfare}/>
+                                $<input name="airfare" type="number" min="0" defaultValue={initialValues.travelProfile.airfare}/>
                                 </div>
                             </td>
                         </tr>
@@ -197,7 +216,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                             </td>
                             <td>
                                 <div className="inputOuterLeft">
-                                $<input name="lodging" type="number" min="0" defaultValue={initialValues.lodging}/>
+                                $<input name="lodging" type="number" min="0" defaultValue={initialValues.travelProfile.lodging}/>
                                 </div>
                             </td>
                         </tr>
@@ -216,7 +235,7 @@ export default function SemesterSetupForm({ semester, budget }: { semester?: any
                             </td>
                             <td>
                                 <div className="inputOuterLeft">
-                                $<input name="overheadCharge" type="number" min="0" defaultValue={initialValues.overheadCharge}/>
+                                $<input name="overheadCharge" type="number" min="0" defaultValue={initialValues.overheadCharge.charge}/>
                                 </div>
                             </td>
                         </tr>

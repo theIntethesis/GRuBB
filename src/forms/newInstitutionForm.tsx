@@ -1,15 +1,31 @@
 "use client"
 
-import { createBudget } from "@/api/budget"
+import { BudgetType } from "@/lib/_common"
+import {BudgetAPI} from "@/lib/models"
+import { castFormDataToObject } from "@/lib/utils"
 import Form from "next/form"
+
+interface FormKeys {
+    name: string,
+    budgetType: BudgetType,
+    pi: string
+}
 
 export default function NewInstituionForm() {
     const onSubmit = async (formData: FormData) => {
-        const id = await createBudget(
-            formData.get("name")?.toString() || "Unnamed",
-            formData.get("pi")?.toString() || "",
-            "primary" // [todo]
-        );
+
+        const vals = castFormDataToObject(formData)
+
+        await BudgetAPI.create({
+            name: vals.name,
+            type: vals.budgetType as BudgetType,
+            pi: vals.pi
+        })
+        // const id = await createBudget(
+        //     formData.get("name")?.toString() || "Unnamed",
+        //     formData.get("pi")?.toString() || "",
+        //     "primary" // [todo]
+        // );
 
     }
 
@@ -28,9 +44,9 @@ export default function NewInstituionForm() {
                         <td className="leftside">Budget Type</td>
                         <td className="rightside">
                             <select name="budgetType">
-                                <option>Primary</option>
-                                <option>Secondary</option>
-                                <option>Parallel</option>
+                                <option value="Primary">Primary</option>
+                                <option value="Secondary">Secondary</option>
+                                <option value="Parallel">Parallel</option>
                             </select>
                         </td>
                     </tr>

@@ -1,6 +1,5 @@
 "use server"
 import mongoose from "mongoose"
-import ModelAPI from "./modelAPI"
 
 export interface I_Individual {
     name: string,

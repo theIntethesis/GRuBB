@@ -1,10 +1,12 @@
 import { StudentForm } from "@/forms/individualForms"
-import { getAllAccounts } from "@/api/semesterAccount"
+
+import { DashboardSlugs } from "@/lib/_common"
+import {SemesterAccountAPI} from "@/lib/models"
 // add new student
-export default async function Page({params} : {params: Promise<{budgetID: string}>}) {
+export default async function Page({params}: {params: Promise<DashboardSlugs>}) {
     const { budgetID } = await params
 
-    const semesterAccounts = await getAllAccounts(budgetID)
+    const semesterAccounts = await SemesterAccountAPI.getAll({budgetID})
 
     return <StudentForm budgetID={budgetID} semesterAccounts={semesterAccounts}/>
 }

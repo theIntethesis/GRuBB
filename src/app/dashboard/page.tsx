@@ -1,10 +1,9 @@
-import Header from "@/app/dashboard/header";
-import dbConnect from "@/lib/mongodb";
+import Header from "@/modules/header";
+;
 import NewInstituionForm from "@/forms/newInstitutionForm";
-import BudgetAPI from "@/lib/models/budget";
+import { BudgetAPI } from "@/lib/models";
 
 export default async function Page() {
-    await dbConnect()
 
     const allBudgets = await BudgetAPI.getAll()
 

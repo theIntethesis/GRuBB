@@ -1,12 +1,22 @@
-import BudgetAPI from '@/lib/models/budget'
-import { getSemesterAccount } from '@/api/semesterAccount'
+import {BudgetAPI} from '@/lib/models'
 import SemesterForm from '@/forms/SemesterSetupForm'
+import { DashboardSlugs } from '@/lib/_common'
+import {SemesterAccountAPI} from '@/lib/models'
+import { redirect } from 'next/navigation'
 
-export default async function Page({ params }: {params: {budgetID: string, semester: string, year: string}}) {
+export default async function Page({params}: {params: Promise<DashboardSlugs>}) {
     const { budgetID, semester, year } = await params
 
-    const budget = await BudgetAPI.getOne({budgetID})
-    const semesterAcc = await getSemesterAccount(budgetID, semester, parseInt(year))
+    const budget = await BudgetAPI.getOne({_id: budgetID})
 
-    return <SemesterForm budget={budget} semester={semesterAcc}/>
+    const semesterAcc = await SemesterAccountAPI.getOne({budgetID, semester, year})
+
+    if (budget != undefined) {
+        return <SemesterForm budget={budget} semester={semesterAcc}/>
+    }
+    else {
+        redirect("/dashboard")
+    }
+
+
 }

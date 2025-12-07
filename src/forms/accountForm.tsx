@@ -1,8 +1,17 @@
 
 "use client"
 
+import BudgetAPI from "@/lib/models/budget";
+import { castFormDataToObject } from "@/lib/utils";
 import Form from "next/form"
 import { useState } from "react";
+import { BudgetType } from "@/lib/_common";
+
+interface FormKeys {
+    name: string,
+    pi: string
+}
+
 
 export default function AccountForm({ budget } : {budget: any}) {
 
@@ -10,22 +19,21 @@ export default function AccountForm({ budget } : {budget: any}) {
 
     // these will be server side
     const onSubmit = async (formData: FormData) => {
+        const vals = castFormDataToObject(formData)
 
-        await modifyBudget(budget._id, {
-            name: formData.get("name") != "" ? formData.get("name") : budget.name,
-            pi: formData.get("PI") != "" ? formData.get("PI") : budget.pi,
+        await BudgetAPI.modify({
+            name: vals.name,
+            type: budget.type,
+            pi: vals.pi,
             coPI: coPIs
         })
     };
-    const addPI = () => {
-        // reload budget
-        const name = (document.getElementById("add-co-pi") as HTMLInputElement).value
 
+    const addPI = () => {
+        const name = (document.getElementById("add-co-pi") as HTMLInputElement).value
         setCoPIs([...coPIs, name])
     }
     const removePI = (coPIName: string) => {
-        // reload budget
-
         setCoPIs(coPIs.filter(x => x != coPIName))
     }
 
@@ -39,8 +47,8 @@ export default function AccountForm({ budget } : {budget: any}) {
 
                     <span/><span/>
 
-                    <label htmlFor="PI">Principal Investigator:</label>
-                    <input name="PI" type="text" defaultValue={budget.pi}></input>
+                    <label htmlFor="pi">Principal Investigator:</label>
+                    <input name="pi" type="text" defaultValue={budget.pi}></input>
 
                         <input id="add-co-pi" type="text"></input>
                         <button formAction={addPI}>Add</button>

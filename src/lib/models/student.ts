@@ -5,27 +5,32 @@ import { Budget } from "./budget"
 import { ForeignKeyModelAPI } from "./_modelAPI"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import dbConnect from "../mongodb"
 
-export interface I_Student {
+interface I_Student {
     outOfState: boolean,
-    individual_id: string // uid from Individual
+    individualID: string // uid from Individual
 }
 
 const StudentSchema = new mongoose.Schema<I_Student>({
     outOfState: Boolean,
-    individual_id: mongoose.Types.ObjectId
+    individualID: mongoose.Types.ObjectId
 })
 
 export const Student = mongoose.models.Student || mongoose.model<I_Student>("Student", StudentSchema, "Students")
 
+export interface StudentIndividual {individual: I_Individual, student: I_Student}
+
+/*
 const StudentAPI: ForeignKeyModelAPI<
-    {individual_id: string},
-    {individual: I_Individual, student: I_Student},
+    {individualID: string},
+    StudentIndividual,
     {budgetID: string}
 > = {
-    getOne: async ({individual_id}) => {
-        const student = (await Student.find({individual_id: individual_id}))[0] // individualID is unique
-        const ind = await Individual.findById(individual_id);
+    getOne: async ({individualID}) => {
+        await dbConnect()
+        const student = (await Student.find({individualID: individualID}))[0] // individualID is unique
+        const ind = await Individual.findById(individualID);
 
         return {
             individual: ind,
@@ -34,12 +39,13 @@ const StudentAPI: ForeignKeyModelAPI<
     },
 
     getAll: async ({budgetID}) => {
+        await dbConnect()
         const budget = await Budget.findById(budgetID)
         let students = []
 
         for (let i in budget.students) {
-            const individual_id = budget.students[i].toJSON();
-            const stu = await StudentAPI.getOne({individual_id})
+            const individualID = budget.students[i].toJSON();
+            const stu = await StudentAPI.getOne({individualID})
             if (stu != undefined) students.push(stu)
         }
 
@@ -47,14 +53,14 @@ const StudentAPI: ForeignKeyModelAPI<
         return students;
     },
     create: async (input, fk) => {
-
+        await dbConnect()
         const individual = new Individual({
             name: input.individual.name
         })
         await individual.save()
 
         const student = new Student({
-            individual_id: individual._id,
+            individualID: individual._id,
             outOfState: input.student.outOfState
         })
         await student.save()
@@ -65,14 +71,15 @@ const StudentAPI: ForeignKeyModelAPI<
         await budget.save()
 
         revalidatePath("/dashboard", "layout")
-        redirect(`/dashboard/${fk.budgetID}/Student/${student.individual_id.toJSON()}`)
+        redirect(`/dashboard/${fk.budgetID}/Student/${student.individualID.toJSON()}`)
     },
     modify: async (input) => {
-        const student = await Student.findOne({individual_id: input.student.individual_id})
+        await dbConnect()
+        const student = await Student.findOne({individualID: input.student.individualID})
         student.outOfState = input.student.outOfState
         await student.save()
 
-        const individual = await Individual.findById(input.student.individual_id)
+        const individual = await Individual.findById(input.student.individualID)
         individual.name = input.individual.name
         await individual.save()
 
@@ -80,17 +87,116 @@ const StudentAPI: ForeignKeyModelAPI<
         revalidatePath("/dashboard", "layout")
     },
     // budgetID is required
-    delete: async ({individual_id}, {budgetID}) => {
-        await Student.deleteOne({individual_id})
-        await Individual.findByIdAndDelete(individual_id)
+    delete: async ({individualID}, {budgetID}) => {
+        await dbConnect()
+        // await Student.deleteOne({individualID})
+        // await Individual.findByIdAndDelete(individualID)
 
-        const budget = await Budget.findById(budgetID)
-        budget.students.pull(individual_id)
-        await budget.save()
+        // const budget = await Budget.findById(budgetID)
+        // budget.students.pull(individualID)
+        // await budget.save()
 
-        revalidatePath("/dashboard", "layout")
-        redirect(`/dashboard/${budgetID}/Student`)
+        // revalidatePath("/dashboard", "layout")
+        // redirect(`/dashboard/${budgetID}/Student`)
+
+
+    }
+}
+*/
+
+export async function getOne(
+    { individualID }: { individualID: string }
+): Promise<StudentIndividual | undefined> {
+    await dbConnect()
+
+    const student = (await Student.find({ individualID }))[0] // unique
+    const individual = await Individual.findById(individualID)
+
+    return {
+        individual,
+        student
     }
 }
 
-export default StudentAPI
+export async function getAll(
+    { budgetID }: { budgetID: string }
+): Promise<StudentIndividual[]> {
+    await dbConnect()
+
+    const budget = await Budget.findById(budgetID)
+    const students: StudentIndividual[] = []
+
+    for (let i in budget.students) {
+        const individualID = budget.students[i].toJSON()
+
+        // Now calls the exported function instead of StudentAPI.getOne
+        const stu = await getOne({ individualID })
+
+        if (stu != undefined) students.push(stu)
+    }
+
+    return students
+}
+
+export async function create(
+    input: StudentIndividual,
+    fk: { budgetID: string }
+): Promise<void> {
+    await dbConnect()
+
+    const individual = new Individual({
+        name: input.individual.name
+    })
+    await individual.save()
+
+    const student = new Student({
+        individualID: individual._id,
+        outOfState: input.student.outOfState
+    })
+    await student.save()
+
+    const budget = await Budget.findById(fk.budgetID)
+    budget.students.push(individual._id)
+    await budget.save()
+
+    revalidatePath("/dashboard", "layout")
+    redirect(`/dashboard/${fk.budgetID}/Student/${student.individualID.toJSON()}`)
+}
+
+export async function modify(
+    input: StudentIndividual
+): Promise<void> {
+    await dbConnect()
+
+    const student = await Student.findOne({
+        individualID: input.student.individualID
+    })
+
+    student.outOfState = input.student.outOfState
+    await student.save()
+
+    const individual = await Individual.findById(input.student.individualID)
+    individual.name = input.individual.name
+    await individual.save()
+
+    revalidatePath("/dashboard", "layout")
+}
+
+export async function del(
+    { individualID }: { individualID: string },
+    { budgetID }: { budgetID: string }
+): Promise<void> {
+    await dbConnect()
+
+    // Keeping your commented-out deletion logic intact
+
+    // await Student.deleteOne({ individualID })
+    // await Individual.findByIdAndDelete(individualID)
+
+    // const budget = await Budget.findById(budgetID)
+    // budget.students.pull(individualID)
+    // await budget.save()
+
+    // revalidatePath("/dashboard", "layout")
+    // redirect(`/dashboard/${budgetID}/Student`)
+}
