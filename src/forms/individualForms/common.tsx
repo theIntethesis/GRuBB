@@ -5,8 +5,8 @@ import { I_SalaryAccount } from "@/lib/models/salaryAccount";
 import { SemesterAccountCombo } from "@/lib/models/semesterAccount";
 import { I_StudentAccount } from "@/lib/models/studentAccount";
 import { redirect } from "next/navigation";
-import { Dispatch } from "react";
-
+import { Dispatch, useState, useEffect } from "react";
+import { RateTimeUnit } from "@/lib/common";
 export function IndividualLine({individual}: {individual?: I_Individual}) {
     return <tr>
         <td colSpan={2} style={{
@@ -81,7 +81,19 @@ export function SalaryAccountSection(
     {salaryAccounts, semesterAccounts, currentSemester, role}:
     {salaryAccounts?: I_SalaryAccount[], semesterAccounts: SemesterAccountCombo[], currentSemester: SemesterCombo, role: EmpolymentType}
 ) {
-    const salaryAccount = salaryAccounts?.find((val) => semesterEq(val, currentSemester))
+
+    const [salaryAccount, setSalaryAccount] = useState<I_SalaryAccount | undefined>(undefined)
+    const [rateTimeUnit, setRateTimeUnit] = useState<RateTimeUnit | undefined>(undefined)
+
+
+
+    useEffect(() => {
+        const salAcc = salaryAccounts?.find((val) => semesterEq(val, currentSemester))
+        setSalaryAccount(salAcc)
+        setRateTimeUnit(salAcc?.rateTimeUnit || "Hour")
+
+    }, [salaryAccounts, currentSemester])
+
 
     return <>
         <tr>
@@ -94,7 +106,10 @@ export function SalaryAccountSection(
                 </div>
                 <div style={{display: "inline-block", width: "10%", textAlign: "center"}}>/</div>
                 <div className="inputOuterRight"  style={{width: "45%", height: "100%", padding: "0.25em"}}>
-                    <select name="rateTimeUnit" defaultValue={salaryAccount != null ? salaryAccount.rate : "hour"}><option value={"hour"}>Hour</option><option value={"year"}>Year</option></select>
+                    <select name="rateTimeUnit" defaultValue={rateTimeUnit} onChange={e => setRateTimeUnit(e.target.value as RateTimeUnit)} key={rateTimeUnit}>
+                        <option key="Hour" value="Hour" id="Hour">Hour</option>
+                        <option key="Year" value="Year" id="Year">Year</option>
+                    </select>
                 </div>
             </td>
         </tr>
@@ -105,7 +120,7 @@ export function SalaryAccountSection(
             <td>
                 <div className="inputOuterRight">
                     {/* this needs to be limited if they're a student */}
-                    <input type="number" id="percentFTE" name="percentFTE" min={0} max={100} defaultValue={salaryAccount != null ? salaryAccount.percentFTE * 100 : 100}/>%
+                    <input type="number" id="percentFTE" name="percentFTE" min={0} max={100} defaultValue={salaryAccount != null ? salaryAccount.percentFTE: 100}/>%
                 </div>
             </td>
         </tr>
@@ -122,7 +137,7 @@ export function SalaryAccountSection(
         </tr>
         <tr>
             <td>
-                <label htmlFor="FBR">Fringe Benefits Rate:</label>
+                <label>Fringe Benefits Rate:</label>
             </td>
             <td>
                 {/* TODO fetch this */}

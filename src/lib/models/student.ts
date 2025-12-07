@@ -9,7 +9,7 @@ import dbConnect from "../mongodb"
 
 export interface I_Student {
     outOfState: boolean,
-    individualID: string // uid from Individual
+    individualID?: string // uid from Individual
 }
 
 const StudentSchema = new mongoose.Schema<I_Student>({
@@ -103,6 +103,8 @@ const StudentAPI: ForeignKeyModelAPI<
     }
 }
 */
+
+export interface I_StudentPK { individualID: string }
 
 export async function getOne(
     { individualID }: { individualID: string }

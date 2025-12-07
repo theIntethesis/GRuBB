@@ -87,7 +87,8 @@ export async function modify(
 ): Promise<void> {
     await dbConnect()
 
-    const acc = await StudentAccount.findOne(val as I_StudentAccount_PK).exec()
+    const acc = await StudentAccount.findOne({individualID: val.individualID}).exec()
+    console.log(acc)
 
     acc.aidRecieved = val.aidRecieved
     await acc.save()

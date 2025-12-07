@@ -6,10 +6,10 @@ import { redirect, usePathname } from "next/navigation";
 export default function Header({budgets, current_budget}: {budgets: [any], current_budget: any}) {
     const path = usePathname()
 
-    const handleOnChange = (e) => {
+    const handleOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const ret = budgets.filter((x) => x.name == e.target.value)
         if (ret.length == 1) {
-            redirect("/dashboard/" + ret[0]._id + "/SemesterRates")
+            redirect("/dashboard/" + ret[0]._id)
         }
         else {
             redirect ("/dashboard")

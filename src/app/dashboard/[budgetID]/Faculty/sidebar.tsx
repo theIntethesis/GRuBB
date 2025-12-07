@@ -1,21 +1,22 @@
 "use client"
+import { FacultyIndividual } from "@/lib/models/faculty";
 import Link from "next/link"
 import { usePathname } from "next/navigation";
 
 
-export default function FacultySidebar({faculty, budgetID}: {faculty: any[], budgetID: string}) {
+export default function FacultySidebar({faculty, budgetID}: {faculty: FacultyIndividual[], budgetID: string}) {
     const currPath = usePathname()
     let anyActive: boolean = false
 
     return <div className="items">
         {faculty != null ? faculty.map(x => {
-            const path = `/dashboard/${budgetID}/Faculty/${x.individual_id.toString()}`
+            const path = `/dashboard/${budgetID}/Faculty/${x.faculty.individualID}`
             if (currPath.startsWith(path)) {
                 anyActive = true
-                return <Link key={x.individual_id} href={path} className="active">{x.name}</Link>
+                return <Link key={x.faculty.individualID} href={path} className="active">{x.individual.name}</Link>
             }
             else {
-                return <Link key={x.individual_id} href={path}>{x.name}</Link>
+                return <Link key={x.faculty.individualID} href={path}>{x.individual.name}</Link>
             }
 
         }) : null}

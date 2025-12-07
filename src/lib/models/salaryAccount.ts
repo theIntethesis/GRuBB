@@ -1,7 +1,7 @@
 "use server"
 import mongoose from "mongoose"
 import { ForeignKeyModelAPI } from "./_modelAPI"
-import { Semester, SemesterCombo } from "../common"
+import { RateTimeUnit, Semester, SemesterCombo } from "../common"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import dbConnect from "../mongodb"
@@ -13,7 +13,7 @@ interface I_SalaryAccount_PK extends I_SalaryAccount_FK, SemesterCombo {}
 
 export interface I_SalaryAccount  extends I_SalaryAccount_PK{
     rate: number,
-    rateTimeUnit: "hour" | "year",
+    rateTimeUnit: RateTimeUnit,
     percentFTE: number, // Percentage
 
     // payment - calculated (payment)
@@ -100,7 +100,7 @@ export async function modify(
 ): Promise<void> {
     await dbConnect()
 
-    const acc = await SalaryAccount.findOne(val as I_SalaryAccount_PK).exec()
+    const acc = await SalaryAccount.findOne({individualID: val.individualID}).exec()
 
     acc.rate = val.rate
     acc.rateTimeUnit = val.rateTimeUnit

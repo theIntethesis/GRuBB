@@ -8,6 +8,10 @@ import { getSemesterData, ChooseSemesterDropdown, IndividualLine, SalaryAccountS
 import { redirect } from "next/navigation"
 import Form from "next/form"
 import { I_SalaryAccount } from "@/lib/models/salaryAccount"
+import { castFormDataToObject } from "@/lib/utils"
+import { StudentAccountAPI, StudentAPI } from "@/lib/models"
+import { I_StudentPK } from "@/lib/models/student"
+import { SalaryAccountAPI } from "@/lib/models"
 
 function StudentLine({student}: {student?: I_Student}) {
     return <tr>
@@ -81,14 +85,92 @@ export default function StudentForm(
 
     const [currentSemester, setCurrentSemester] = useState(inputSemester || absentSemesters[0])
 
-    const initialShowSalary = false
+    const initialShowSalary = inputSemester != undefined ? (salaryAccounts?.find(x => semesterEq(x, inputSemester)) != undefined) : false
+
     const [showSalary, setShowSalary] = useState(initialShowSalary)
 
 
     const onSubmit = (formData: FormData) => {
+        if (student != undefined) {
+            return
+        }
 
+        const vals = castFormDataToObject(formData)
+
+        StudentAPI.create({
+            student: {
+                outOfState: vals.outOfState == "on"
+            },
+            individual: {
+                name: vals.name
+            }
+        }, {budgetID})
     }
+
     const onUpdate = (formData: FormData) => {
+        if (student == undefined || student.student.individualID == undefined) {
+            return
+        }
+
+        const vals = castFormDataToObject(formData)
+
+        console.log(vals)
+
+        StudentAPI.modify({
+            student: {
+                ...(student.student as I_StudentPK),
+                outOfState: vals.outOfState == "on"
+            },
+            individual: {
+                name: vals.name
+            }
+        })
+
+        if (inputSemester == null) {
+            StudentAccountAPI.create({
+                aidRecieved: vals.aidRecieved,
+                individualID: student.student.individualID,
+                ...currentSemester
+            }, {individualID: student.student.individualID})
+
+            if (showSalary) {
+                SalaryAccountAPI.create({
+                    individualID: student.student.individualID,
+                    percentFTE: vals.percentFTE,
+                    rate: vals.rate,
+                    rateTimeUnit: vals.rateTimeUnit,
+                    ...currentSemester
+                }, {individualID: student.student.individualID})
+            }
+        }
+        else {
+            StudentAccountAPI.modify({
+                aidRecieved: vals.aidRecieved,
+                individualID: student.student.individualID,
+                ...currentSemester
+            })
+
+            if (showSalary) {
+                if (!initialShowSalary) {
+                    SalaryAccountAPI.create({
+                        individualID: student.student.individualID,
+                        percentFTE: vals.percentFTE,
+                        rate: vals.rate,
+                        rateTimeUnit: vals.rateTimeUnit,
+                        ...currentSemester
+                    }, {individualID: student.student.individualID})
+                }
+                else {
+                    SalaryAccountAPI.modify({
+                        individualID: student.student.individualID,
+                        percentFTE: vals.percentFTE,
+                        rate: vals.rate,
+                        rateTimeUnit: vals.rateTimeUnit,
+                        ...currentSemester
+                    })
+                }
+            }
+        }
 
     }
 
@@ -101,7 +183,7 @@ export default function StudentForm(
 
     }
 
-    return <Form action={inputSemester == undefined ? onSubmit : onUpdate}>
+    return <Form action={student == undefined ? onSubmit : onUpdate}>
         <table>
             <tbody>
                 <IndividualLine individual={student?.individual}/>
@@ -123,7 +205,7 @@ export default function StudentForm(
                     <tr><td colSpan={2}><hr/></td></tr>
                     <StudentAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} student={student.student} studentAccounts={studentAccounts}/>
                     <tr><td colSpan={2}><hr/></td></tr>
-                    <StudentSalaryAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} showSalary={showSalary} setShowSalary={setShowSalary}/>
+                    <StudentSalaryAccountSection currentSemester={currentSemester} semesterAccounts={semesterAccounts} showSalary={showSalary} setShowSalary={setShowSalary} salaryAccounts={salaryAccounts}/>
                     <tr><td colSpan={2}><hr/></td></tr>
                 </> : undefined}
 

@@ -3,10 +3,13 @@ import { useState, useEffect } from "react"
 import { redirect } from "next/navigation"
 import { getSemesterData, ChooseSemesterDropdown, IndividualLine, SalaryAccountSection, SelectSemesterDropdown } from "./common"
 import { SemesterCombo, FacultyRole } from "@/lib/common"
+import { castFormDataToObject } from "@/lib/utils"
 import Form from "next/form"
 import { FacultyIndividual, I_Faculty } from "@/lib/models/faculty"
 import { I_SalaryAccount } from "@/lib/models/salaryAccount"
 import { SemesterAccountCombo } from "@/lib/models/semesterAccount"
+import { FacultyAPI, SalaryAccountAPI } from "@/lib/models"
+import { I_Faculty_PK } from "@/lib/models/faculty"
 
 function FacultyLine({faculty}: {faculty?: I_Faculty}) {
     const [role, setRole] = useState<FacultyRole>("Faculty")
@@ -40,11 +43,59 @@ export default function FacultyForm(
     const [currentSemester, setCurrentSemester] = useState(inputSemester || absentSemesters[0])
 
     const onSubmit = (formData: FormData) => {
+        if (faculty != undefined) {
+            return
+        }
 
+        const vals = castFormDataToObject(formData)
+
+        FacultyAPI.create({
+            faculty: {
+                role: vals.role
+            },
+            individual: {
+                name: vals.name
+            }
+        }, {budgetID})
     }
+
     const onUpdate = (formData: FormData) => {
+        if (faculty == undefined || faculty?.faculty.individualID == undefined) {
+            return
+        }
 
+        const vals = castFormDataToObject(formData)
+
+        FacultyAPI.modify({
+            faculty: {
+                individualID: faculty.faculty.individualID,
+                role: vals.role
+            },
+            individual: {
+                name: vals.name
+            }
+        })
+
+        if (inputSemester == null) {
+            SalaryAccountAPI.create({
+                individualID: faculty.faculty.individualID,
+                percentFTE: vals.percentFTE,
+                rate: vals.rate,
+                rateTimeUnit: vals.rateTimeUnit,
+                ...currentSemester
+            }, {individualID: faculty.faculty.individualID})
+        }
+        else {
+            SalaryAccountAPI.modify({
+                individualID: faculty.faculty.individualID,
+                percentFTE: vals.percentFTE,
+                rate: vals.rate,
+                rateTimeUnit: vals.rateTimeUnit,
+                ...currentSemester
+            })
+        }
     }
+
     const onDelete = () => {
         if (faculty != null) {
             // deleteFaculty(faculty.individual_id, budgetID)
@@ -54,7 +105,7 @@ export default function FacultyForm(
 
     }
 
-    return <Form action={inputSemester == undefined ? onSubmit : onUpdate}>
+    return <Form action={faculty == undefined ? onSubmit : onUpdate}>
         <table>
             <tbody>
                 <IndividualLine individual={faculty?.individual}/>

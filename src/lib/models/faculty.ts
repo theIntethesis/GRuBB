@@ -8,8 +8,8 @@ import { redirect } from "next/navigation"
 import { FacultyRole } from "../common"
 import dbConnect from "../mongodb"
 
-interface I_Faculty_PK {
-    individualID: string // uid from Individual
+export interface I_Faculty_PK {
+    individualID?: string // uid from Individual
 }
 
 interface I_Faculty_Data {
@@ -108,6 +108,8 @@ const FacultyAPI: ForeignKeyModelAPI<
 }
 */
 
+
+
 // ---- getOne ----
 export async function getOne(
     { individualID }: I_Faculty_PK
@@ -178,8 +180,9 @@ export async function modify(
     await dbConnect()
 
     const faculty = await Faculty.findOne({
-        indiviudalID: input.faculty.individualID // (keeping your typo: indiviudal_id)
+        individualID: input.faculty.individualID
     }).exec()
+
 
     faculty.role = input.faculty.role
     await faculty.save()
