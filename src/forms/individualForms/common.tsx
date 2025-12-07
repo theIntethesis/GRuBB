@@ -84,13 +84,41 @@ export function SalaryAccountSection(
 
     const [salaryAccount, setSalaryAccount] = useState<I_SalaryAccount | undefined>(undefined)
     const [rateTimeUnit, setRateTimeUnit] = useState<RateTimeUnit | undefined>(undefined)
-
+    const [fringeRate, setFringeRate] = useState<number>(0)
+    const [payment, setPaymentAmnt] = useState<number>(0)
 
 
     useEffect(() => {
         const salAcc = salaryAccounts?.find((val) => semesterEq(val, currentSemester))
+        const semAcc = semesterAccounts?.find((val) => semesterEq(val.semesterAccount, currentSemester))
         setSalaryAccount(salAcc)
         setRateTimeUnit(salAcc?.rateTimeUnit || "Hour")
+
+        switch (role) {
+            case "Faculty":
+                setFringeRate(semAcc?.semesterAccount.facultyFBR || 0)
+                break
+            case "Postdoc":
+                setFringeRate(semAcc?.semesterAccount.postDocFBR || 0)
+                break
+            case "Staff":
+                setFringeRate(semAcc?.semesterAccount.facultyFBR || 0)
+                break
+            case "Student":
+                setFringeRate(semAcc?.semesterAccount.studentFBR || 0)
+                break
+        }
+
+        switch (salAcc?.rateTimeUnit) {
+            case "Hour":
+                setPaymentAmnt(salAcc.rate * ((salAcc.percentFTE / 100) * 40) * 15) // assuming 15 weeks in a semester and that they don't get paid over the summer. this is probably a gross miscalculation but I don't care.
+                console.log(salAcc.rate * ((salAcc.percentFTE / 100) * 40) * 15)
+                break;
+            case "Year":
+                setPaymentAmnt(salAcc.rate)
+                break;
+        }
+
 
     }, [salaryAccounts, currentSemester])
 
@@ -131,7 +159,7 @@ export function SalaryAccountSection(
             <td>
                 <div className="inputOuterLeft">
                     {/* TODO calculate this */}
-                    $<input type="number" disabled={true}/>
+                    $<input type="number" disabled={true}  value={payment} onChange={e => {}}/>
                 </div>
             </td>
         </tr>
@@ -142,7 +170,7 @@ export function SalaryAccountSection(
             <td>
                 {/* TODO fetch this */}
                 <div className="inputOuterRight">
-                <input type="number"/>%
+                <input type="number" disabled={true}  value={fringeRate} onChange={(e) => {}}/>%
                 </div>
             </td>
         </tr>

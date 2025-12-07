@@ -36,6 +36,7 @@ export default function Header({budgets, current_budget}: {budgets: [any], curre
                 <Link href={"/dashboard/"  + current_budget._id + "/Student"} className={"tab " + (path.includes("Student") ? "active" : "")}>Student</Link>
                 <Link href={"/dashboard/"  + current_budget._id + "/Faculty"} className={"tab " + (path.includes("Faculty") ? "active" : "")}>Faculty</Link>
                 <Link href={"/dashboard/"  + current_budget._id + "/Account"} className={"tab " + (path.includes("Account") ? "active" : "")}>Account</Link>
+                <Link href={"/dashboard/"  + current_budget._id + "/Overview"} className={"tab " + (path.includes("Overview") ? "active" : "")}>Overview</Link>
             </nav>
         : <nav className="tabNav"></nav>}
 

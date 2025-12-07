@@ -289,9 +289,12 @@ export async function getOne(
     const travelProfile = await TravelProfile.findById(semesterAccount.travelProfileID).exec()
     const overheadCharge = await OverheadCharge.findById(semesterAccount.overheadChargeID).exec()
 
+    // remove these ids from the return since they're not necessary
+    const {travelProfileID, overheadChargeID, ...semesterAccRet} = JSON.parse(JSON.stringify(semesterAccount))
+
     // console.log(semesterAccount)
     return JSON.parse(JSON.stringify({
-        semesterAccount,
+        semesterAccount: semesterAccRet,
         travelProfile,
         overheadCharge
     }))
