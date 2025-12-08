@@ -21,6 +21,7 @@ export interface I_SalaryAccount  extends I_SalaryAccount_PK{
     // fringe benefits rate - calculated, (fringeRate)
 }
 
+
 const SalaryAccountSchema = new mongoose.Schema<I_SalaryAccount>({
     rate: Number,
     rateTimeUnit: String,
@@ -117,7 +118,10 @@ export async function modify(
 export async function getOne(
     pk: I_SalaryAccount_PK
 ): Promise<I_SalaryAccount | undefined> {
-    return undefined
+    const acc = await SalaryAccount.findOne(pk).exec()
+
+    // todo: sanitize
+    return JSON.parse(JSON.stringify(acc))
 }
 
 export async function getAll(

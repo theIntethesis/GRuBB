@@ -5,6 +5,10 @@ import { redirect } from "next/navigation"
 import { revalidatePath } from 'next/cache'
 import ModelAPI from "./_modelAPI"
 import { BudgetType } from "../common"
+import { SalaryAccount } from "./salaryAccount"
+import { StudentAccount } from "./studentAccount"
+import { Student } from "./student"
+import { FacultyAPI, SemesterAccountAPI, StudentAPI } from "../models"
 
 export interface I_Budget {
     name: string,
@@ -155,6 +159,36 @@ export async function modify(val: I_Budget): Promise<void> {
 export async function del(
     pk: { _id: string }
 ): Promise<void> {
+    // delete all salary and student accounts
+    // delete all students
+    // delete all faculty
+    // delete all semesters
 
-    return undefined
+    const budget = JSON.parse(JSON.stringify(await Budget.findById(pk._id).exec()))
+    console.log(budget)
+
+    const promises = []
+
+    for (let i = 0; i < budget.students.length; i++) {
+        console.log(budget.students[i])
+        promises.push(StudentAPI.del({individualID: budget.students[i]}, {budgetID: pk._id}))
+    }
+
+    for (let i = 0; i < budget.faculty.length; i++) {
+        console.log(budget.faculty[i])
+        promises.push(FacultyAPI.del({individualID: budget.faculty[i]}, {budgetID: pk._id}))
+    }
+
+    const accs = await SemesterAccountAPI.getAll({budgetID: pk._id})
+
+    for (let i = 0; i < accs.length; i++) {
+        promises.push(SemesterAccountAPI.del({budgetID: pk._id, semester: accs[i].semesterAccount.semester, year: accs[i].semesterAccount.year}, {budgetID: pk._id}))
+    }
+
+    await Promise.all(promises)
+    await Budget.findByIdAndDelete(pk._id).exec()
+
+
+    revalidatePath("/dashboard", "layout")
+    redirect("/dashboard")
 }

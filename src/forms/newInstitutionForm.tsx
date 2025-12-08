@@ -24,9 +24,20 @@ export default function NewInstituionForm() {
             <table>
                 <tbody>
                     <tr>
-                        <td className="leftside">Institution Name</td>
-                        <td className="rightside">
-                            <input type="text" name="name"></input>
+                        <td colSpan={2} style={{
+                                textAlign: "center"
+                        }}>
+                            <input
+                                type="text"
+                                placeholder="Name"
+
+                                required={true}
+                                name="name"
+                                style={{
+                                    fontSize: "20pt",
+                                    fontWeight: "bold"
+                                }}
+                            />
                         </td>
                     </tr>
                     <tr>
@@ -47,7 +58,7 @@ export default function NewInstituionForm() {
                     </tr>
                     <tr>
                         <td>
-                            <button>Submit</button>
+                            <button className="actionButton submitButton">Submit</button>
                         </td>
                     </tr>
                 </tbody>

@@ -7,6 +7,7 @@ import { I_StudentAccount } from "@/lib/models/studentAccount";
 import { redirect } from "next/navigation";
 import { Dispatch, useState, useEffect } from "react";
 import { RateTimeUnit } from "@/lib/common";
+import { calculatePayment } from "@/lib/utils";
 export function IndividualLine({individual}: {individual?: I_Individual}) {
     return <tr>
         <td colSpan={2} style={{
@@ -86,6 +87,7 @@ export function SalaryAccountSection(
     const [rateTimeUnit, setRateTimeUnit] = useState<RateTimeUnit | undefined>(undefined)
     const [fringeRate, setFringeRate] = useState<number>(0)
     const [payment, setPaymentAmnt] = useState<number>(0)
+    const [maxFTE, setMaxFTE] = useState<number>(0)
 
 
     useEffect(() => {
@@ -97,30 +99,28 @@ export function SalaryAccountSection(
         switch (role) {
             case "Faculty":
                 setFringeRate(semAcc?.semesterAccount.facultyFBR || 0)
+                setMaxFTE(100);
                 break
             case "Postdoc":
                 setFringeRate(semAcc?.semesterAccount.postDocFBR || 0)
+                setMaxFTE(100);
                 break
             case "Staff":
                 setFringeRate(semAcc?.semesterAccount.facultyFBR || 0)
+                setMaxFTE(100);
                 break
             case "Student":
                 setFringeRate(semAcc?.semesterAccount.studentFBR || 0)
+                setMaxFTE(50);
                 break
         }
 
-        switch (salAcc?.rateTimeUnit) {
-            case "Hour":
-                setPaymentAmnt(salAcc.rate * ((salAcc.percentFTE / 100) * 40) * 15) // assuming 15 weeks in a semester and that they don't get paid over the summer. this is probably a gross miscalculation but I don't care.
-                // (salAcc.rate * ((salAcc.percentFTE / 100) * 40) * 15)
-                break;
-            case "Year":
-                setPaymentAmnt(salAcc.rate)
-                break;
-        }
+        setPaymentAmnt(salAcc != undefined ? calculatePayment(salAcc) : 0)
+
 
 
     }, [salaryAccounts, currentSemester])
+
 
 
     return <>
@@ -148,8 +148,8 @@ export function SalaryAccountSection(
             </td>
             <td>
                 <div className="inputOuterRight">
-                    {/* this needs to be limited if they're a student */}
-                    <input type="number" id="percentFTE" name="percentFTE" min={0} max={100} defaultValue={salaryAccount != null ? salaryAccount.percentFTE: 100}/>%
+
+                    <input type="number" id="percentFTE" name="percentFTE" min={0} max={maxFTE} defaultValue={salaryAccount != null ? salaryAccount.percentFTE: maxFTE}/>%
                 </div>
             </td>
         </tr>

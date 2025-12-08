@@ -156,42 +156,32 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
                     margin: "auto"
                 }}>
                     <tbody>
-                        <tr>
-                            {
-                                semester ? <>
-                                    <td colSpan={2} style = {{
-                                        textAlign: "center",
-                                        fontSize: "15pt",
-                                        fontWeight: "bold"
-                                    }}>
-                                        {initialValues.semesterAccount.semester} {initialValues.semesterAccount.year}
-                                    </td>
-                                </> :
-                                <>
-                                    <td><label htmlFor="semester">Semester:</label></td>
-                                    <td>
-                                        <div style={{display: 'inline-grid', gridTemplateColumns: "auto auto", columnGap: "0.5em"}}>
-                                            <select onChange={onSemSelected} style={{height: "2em"}} value={newSemester.semester}>
-                                                <option>Fall</option>
-                                                <option>Spring</option>
-                                            </select>
-                                            <input type="number" onChange={onYearSelected} value={newSemester.year}/>
-                                        </div>
 
-                                    </td>
-                                </>
-                            }
-                        </tr>
-                        <tr>
-                            <td colSpan={2}><hr/></td>
-                        </tr>
+                        {
+                            semester == undefined ?
+                            <tr>
+                                <td><label htmlFor="semester">Semester:</label></td>
+                                <td>
+                                    <div style={{display: 'inline-grid', gridTemplateColumns: "auto auto", columnGap: "0.5em"}}>
+                                        <select onChange={onSemSelected} style={{height: "2em"}} value={newSemester.semester}>
+                                            <option>Fall</option>
+                                            <option>Spring</option>
+                                        </select>
+                                        <input type="number" onChange={onYearSelected} value={newSemester.year}/>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        : undefined}
+
+                        <tr><td colSpan={2}><hr/></td></tr>
+                        <tr><td colSpan={2}><h2>Rates</h2></td></tr>
                         <tr>
                             <td>
                                 <label htmlFor="inStateTuitionRate">In-State Tuition Rate:</label>
                             </td>
                             <td>
                                 <div className="inputOuterLeft">
-
 
                                 $<input name="inStateTuitionRate" type="number" min="0" defaultValue={initialValues.semesterAccount.inStateTuitionRate}/>
                                 </div>
@@ -249,13 +239,10 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
                                 </div>
                             </td>
                         </tr>
-
+                        <tr><td colSpan={2}><hr/></td></tr>
                         <tr>
-                            <td colSpan={2} style={{
-                                fontSize: "15pt",
-                                textAlign: "center"
-                            }}>
-                                <hr/>Travel
+                            <td colSpan={2}>
+                                <h2>Travel</h2>
                             </td>
 
                         </tr>
@@ -289,13 +276,10 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
                                 </div>
                             </td>
                         </tr>
+                        <tr><td colSpan={2}><hr/></td></tr>
                         <tr>
-                            <td colSpan={2} style={{
-                                fontSize: "15pt",
-                                textAlign: "center"
-                            }}>
-                                <hr/>
-                                Overhead Charges
+                            <td colSpan={2}>
+                                <h2>Overhead Charges</h2>
                             </td>
                         </tr>
                         <tr>

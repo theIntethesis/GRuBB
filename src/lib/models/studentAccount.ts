@@ -106,7 +106,10 @@ export async function modify(
 export async function getOne(
     pk: I_StudentAccount_PK
 ): Promise<I_StudentAccount | undefined> {
-    return undefined
+    const acc = await StudentAccount.findOne(pk).exec()
+
+    // todo: sanitize
+    return JSON.parse(JSON.stringify(acc))
 }
 
 export async function getAll(

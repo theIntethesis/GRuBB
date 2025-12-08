@@ -46,11 +46,9 @@ export interface I_SemesterAccountFK {
     budgetID: string,
 }
 
-export interface I_SemesterAccountPK extends SemesterCombo {
-    budgetID: string
-}
+export interface I_SemesterAccountPK extends SemesterCombo, I_SemesterAccountFK {}
 
-export interface I_SemesterAccount extends I_SemesterAccountPK, I_SemesterAccountFK {
+export interface I_SemesterAccount extends I_SemesterAccountPK {
 
     // incoming,
     // outgoing,
@@ -245,20 +243,25 @@ export async function del(
     const budget = JSON.parse(JSON.stringify(await Budget.findById(pk.budgetID).exec()))
     console.log(budget)
 
+    const promises = []
+
     for (let i = 0; i < budget.students.length; i++) {
         console.log(budget.students[i])
-        await StudentAccount.findOneAndDelete({individualID: budget.students[i], semester: pk.semester, year: pk.year}).exec()
-        await SalaryAccount.findOneAndDelete({individualID: budget.students[i], semester: pk.semester, year: pk.year}).exec()
+        promises.push(StudentAccount.findOneAndDelete({individualID: budget.students[i], semester: pk.semester, year: pk.year}).exec())
+        promises.push(SalaryAccount.findOneAndDelete({individualID: budget.students[i], semester: pk.semester, year: pk.year}).exec())
     }
 
     for (let i = 0; i < budget.faculty.length; i++) {
         console.log(budget.faculty[i])
-        await SalaryAccount.findOneAndDelete({individualID: budget.faculty[i], semester: pk.semester, year: pk.year}).exec()
+        promises.push(SalaryAccount.findOneAndDelete({individualID: budget.faculty[i], semester: pk.semester, year: pk.year}).exec())
     }
 
-    await TravelProfile.findByIdAndDelete(acc.travelProfileID)
-    await OverheadCharge.findByIdAndDelete(acc.overheadChargeID)
-    await SemesterAccount.findByIdAndDelete(acc._id)
+    promises.push(TravelProfile.findByIdAndDelete(acc.travelProfileID))
+    promises.push(OverheadCharge.findByIdAndDelete(acc.overheadChargeID))
+    promises.push(SemesterAccount.findByIdAndDelete(acc._id))
+
+    // this is a little neat optimization!
+    await Promise.all(promises)
 
     revalidatePath("/dashboard", "layout")
     redirect(`/dashboard/${fk.budgetID}/SemesterRates`)
@@ -278,19 +281,17 @@ export async function modify(
     acc.studentFBR = val.semesterAccount.studentFBR
     acc.postDocFBR = val.semesterAccount.postDocFBR
 
-    await acc.save()
 
     const travelProfile = await TravelProfile.findById(acc.travelProfileID).exec()
     travelProfile.perDiem = val.travelProfile.perDiem
     travelProfile.airfare = val.travelProfile.airfare
     travelProfile.lodging = val.travelProfile.lodging
 
-    await travelProfile.save()
-
     const overheadCharge = await OverheadCharge.findById(acc.overheadChargeID).exec()
     overheadCharge.charge = val.overheadCharge.charge
 
-    await overheadCharge.save()
+
+    await Promise.all([ acc.save(), travelProfile.save(), overheadCharge.save() ])
 
     revalidatePath("/dashboard", "layout")
     refresh()

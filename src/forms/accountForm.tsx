@@ -8,7 +8,7 @@ import Form from "next/form"
 import { useState } from "react";
 
 export default function AccountForm({ budget } : {budget: I_Budget}) {
-    if (budget.coPI == undefined) {
+    if (budget.coPI == undefined || budget._id == undefined) {
         return
     }
 
@@ -26,6 +26,15 @@ export default function AccountForm({ budget } : {budget: I_Budget}) {
             _id: budget._id
         })
     };
+    const onDelete = async () => {
+        if (budget._id == undefined) {
+            return
+        }
+        if (confirm("Are you really sure you want to do this?")) {
+            await BudgetAPI.del({_id: budget._id})
+        }
+
+    }
 
     const addPI = () => {
         const name = (document.getElementById("add-co-pi") as HTMLInputElement).value
@@ -80,7 +89,7 @@ export default function AccountForm({ budget } : {budget: I_Budget}) {
                         <tr><td colSpan={2}><hr/></td></tr>
                         <tr>
                             <td><button className="actionButton submitButton">Save</button></td>
-                            <td><button className="actionButton warning">Delete Institution</button></td>
+                            <td><button formAction={onDelete} className="actionButton warning">Delete Institution</button></td>
                         </tr>
 
                     </tbody>
