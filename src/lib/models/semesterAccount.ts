@@ -6,6 +6,9 @@ import dbConnect from "../mongodb"
 import { revalidatePath } from 'next/cache'
 import { redirect } from "next/navigation";
 import { refresh } from "next/cache"
+import { Budget } from "./budget"
+import { StudentAccount } from "./studentAccount"
+import { SalaryAccount } from "./salaryAccount"
 
 /* BEGIN OVERHEAD CHARGE */
 
@@ -238,6 +241,20 @@ export async function del(
     const acc = await SemesterAccount.findOne(pk).exec()
 
     // this needs to also delete all associated semester/salary accounts!
+
+    const budget = JSON.parse(JSON.stringify(await Budget.findById(pk.budgetID).exec()))
+    console.log(budget)
+
+    for (let i = 0; i < budget.students.length; i++) {
+        console.log(budget.students[i])
+        await StudentAccount.findOneAndDelete({individualID: budget.students[i], semester: pk.semester, year: pk.year}).exec()
+        await SalaryAccount.findOneAndDelete({individualID: budget.students[i], semester: pk.semester, year: pk.year}).exec()
+    }
+
+    for (let i = 0; i < budget.faculty.length; i++) {
+        console.log(budget.faculty[i])
+        await SalaryAccount.findOneAndDelete({individualID: budget.faculty[i], semester: pk.semester, year: pk.year}).exec()
+    }
 
     await TravelProfile.findByIdAndDelete(acc.travelProfileID)
     await OverheadCharge.findByIdAndDelete(acc.overheadChargeID)

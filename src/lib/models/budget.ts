@@ -108,11 +108,6 @@ export async function getOne(
         const budget = await Budget.findById(_id).exec()
 
         if (budget != null) {
-            // normalize id
-            budget._id = budget._id.toJSON()
-
-            // TODO: fix original code: should return the budget here
-            // for now we match your existing behavior
             return JSON.parse(JSON.stringify(budget))
         }
 
@@ -160,6 +155,6 @@ export async function modify(val: I_Budget): Promise<void> {
 export async function del(
     pk: { _id: string }
 ): Promise<void> {
-    // original does nothing
+
     return undefined
 }
