@@ -131,6 +131,7 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
                 tuitionIncrease: vals.tuitionIncrease
             }
         })
+
     }
 
 

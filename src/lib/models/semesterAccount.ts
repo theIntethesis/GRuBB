@@ -272,7 +272,9 @@ export async function modify(
 ): Promise<void> {
     await dbConnect()
 
-    const acc = await SemesterAccount.findOne({budgetID: val.semesterAccount.budgetID}).exec()
+    const acc = await SemesterAccount.findOne({budgetID: val.semesterAccount.budgetID, semester: val.semesterAccount.semester, year: val.semesterAccount.year}).exec()
+
+    console.log(acc)
 
     acc.inStateTuitionRate = val.semesterAccount.inStateTuitionRate
     acc.outOfStateTuitionRate = val.semesterAccount.outOfStateTuitionRate
@@ -280,7 +282,6 @@ export async function modify(
     acc.facultyFBR = val.semesterAccount.facultyFBR
     acc.studentFBR = val.semesterAccount.studentFBR
     acc.postDocFBR = val.semesterAccount.postDocFBR
-
 
     const travelProfile = await TravelProfile.findById(acc.travelProfileID).exec()
     travelProfile.perDiem = val.travelProfile.perDiem
@@ -290,8 +291,9 @@ export async function modify(
     const overheadCharge = await OverheadCharge.findById(acc.overheadChargeID).exec()
     overheadCharge.charge = val.overheadCharge.charge
 
-
-    await Promise.all([ acc.save(), travelProfile.save(), overheadCharge.save() ])
+    console.log(await acc.save())
+    console.log(await travelProfile.save())
+    console.log(await overheadCharge.save())
 
     revalidatePath("/dashboard", "layout")
     refresh()

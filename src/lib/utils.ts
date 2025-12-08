@@ -30,9 +30,9 @@ export async function fetchAndCalculateSemesterOverview(budgetID: string, semest
     }
 
     const studentAccounts = (await Promise.all(budget?.students?.map(async (x) => {
-        console.log(x)
-        console.log(semester)
-        console.log(year)
+        // console.log(x)
+        // console.log(semester)
+        // console.log(year)
         const student = await StudentAPI.getOne({individualID: x})
         const account = await StudentAccountAPI.getOne({individualID: x, semester: semester, year: year})
 
@@ -78,6 +78,8 @@ export async function fetchAndCalculateSemesterOverview(budgetID: string, semest
         numInStateStudents: studentAccounts.filter(x => !x.outOfState).length,
         numOutOfStateStudents: studentAccounts.filter(x => x.outOfState).length,
         numStudentEmployees: salaryStudentAccounts.length,
-        numFacultyEmployees: salaryFacultyAccounts.length
+        numFacultyEmployees: salaryFacultyAccounts.length,
+        semester: semester,
+        year: year
     }
 }

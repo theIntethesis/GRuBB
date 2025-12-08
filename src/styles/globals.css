@@ -101,6 +101,53 @@ table {
   }
 }
 
+table.overview-table {
+
+  td {
+    width: unset;
+    text-align: left;
+    border-bottom: var(--text) 2px solid;
+    border-top: var(--text) 2px solid;
+    padding: 0em 0.5em;
+
+  }
+
+
+  border-collapse: collapse;
+
+  thead.major-cats {
+    td {
+      border-right: var(--text) 2px solid;
+      border-left: var(--text) 2px solid;
+
+      font-weight: bold;
+      font-size: 1.1em;
+
+    }
+  }
+
+  thead.minor-cats {
+    td {
+      font-weight: bold;
+
+    }
+  }
+
+  tbody, thead.minor-cats {
+    td:nth-child(odd) {
+      background-color: var(--base);
+    }
+    td:nth-child(2), td:nth-child(4), td:nth-child(6), td:nth-child(9), td:nth-child(13), td:nth-child(14) {
+      border-right: var(--text) 2px solid;
+    }
+    td:nth-child(1) {
+      border-left: var(--text) 2px solid;
+    }
+  }
+
+
+}
+
 button, input, select, .inputOuterLeft, .inputOuterRight {
   background-color: var(--base);
   border-radius: 10px;
