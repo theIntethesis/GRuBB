@@ -35,13 +35,27 @@ export default function FacultyForm(
     {budgetID, faculty, salaryAccounts, semesterAccounts, inputSemester}:
     {budgetID: string, faculty?: FacultyIndividual, salaryAccounts?: I_SalaryAccount[], semesterAccounts: SemesterAccountCombo[], inputSemester?: SemesterCombo}
 ) {
-    const {semesters, absentSemesters} = getSemesterData(budgetID, semesterAccounts, salaryAccounts || [], [])
 
-    if (inputSemester == undefined && absentSemesters.length == 0 && faculty != undefined) {
-        redirect(`/dashboard/${budgetID}/Faculty/${faculty.faculty.individualID}/${semesters[0].year}/${semesters[0].semester}`)
+    const [semesterData, setSemesterData] = useState<{semesters: SemesterCombo[], absentSemesters: SemesterCombo[]}>(() => {
+        return getSemesterData(budgetID, semesterAccounts, salaryAccounts || [], [])
+    })
+
+    const [currentSemester, setCurrentSemester] = useState(inputSemester || semesterData.absentSemesters[0])
+
+    useEffect(() => {
+
+        const res = getSemesterData(budgetID, semesterAccounts, salaryAccounts || [], [])
+        console.log(res)
+        setSemesterData(res)
+        setCurrentSemester(inputSemester || res.absentSemesters[0])
+
+    }, [budgetID, semesterAccounts, salaryAccounts, inputSemester])
+
+
+
+    if (inputSemester == undefined && semesterData.absentSemesters.length == 0 && faculty != undefined) {
+        redirect(`/dashboard/${budgetID}/Faculty/${faculty.faculty.individualID}/${semesterData.semesters[0].year}/${semesterData.semesters[0].semester}`)
     }
-
-    const [currentSemester, setCurrentSemester] = useState(inputSemester || absentSemesters[0])
 
     const onSubmit = (formData: FormData) => {
         if (faculty != undefined) {
@@ -128,12 +142,12 @@ export default function FacultyForm(
                    <tr>
                         <SelectSemesterDropdown
                             basePath={`/dashboard/${budgetID}/Faculty/${faculty.faculty.individualID}/`}
-                            semesters={semesters}
+                            semesters={semesterData.semesters}
                             currentSemester={inputSemester}
-                            displayAddNew={absentSemesters.length > 0}
+                            displayAddNew={semesterData.absentSemesters.length > 0}
                         />
                         {inputSemester == null
-                            ? <ChooseSemesterDropdown semesters={absentSemesters} setSemester={setCurrentSemester}/>
+                            ? <ChooseSemesterDropdown semesters={semesterData.absentSemesters} setSemester={setCurrentSemester}/>
                             : <td><button className="warning" formAction={deleteCurrentSemester}>Delete Semester</button></td>
                         }
                     </tr>

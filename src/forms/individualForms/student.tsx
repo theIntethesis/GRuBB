@@ -12,6 +12,7 @@ import { castFormDataToObject } from "@/lib/utils"
 import { StudentAccountAPI, StudentAPI } from "@/lib/models"
 import { I_StudentPK } from "@/lib/models/student"
 import { SalaryAccountAPI } from "@/lib/models"
+import { refresh } from "next/cache"
 
 function StudentLine({student}: {student?: I_Student}) {
     const [role, setRole] = useState<"on" | "off">("off")
@@ -68,15 +69,15 @@ function StudentAccountSection(
     const [tuitionRate, setTuitionRate] = useState(0)
 
     useEffect(() => {
-        const account = semesterAccounts.map(x => x.semesterAccount).find((val) => semesterEq(val, currentSemester))
+        const account = currentSemester != null ? semesterAccounts.map(x => x.semesterAccount).find((val) => semesterEq(val, currentSemester)) : undefined
         if (account != undefined) {
             setTuitionRate(student.outOfState ? account.outOfStateTuitionRate : account.inStateTuitionRate)
         }
         // console.log(account)
 
-    }, [currentSemester, semesterAccounts])
+    }, [currentSemester])
 
-    const studentAccount = studentAccounts?.find((val) => semesterEq(val, currentSemester))
+    const studentAccount = currentSemester != null ? studentAccounts?.find((val) => semesterEq(val, currentSemester)) : undefined
 
     return <>
         <tr><td colSpan={2}><h2>Tuition</h2></td></tr>
@@ -97,19 +98,35 @@ export default function StudentForm(
     {budgetID,  student, studentAccounts, salaryAccounts, semesterAccounts, inputSemester}:
     {budgetID: string, student?: StudentIndividual, studentAccounts?: I_StudentAccount[], salaryAccounts?: I_SalaryAccount[], semesterAccounts: SemesterAccountCombo[], inputSemester?: SemesterCombo}
 ) {
-    const {semesters, absentSemesters} = getSemesterData(budgetID, semesterAccounts, salaryAccounts || [], studentAccounts || [])
 
-    if (inputSemester == undefined && absentSemesters.length == 0 && student != undefined) {
-        redirect(`/dashboard/${budgetID}/Student/${student.student.individualID}/${semesters[0].year}/${semesters[0].semester}`)
+
+    const [semesterData, setSemesterData] = useState<{semesters: SemesterCombo[], absentSemesters: SemesterCombo[]}>(() => {
+        return getSemesterData(budgetID, semesterAccounts, salaryAccounts || [], studentAccounts || [])
+    })
+
+    const [currentSemester, setCurrentSemester] = useState(inputSemester || semesterData.absentSemesters[0])
+
+    useEffect(() => {
+
+        const res = getSemesterData(budgetID, semesterAccounts, salaryAccounts || [], studentAccounts || [])
+        console.log(res)
+        setSemesterData(res)
+        setCurrentSemester(inputSemester || res.absentSemesters[0])
+
+    }, [budgetID, semesterAccounts, salaryAccounts, studentAccounts, inputSemester])
+
+    if (inputSemester == undefined && semesterData.absentSemesters.length == 0 && student != undefined) {
+        redirect(`/dashboard/${budgetID}/Student/${student.student.individualID}/${semesterData.semesters[0].year}/${semesterData.semesters[0].semester}`)
     }
 
-    const [currentSemester, setCurrentSemester] = useState(inputSemester || absentSemesters[0])
+    if (student != undefined && inputSemester != undefined && semesterData.semesters.find((x) => semesterEq(x, inputSemester)) == undefined) {
+        redirect(`/dashboard/${budgetID}/Student/${student.student.individualID}`)
+    }
+
 
     const initialShowSalary = inputSemester != undefined ? (salaryAccounts?.find(x => semesterEq(x, inputSemester)) != undefined) : false
 
     const [showSalary, setShowSalary] = useState(initialShowSalary)
-
-    console.log(currentSemester)
 
     const onSubmit = (formData: FormData) => {
         if (student != undefined) {
@@ -201,7 +218,6 @@ export default function StudentForm(
                 }
             }
         }
-
     }
 
     const onDelete = () => {
@@ -241,12 +257,12 @@ export default function StudentForm(
                     <tr>
                         <SelectSemesterDropdown
                             basePath={`/dashboard/${budgetID}/Student/${student.student.individualID}/`}
-                            semesters={semesters}
+                            semesters={semesterData.semesters}
                             currentSemester={inputSemester}
-                            displayAddNew={absentSemesters.length > 0}
+                            displayAddNew={semesterData.absentSemesters.length > 0}
                         />
                         {inputSemester == null
-                            ? <ChooseSemesterDropdown semesters={absentSemesters} setSemester={setCurrentSemester}/>
+                            ? <ChooseSemesterDropdown semesters={semesterData.absentSemesters} setSemester={setCurrentSemester}/>
                             : <td><button className="warning" formAction={deleteCurrentSemester}>Delete Semester</button></td>
                         }
                     </tr>
@@ -269,7 +285,7 @@ export default function StudentForm(
                 </> : undefined}
 
                 <tr>
-                    <td><button className="actionButton submitButton">{student != undefined ? "Update" : "Create"}</button></td>
+                    <td><button type="submit" className="actionButton submitButton">{student != undefined ? "Update" : "Create"}</button></td>
                     {student != null
                         ? <td><button formAction={onDelete} className="warning actionButton">Remove {student.individual.name}</button></td>
                         : undefined
