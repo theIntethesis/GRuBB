@@ -10,6 +10,7 @@ import { I_SalaryAccount } from "@/lib/models/salaryAccount"
 import { SemesterAccountCombo } from "@/lib/models/semesterAccount"
 import { FacultyAPI, SalaryAccountAPI } from "@/lib/models"
 import { I_Faculty_PK } from "@/lib/models/faculty"
+import { semesterEq } from "@/lib/common"
 
 function FacultyLine({faculty}: {faculty?: I_Faculty}) {
     const [role, setRole] = useState<FacultyRole>("Faculty")
@@ -45,7 +46,7 @@ export default function FacultyForm(
     useEffect(() => {
 
         const res = getSemesterData(budgetID, semesterAccounts, salaryAccounts || [], [])
-        console.log(res)
+
         setSemesterData(res)
         setCurrentSemester(inputSemester || res.absentSemesters[0])
 
@@ -55,6 +56,11 @@ export default function FacultyForm(
 
     if (inputSemester == undefined && semesterData.absentSemesters.length == 0 && faculty != undefined) {
         redirect(`/dashboard/${budgetID}/Faculty/${faculty.faculty.individualID}/${semesterData.semesters[0].year}/${semesterData.semesters[0].semester}`)
+    }
+
+
+    if (faculty != undefined && inputSemester != undefined && semesterData.semesters.find((x) => semesterEq(x, inputSemester)) == undefined) {
+        redirect(`/dashboard/${budgetID}/Faculty/${faculty.faculty.individualID}`)
     }
 
     const onSubmit = (formData: FormData) => {
@@ -73,9 +79,6 @@ export default function FacultyForm(
             }
         }, {budgetID})
     }
-
-
-    console.log(currentSemester)
 
     const onUpdate = (formData: FormData) => {
         if (faculty == undefined || faculty?.faculty.individualID == undefined) {

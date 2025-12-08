@@ -109,7 +109,7 @@ export default function StudentForm(
     useEffect(() => {
 
         const res = getSemesterData(budgetID, semesterAccounts, salaryAccounts || [], studentAccounts || [])
-        console.log(res)
+
         setSemesterData(res)
         setCurrentSemester(inputSemester || res.absentSemesters[0])
 
@@ -243,8 +243,9 @@ export default function StudentForm(
             }
             StudentAccountAPI.del({individualID: student.student.individualID, ...currentSemester}, {individualID: student.student.individualID})
         }
-
     }
+
+    console.log(student)
 
     return <Form action={student == undefined ? onSubmit : onUpdate} >
         <table>

@@ -81,7 +81,7 @@ export async function del(
 ): Promise<void> {
     await dbConnect()
 
-    console.log(pk)
+
     await StudentAccount.deleteOne({...pk})
 
     revalidatePath("/dashboard", "layout")
