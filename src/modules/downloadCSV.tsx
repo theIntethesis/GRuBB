@@ -18,7 +18,8 @@ export default async  function ExportCSV() {
 
         const semOverviews = (await Promise.all(semesters.map(async (x) => { return fetchAndCalculateSemesterOverview(budget._id, x.semester, x.year)}))).filter(x => x != undefined)
         return [
-            [ budget.name, `Primary Investigator: ${budget.pi}`, `${budget.type} Budget` ],
+            [ budget.name, `${budget.type} Budget` ],
+            [ "Primary Investigator", `${budget.pi}` ],
             [ "Co-PIs", ...budget.coPI || []],
             [],
             [ "Semester", "", "Number of Students", "", "Number of Employees", "", "Income", "", "", "Expenditure", "", "", "", "", "Balance"],
