@@ -103,7 +103,7 @@ export async function modify(
 ): Promise<void> {
     await dbConnect()
 
-    const acc = await SalaryAccount.findOne({individualID: val.individualID}).exec()
+    const acc = await SalaryAccount.findOne({individualID: val.individualID, semester: val.semester, year: val.year}).exec()
 
     acc.rate = val.rate
     acc.rateTimeUnit = val.rateTimeUnit

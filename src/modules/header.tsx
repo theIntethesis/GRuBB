@@ -3,6 +3,7 @@
 import { I_Budget } from "@/lib/models/budget";
 import Link from "next/link";
 import { redirect, usePathname } from "next/navigation";
+import ExportCSV from "./downloadCSV";
 
 export default function Header({budgets, currentBudget}: {budgets: I_Budget[], currentBudget?: I_Budget}) {
     const path = usePathname()
@@ -30,7 +31,7 @@ export default function Header({budgets, currentBudget}: {budgets: I_Budget[], c
                 })}
                 <option>Add new Institution</option>
             </select>
-            <button className="submitButton">Export Full Budget</button>
+            <button className="submitButton" onClick={e => currentBudget != undefined && currentBudget._id != undefined ? ExportCSV() : undefined}>Export Full Budget</button>
         </div>
 
         {currentBudget != null ?

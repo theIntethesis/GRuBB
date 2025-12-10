@@ -23,7 +23,7 @@ export default async function Page({params}: {params: Promise<DashboardSlugs>}) 
                     <td colSpan={2}>Number of Students</td>
                     <td colSpan={2}>Number of Employees</td>
                     <td colSpan={3}>Income</td>
-                    <td colSpan={4}>Expenditure</td>
+                    <td colSpan={5}>Expenditure</td>
                     <td>Balance</td>
                 </tr>
 
@@ -41,6 +41,7 @@ export default async function Page({params}: {params: Promise<DashboardSlugs>}) 
                     <td>Out of State Tuition</td>
                     <td>Total</td>
                     <td>Salary</td>
+                    <td>Fringe Benefits</td>
                     <td>Financial Aid</td>
                     <td>Overhead</td>
                     <td>Total</td>
@@ -61,11 +62,13 @@ export default async function Page({params}: {params: Promise<DashboardSlugs>}) 
                         <td>{x.numStudentEmployees}</td>
                         <td>{x.income.fromInStateTuition}</td>
                         <td>{x.income.fromOutOfStateTuition}</td>
-                        <td>{x.incomeTotal}</td>
+                        <td>{x.income.total}</td>
                         <td>{x.expenditure.fromSalary}</td>
+                        <td>{x.expenditure.fringeBenefits.total}</td>
                         <td>{x.expenditure.fromFinancialAid}</td>
                         <td>{x.expenditure.fromOverhead}</td>
-                        <td>{x.expenditureTotal}</td>
+
+                        <td>{x.expenditure.total}</td>
                         <td>{x.balance}</td>
                     </tr>
                 })}

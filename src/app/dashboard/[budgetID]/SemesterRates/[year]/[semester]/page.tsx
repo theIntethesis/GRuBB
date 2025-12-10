@@ -41,37 +41,37 @@ export default async function Page({params}: {params: Promise<DashboardSlugs>}) 
                     <tr><td colSpan={2}><h3>Expenditure</h3></td></tr>
                     <tr>
                         <td><label>From Salary:</label></td>
-                        <td>{semOverview.expenditure.fromSalary} $</td>
+                        <td>$ {semOverview.expenditure.fromSalary}</td>
                     </tr>
                     <tr>
                         <td><label>From Fringe Benefits:</label></td>
-                        <td></td>
+                        <td>$ {semOverview.expenditure.fringeBenefits.total} (Faculty: $ {semOverview.expenditure.fringeBenefits.fromFaculty}, PostDoc: $ {semOverview.expenditure.fringeBenefits.fromPostDoc}, Student: $ {semOverview.expenditure.fringeBenefits.fromStudent})</td>
                     </tr>
                     <tr>
                         <td><label>From Financial Aid:</label></td>
-                        <td>{semOverview.expenditure.fromFinancialAid} $</td>
+                        <td>$ {semOverview.expenditure.fromFinancialAid}</td>
                     </tr>
                     <tr>
                         <td><label>From Overhead:</label></td>
-                        <td>{semOverview.expenditure.fromOverhead} $</td>
+                        <td>$ {semOverview.expenditure.fromOverhead}</td>
                     </tr>
                     <tr><td colSpan={2}><h3>Income</h3></td></tr>
                     <tr>
                         <td><label>From Tuition:</label></td>
-                        <td>{semOverview.income.fromInStateTuition + semOverview.income.fromOutOfStateTuition} $ ({semOverview.income.fromInStateTuition} $ In State), ({semOverview.income.fromOutOfStateTuition} $ Out of State)</td>
+                        <td>$ {semOverview.income.fromInStateTuition + semOverview.income.fromOutOfStateTuition} $ ({semOverview.income.fromInStateTuition} In State), ($ {semOverview.income.fromOutOfStateTuition} Out of State)</td>
                     </tr>
                     <tr><td colSpan={2}><h3>Summary</h3></td></tr>
                     <tr>
                         <td><label>Expenditure:</label></td>
-                        <td>{semOverview.expenditureTotal} $</td>
+                        <td>$ {semOverview.expenditure.total}</td>
                     </tr>
                     <tr>
                         <td><label>Income:</label></td>
-                        <td>{semOverview.incomeTotal} $</td>
+                        <td>$ {semOverview.income.total}</td>
                     </tr>
                     <tr>
                         <td><label>Balance:</label></td>
-                        <td>{semOverview.balance} $</td>
+                        <td>$ {semOverview.balance}</td>
                     </tr>
                 </tbody>
             </table>

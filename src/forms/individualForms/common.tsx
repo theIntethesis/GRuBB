@@ -83,25 +83,27 @@ export function SalaryAccountSection(
     {salaryAccounts?: I_SalaryAccount[], semesterAccounts: SemesterAccountCombo[], currentSemester: SemesterCombo, role: EmpolymentType}
 ) {
 
-    const [salaryAccount, setSalaryAccount] = useState<I_SalaryAccount | undefined>(undefined)
     const [rateTimeUnit, setRateTimeUnit] = useState<RateTimeUnit | undefined>(undefined)
+    const [rate, setRate] = useState<number>(0)
     const [fringeRate, setFringeRate] = useState<number>(0)
     const [payment, setPaymentAmnt] = useState<number>(0)
     const [maxFTE, setMaxFTE] = useState<number>(0)
+    const [percentFTE, setPercentFTE] = useState<number>(0)
 
 
     useEffect(() => {
         const salAcc = salaryAccounts?.find((val) => semesterEq(val, currentSemester))
         const semAcc = semesterAccounts?.find((val) => semesterEq(val.semesterAccount, currentSemester))
-        setSalaryAccount(salAcc)
         setRateTimeUnit(salAcc?.rateTimeUnit || "Hour")
+        setRate(salAcc?.rate || 0)
+        setPercentFTE(salAcc?.percentFTE || 0)
 
         switch (role) {
             case "Faculty":
                 setFringeRate(semAcc?.semesterAccount.facultyFBR || 0)
                 setMaxFTE(100);
                 break
-            case "Postdoc":
+            case "Post-Doc":
                 setFringeRate(semAcc?.semesterAccount.postDocFBR || 0)
                 setMaxFTE(100);
                 break
@@ -131,7 +133,7 @@ export function SalaryAccountSection(
             </td>
             <td>
                 <div className="inputOuterLeft" style={{width: "45%"}}>
-                    $<input type="float" id="rate" name="rate" defaultValue={salaryAccount != null ? salaryAccount.rate : 0}/>
+                    $<input type="float" id="rate" name="rate" defaultValue={rate} key={`rate=${rate}`}/>
                 </div>
                 <div style={{display: "inline-block", width: "10%", textAlign: "center"}}>/</div>
                 <div className="inputOuterRight"  style={{width: "45%", height: "100%"}}>
@@ -149,7 +151,7 @@ export function SalaryAccountSection(
             <td>
                 <div className="inputOuterRight">
 
-                    <input type="number" id="percentFTE" name="percentFTE" min={0} max={maxFTE} defaultValue={salaryAccount != null ? salaryAccount.percentFTE: maxFTE}/>%
+                    <input type="number" id="percentFTE" name="percentFTE" min={0} max={maxFTE} defaultValue={percentFTE} key={`percentFTE=${percentFTE}`}/>%
                 </div>
             </td>
         </tr>

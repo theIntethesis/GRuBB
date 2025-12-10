@@ -1,6 +1,6 @@
 
 export type Semester = "Fall" | "Spring"
-export type FacultyRole = "Faculty" | "Staff" | "Postdoc"
+export type FacultyRole = "Faculty" | "Staff" | "Post-Doc"
 export type EmpolymentType = FacultyRole | "Student"
 
 export type BudgetType = "Primary" | "Secondary" | "Parallel"

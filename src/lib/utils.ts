@@ -51,30 +51,53 @@ export async function fetchAndCalculateSemesterOverview(budgetID: string, semest
     }) || [])).filter(n => n != undefined)
 
     const salaryFacultyAccounts = (await Promise.all(budget?.faculty?.map(async (x) => {
-        return await SalaryAccountAPI.getOne({individualID: x, semester: semester, year: year})
+        const account = await  SalaryAccountAPI.getOne({individualID: x, semester: semester, year: year})
+        const faculty = await FacultyAPI.getOne({individualID: x})
+
+        if (account != undefined && faculty != undefined) {
+            return {
+                account: account,
+                role: faculty?.faculty.role
+            }
+        }
     }) || [])).filter(n => n != undefined)
 
-    const salaryAccounts = [...salaryFacultyAccounts, ...salaryStudentAccounts]
+
+    const salaryAccounts = [...salaryFacultyAccounts.map(x => x.account), ...salaryStudentAccounts]
+
+    const facultyStaffSalaryAccs = salaryFacultyAccounts.filter((x) => x.role == "Faculty" || x.role == "Staff")
+    const postDocSalaryAccs = salaryFacultyAccounts.filter((x) => x.role == "Post-Doc")
+
+    const fringeBenefits = {
+        fromStudent: -1 * salaryStudentAccounts.map((x) => calculatePayment(x) * semesterAcc.semesterAccount.studentFBR / 100).reduce((accumulator, val) => accumulator + val, 0),
+        fromFaculty: -1 * facultyStaffSalaryAccs.map((x) =>  calculatePayment(x.account) * semesterAcc.semesterAccount.facultyFBR / 100).reduce((accumulator, val) => accumulator + val, 0),
+        fromPostDoc: -1 * postDocSalaryAccs.map((x) => calculatePayment(x.account) * semesterAcc.semesterAccount.postDocFBR / 100).reduce((accumulator, val) => accumulator + val, 0),
+        total: 0
+    }
+    fringeBenefits.total = fringeBenefits.fromFaculty + fringeBenefits.fromStudent + fringeBenefits.fromPostDoc
 
     const expenditure = {
-        fromSalary: salaryAccounts.map((x) => calculatePayment(x)).reduce((accumulator, val) => accumulator + val, 0),
-        fromFinancialAid: studentAccounts.map((x) => x.account?.aidRecieved).reduce((accumulator, val) => accumulator + val, 0),
-        fromOverhead: semesterAcc.overheadCharge.charge
+        fromSalary: -1 * salaryAccounts.map((x) => calculatePayment(x)).reduce((accumulator, val) => accumulator + val, 0),
+        fromFinancialAid: -1 * studentAccounts.map((x) => x.account?.aidRecieved).reduce((accumulator, val) => accumulator + val, 0),
+        fromOverhead: -1 * semesterAcc.overheadCharge.charge,
+        fringeBenefits,
+        total: 0
     }
+    expenditure.total = expenditure.fromFinancialAid + expenditure.fromSalary + expenditure.fromOverhead + expenditure.fringeBenefits.total
+
     const income = {
         fromInStateTuition: studentAccounts.filter(x => !x.outOfState).map((x) => semesterAcc.semesterAccount.inStateTuitionRate).reduce((accumulator, val) => accumulator + val, 0),
-        fromOutOfStateTuition: studentAccounts.filter(x => x.outOfState).map((x) => semesterAcc.semesterAccount.outOfStateTuitionRate).reduce((accumulator, val) => accumulator + val, 0)
+        fromOutOfStateTuition: studentAccounts.filter(x => x.outOfState).map((x) => semesterAcc.semesterAccount.outOfStateTuitionRate).reduce((accumulator, val) => accumulator + val, 0),
+        total: 0
     }
+    income.total = income.fromInStateTuition + income.fromOutOfStateTuition
 
-    const expenditureTotal = expenditure.fromFinancialAid + expenditure.fromSalary + expenditure.fromOverhead
-    const incomeTotal =  income.fromInStateTuition + income.fromOutOfStateTuition
+
 
     return {
         expenditure,
         income,
-        expenditureTotal,
-        incomeTotal,
-        balance: incomeTotal - expenditureTotal,
+        balance: income.total + expenditure.total,
         numInStateStudents: studentAccounts.filter(x => !x.outOfState).length,
         numOutOfStateStudents: studentAccounts.filter(x => x.outOfState).length,
         numStudentEmployees: salaryStudentAccounts.length,
