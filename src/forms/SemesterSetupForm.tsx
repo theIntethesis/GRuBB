@@ -15,6 +15,7 @@ type I_SemesterAccountFK = SemesterAccountAPI.I_SemesterAccountFK
 
 export default function SemesterSetupForm({ semesters, budget, selectedSemester }: { semesters: SemesterAccountCombo[], budget: I_Budget, selectedSemester?: SemesterCombo }) {
 
+
     if (budget._id == undefined) {
         redirect("/dashboard")
     }
@@ -31,6 +32,7 @@ export default function SemesterSetupForm({ semesters, budget, selectedSemester 
                 : { semester: "Fall", year: 2025})
     )
 
+    
 
     const initialValues: SemesterAccountCombo = semester != null
         ? semester

@@ -168,6 +168,29 @@ export async function create(
     redirect(`/dashboard/${fk.budgetID}/Student/${student.individualID.toJSON()}`)
 }
 
+export async function createNR(
+    input: StudentIndividual,
+    fk: { budgetID: string }
+): Promise<string> {
+    await dbConnect()
+
+    const individual = new Individual({
+        name: input.individual.name
+    })
+    await individual.save()
+
+    const student = new Student({
+        individualID: individual._id,
+        outOfState: input.student.outOfState
+    })
+    await student.save()
+
+    const budget = await Budget.findById(fk.budgetID)
+    budget.students.push(individual._id)
+    await budget.save()
+    return individual._id;
+}
+
 export async function modify(
     input: StudentIndividual
 ): Promise<void> {
