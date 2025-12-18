@@ -86,6 +86,16 @@ export async function create(
     refresh()
 }
 
+export async function createNR(
+    val: I_SalaryAccount,
+    fk: I_SalaryAccount_FK
+): Promise<void> {
+    await dbConnect()
+
+    const acc = new SalaryAccount(val)
+    await acc.save()
+}
+
 export async function del(
     pk: I_SalaryAccount_PK,
     fk: I_SalaryAccount_FK

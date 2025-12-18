@@ -75,6 +75,17 @@ export async function create(
     refresh()
 }
 
+export async function createNR(
+    val: I_StudentAccount,
+    fk: I_StudentAccount_FK
+): Promise<string> {
+    await dbConnect()
+
+    const account = new StudentAccount(val)
+    await account.save()
+    return account._id.toString();
+}
+
 export async function del(
     pk: I_StudentAccount_PK,
     fk: I_StudentAccount_FK

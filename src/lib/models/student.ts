@@ -188,7 +188,7 @@ export async function createNR(
     const budget = await Budget.findById(fk.budgetID)
     budget.students.push(individual._id)
     await budget.save()
-    return individual._id;
+    return individual._id.toJSON();
 }
 
 export async function modify(

@@ -132,7 +132,17 @@ export async function getAll(): Promise<I_Budget[]> {
 }
 
 
-export async function create(val: I_Budget): Promise<string> {
+export async function create(val: I_Budget): Promise<void> {
+    await dbConnect()
+
+    const newBudget = new Budget(val)
+    await newBudget.save()
+
+    revalidatePath("/dashboard", "layout")
+    redirect(`/dashboard/${newBudget._id.toJSON()}`)
+}
+
+export async function createNR(val: I_Budget): Promise<string> {
     await dbConnect()
 
     const newBudget = new Budget(val)

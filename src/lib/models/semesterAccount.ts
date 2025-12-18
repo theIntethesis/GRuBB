@@ -230,6 +230,40 @@ export async function create(
     )
 }
 
+export async function createNR(
+    val: SemesterAccountCombo,
+    fk: I_SemesterAccountFK
+): Promise<string> {
+    await dbConnect()
+
+    const travelProfile = new TravelProfile(val.travelProfile)
+    await travelProfile.save()
+
+    const oCharge = new OverheadCharge(val.overheadCharge)
+    await oCharge.save()
+
+    const newAcc = new SemesterAccount({
+        semester: val.semesterAccount.semester,
+        year: val.semesterAccount.year,
+        budgetID: fk.budgetID,
+
+        inStateTuitionRate: val.semesterAccount.inStateTuitionRate,
+        outOfStateTuitionRate: val.semesterAccount.outOfStateTuitionRate,
+        tuitionIncrease: val.semesterAccount.tuitionIncrease,
+        facultyFBR: val.semesterAccount.facultyFBR,
+        studentFBR: val.semesterAccount.studentFBR,
+        postDocFBR: val.semesterAccount.postDocFBR,
+
+        studentAccounts: [],
+        salaryAccounts: [],
+        travelProfileID: travelProfile._id,
+        overheadChargeID: oCharge._id
+    })
+
+    await newAcc.save()
+    return newAcc._id.toJSON();
+}
+
 export async function del(
     pk: I_SemesterAccountPK,
     fk: I_SemesterAccountFK

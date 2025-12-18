@@ -1,10 +1,10 @@
 "use client"
 
 import { BudgetType } from "@/lib/common"
-import { BudgetAPI, FacultyAPI, SemesterAccountAPI, StudentAccountAPI, StudentAPI } from "@/lib/models"
+import { BudgetAPI, FacultyAPI, SalaryAccountAPI, SemesterAccountAPI, StudentAccountAPI, StudentAPI } from "@/lib/models"
 import { castFormDataToObject } from "@/lib/utils"
-import { redirect } from "next/navigation"
 import { useState } from 'react'
+import { redirect } from "next/navigation"
 import Form from "next/form"
 
 
@@ -28,7 +28,7 @@ export default function NewInstituionForm() {
         vals.tuitionIncrease = parseInt(vals.tuitionIncrease)
         console.log(vals)
 
-        const budgetID = await BudgetAPI.create({
+        const budgetID = await BudgetAPI.createNR({
             name: vals.name,
             type: vals.budgetType as BudgetType,
             pi: vals.pi
@@ -38,9 +38,10 @@ export default function NewInstituionForm() {
         if (!showingDefaults) {
             let sem = vals.default_semester
             let year = vals.default_year
+            console.log(`Creating ${vals.default_length} semesters starting in ${vals.default_semester} ${vals.default_year}`)
             for (let i = 0; i < vals.default_length; i++) {
                 console.log(`Creating semester ${sem} ${year}`)
-                SemesterAccountAPI.create(
+                SemesterAccountAPI.createNR(
                     {
                         semesterAccount: {
                             inStateTuitionRate: vals.inStateTuitionRate * (1 + vals.tuitionIncrease / 100),
@@ -54,19 +55,19 @@ export default function NewInstituionForm() {
                             budgetID: budgetID
                         },
                         travelProfile: {
-                            perDiem: vals.perDiem,
+                            perDiem: vals.perdiem,
                             airfare: vals.airfare,
                             lodging: vals.lodging
                         },
                         overheadCharge: {
-                            charge: vals.charge,
+                            charge: vals.overheadCharge,
                             description: ""
                         }
                     },
                     {budgetID}
                 )
-                vals.inStateTuitionRate *= (1 + vals.tuitionIncrease / 100);
-                vals.outOfStateTuitionRate *= (1 + vals.tuitionIncrease / 100);
+                vals.inStateTuitionRate = Math.round(vals.inStateTuitionRate * (1 + vals.tuitionIncrease / 100));
+                vals.outOfStateTuitionRate = Math.round(vals.outOfStateTuitionRate * (1 + vals.tuitionIncrease / 100));
                 if (sem == "Fall") {
                     sem = "Spring";
                 }
@@ -75,7 +76,6 @@ export default function NewInstituionForm() {
                     year += 1;
                 }
             }
-            console.log(`Creating ${vals.default_length} semesters starting in ${vals.default_semester} ${vals.default_year}`)
             for (let i = 0; i < vals.default_students; i++) {
                 console.log(`Creating student ${i+1}`)
                 let indID = await StudentAPI.createNR({
@@ -84,12 +84,12 @@ export default function NewInstituionForm() {
                     },
                     individual: {
                         name: `Student ${i+1}`
-                    }
+                    }  
                 }, {budgetID});
                 sem = vals.default_semester
                 year = vals.default_year
-                for (let sI = 0; i < vals.default_length; i++){
-                    StudentAccountAPI.create(
+                for (let sI = 0; sI < vals.default_length; sI++){
+                    StudentAccountAPI.createNR(
                         {
                             aidRecieved: 0,
                             individualID: indID,
@@ -121,10 +121,12 @@ export default function NewInstituionForm() {
                 }, {budgetID})
                 sem = vals.default_semester
                 year = vals.default_year
-                for (let sI = 0; i < vals.default_length; i++){
-                    StudentAccountAPI.create(
+                for (let sI = 0; sI < vals.default_length; sI++){
+                    SalaryAccountAPI.createNR(
                         {
-                            aidRecieved: 0,
+                            rate: 20,
+                            rateTimeUnit: "Hour",
+                            percentFTE: 50,
                             individualID: fID,
                             semester: sem,
                             year: year
@@ -144,7 +146,7 @@ export default function NewInstituionForm() {
             }
             for (let i = 0; i < vals.default_faculty; i++) {
                 console.log(`Creating faculty ${i+1}`)
-                FacultyAPI.create({
+                let fID = await FacultyAPI.createNR({
                     faculty: {
                         role: "Faculty"
                     },
@@ -152,6 +154,30 @@ export default function NewInstituionForm() {
                         name: `Faculty ${i+1}`
                     }
                 }, {budgetID})
+                sem = vals.default_semester
+                year = vals.default_year
+                for (let sI = 0; sI < vals.default_length; sI++){
+                    SalaryAccountAPI.createNR(
+                        {
+                            rate: 50000,
+                            rateTimeUnit: "Year",
+                            percentFTE: 100,
+                            individualID: fID,
+                            semester: sem,
+                            year: year
+                        },
+                        {
+                            individualID: fID
+                        }
+                    )
+                    if (sem == "Fall") {
+                        sem = "Spring";
+                    }
+                    else {
+                        sem = "Fall";
+                        year += 1;
+                    }
+                }
             }
         }
         redirect(`/dashboard/${budgetID}`)
@@ -220,32 +246,32 @@ export default function NewInstituionForm() {
                     <tr>
                         <td>Budget Length (Semsters)</td>
                         <td>
-                            <div className="inputOuterCombo">
-                                <input type="number" name="default_length" min={1}></input>
+                            <div className="inputOuterLeft">
+                                :<input type="number" name="default_length" min={1} defaultValue={1}/>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>Students</td>
                         <td>
-                            <div className="inputOuterCombo">
-                                <input type="number" name="default_students" min={1}></input>
+                            <div className="inputOuterLeft">
+                                :<input type="number" name="default_students" min={0} defaultValue={0}/>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>Post-Doctorates</td>
                         <td>
-                            <div className="inputOuterCombo">
-                                <input type="number" name="default_post_doc" min={1}></input>
+                            <div className="inputOuterLeft">
+                                :<input type="number" name="default_post_doc" min={0} defaultValue={0}/>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>Faculty</td>
                         <td>
-                            <div className="inputOuterCombo">
-                                <input type="number" name="default_faculty" min={1}></input>
+                            <div className="inputOuterLeft">
+                                :<input type="number" name="default_faculty" min={0} defaultValue={0}/>
                             </div>
                         </td>
                     </tr>
